@@ -30,7 +30,6 @@
 
 4. [Frontend Design](#4-frontend-design)  
   4.1 [Pages/Views](#pagesviews-react)  
-  4.2 [API Endpoints](#api-endpoints)  
 
 5. [Security](#5-security)  
 
@@ -70,12 +69,9 @@ The platform enables:
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | React.js, JavaScript |
+| Frontend | Blazor cshtml |
 | Backend | .NET Core MVC (C#) |
 | Database | SQL Server |
-| API | RESTful APIs (ASP.NET Core Web API) |
-| Authentication | ASP.NET Identity |
-| Deployment |  (TBD) |
 
 
 ---
@@ -147,7 +143,6 @@ Table: OrderItems
 - MenuItemID (FK)
 - Quantity
 ```
-
 
 ---
 
@@ -253,7 +248,7 @@ Table: MenuItemIngredients
 ## 4. Frontend Design
 
 
-### 4.1 Pages/Views (React.js):
+### 4.1 Pages/Views :
 - HomePage: Overview and links
 - ReservationPage: 50x50 grid w/ table picker
 - MenuPage: Menu items + filters
@@ -263,28 +258,11 @@ Table: MenuItemIngredients
 - Dashboard: Loyalty points, saved info
 - AdminPanel: Floorplan upload, inventory status
 
-
-### 4.2 APIs:
-RESTful services under `/api/*`
-- `/api/reservations`
-- `/api/menu`
-- `/api/orders`
-- `/api/inventory`
-- `/api/users`
-- `/api/auth`
-
-
 ---
-
 
 ## 5. Security
 
-
-- ASP.NET Identity for role-based auth
-- JWT tokens for API auth
 - Encrypted storage for saved payment info (simulation only)
-
-
 
 
 ---
@@ -295,10 +273,9 @@ RESTful services under `/api/*`
 
 ### Table Reservation Flow:
 ```
-User → React Grid UI → /api/reservations → SQL DB 
-→ Reservation table updated → WebSocket broadcast to other users
+User → Grid UI → SQL DB 
+→ Reservation table updated → update to other users
 ```
-
 
 ---
 
@@ -309,7 +286,7 @@ User → React Grid UI → /api/reservations → SQL DB
 | Test Type | Tools |
 |-----------|-------|
 | Unit Tests | xUnit (.NET) |
-| UI Testing | Cypress or Selenium |
+| UI Testing | Bunit, xUnit |
 | Manual QA | Admin/Customer test flows |
 
 
@@ -318,8 +295,6 @@ User → React Grid UI → /api/reservations → SQL DB
 
 ## 8. Deployment
 
-
-- GitHub Actions
 - Database seeding for test data
 
 
