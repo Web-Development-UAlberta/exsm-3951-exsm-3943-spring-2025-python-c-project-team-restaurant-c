@@ -69,7 +69,7 @@ The platform enables:
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | Blazor cshtml |
+| Frontend | Razor cshtml |
 | Backend | .NET Core MVC (C#) |
 | Database | SQL Server |
 
