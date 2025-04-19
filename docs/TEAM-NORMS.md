@@ -7,15 +7,15 @@
 
 ## Table of Contents
 
-1. [Communication & Collaboration Methods](#communication--collaboration-methods)  
-2. [Client Communication](#client-communication)  
-3. [Punctuality & Attendance](#punctuality--attendance)  
-4. [Meeting Coordination](#meeting-coordination)  
-5. [Workload & Expectations](#workload--expectations)  
-6. [Conflict Resolution](#conflict-resolution)  
-7. [Strike System](#strike-system)  
-8. [Member Removal Policy](#member-removal-policy)  
-9. [Agreement](#agreement)  
+1. [Communication & Collaboration Methods](#communication--collaboration-methods)
+2. [Client Communication](#client-communication)
+3. [Punctuality & Attendance](#punctuality--attendance)
+4. [Meeting Coordination](#meeting-coordination)
+5. [Workload & Expectations](#workload--expectations)
+6. [Conflict Resolution](#conflict-resolution)
+7. [Strike System](#strike-system)
+8. [Member Removal Policy](#member-removal-policy)
+9. [Agreement](#agreement)
 
 ---
 
@@ -81,6 +81,7 @@
 - If no consensus is reached, resolve by **majority vote**.
 
 ### Tiebreaker
+
 - For minor conflicts: propose win-win solutions.
 - If unresolved, settle with **rock-paper-scissors** (if appropriate).
 - Serious issues (e.g., harassment, policy violations) are escalated to program staff immediately and may result in removal.
@@ -94,6 +95,7 @@
 - **Three strikes = removal** from the group.
 
 ### Strike Examples:
+
 - Repeated, unnotified absences
 - Lack of meaningful contribution
 - Disrupting group harmony
@@ -118,5 +120,6 @@ By participating in this project, all members agree to uphold the policies, resp
 **Signatures:**  
 (Each team member will sign below to indicate agreement)
 
-- Arlyssa McArthur 
+- Arlyssa McArthur
 - Alexander Molzahn
+- Joshua Mantei
