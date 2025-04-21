@@ -1,46 +1,43 @@
 # Design Document
 
 ## Table of Contents
-
 1. [Overview](#1-overview)  
-  1.1 [Purpose](#11-purpose)  
-  1.2 [Scope](#12-scope)  
+   1.1 [Purpose](#11-purpose)  
+   1.2 [Scope](#12-scope)  
 
 2. [System Architecture](#2-system-architecture)  
-  2.1 [Tech Stack](#21-tech-stack)  
+   2.1 [Tech Stack](#21-tech-stack)  
+   2.2 [Entity-Relationship Diagram](#22-entity-relationship-diagram)  
 
 3. [System Components](#3-system-components)  
-  3.1 [Reservation System](#31-reservation-system)  
-    - [Features](#reservation-system-features)  
-    - [Database Schema](#reservation-system-database-schema)  
-  3.2 [Online Ordering System](#32-online-ordering-system)  
-    - [Features](#ordering-system-features)  
-    - [Database Schema](#ordering-system-database-schema)  
-  3.3 [Online Menus](#33-online-menus)  
-    - [Features](#online-menus-features)  
-    - [Database Schema](#online-menus-database-schema)  
-  3.4 [Loyalty Program & User Profiles](#34-loyalty-program--user-profiles)  
-    - [Features](#loyalty-program-features)  
-    - [Database Schema](#loyalty-program-database-schema)  
-  3.5 [Kitchen Portal](#35-kitchen-portal)  
-    - [Features](#kitchen-portal-features)  
-    - [Database Schema](#kitchen-portal-database-schema)  
-  3.6 [Checkout & Payments](#36-checkout--payments)  
-    - [Features](#checkout--payments-features)  
+   3.1 [Reservation System](#31-reservation-system)  
+       - [Features](#reservation-system-features)  
+   3.2 [Online Ordering System](#32-online-ordering-system)  
+       - [Features](#ordering-system-features)  
+   3.3 [Online Menus](#33-online-menus)  
+       - [Features](#online-menus-features)  
+   3.4 [Loyalty Program & User Profiles](#34-loyalty-program--user-profiles)  
+       - [Features](#loyalty-program-features)  
+   3.5 [Kitchen Portal](#35-kitchen-portal)  
+       - [Features](#kitchen-portal-features)  
+   3.6 [Checkout & Payments](#36-checkout--payments)  
+       - [Features](#checkout--payments-features)  
 
 4. [Frontend Design](#4-frontend-design)  
-  4.1 [Pages/Views](#pagesviews-react)  
+   4.1 [Pages/Views](#41-pagesviews)  
 
 5. [Security](#5-security)  
 
 6. [Data Flow Example](#6-data-flow-example)  
-  - [Table Reservation Flow](#table-reservation-flow)  
+   - [Table Reservation Flow](#table-reservation-flow)  
 
 7. [Testing Strategy](#7-testing-strategy)  
-  - [Types & Tools](#types--tools)  
+   - [Types & Tools](#types--tools)  
 
-8. [Deployment](#8-deployment)  
+8. [Deployment](#8-deployment)
+
 ---
+
 ## 1. Overview
 
 
@@ -49,14 +46,7 @@ To provide a complete technical design for building a web application that moder
 
 
 ### 1.2 Scope
-The platform enables:
-- Table reservations with floorplan selection 
-- Online food ordering for dine-in, pickup, or delivery 
-- Account creation with loyalty tracking 
-- Inventory-managed kitchen interface 
-- Integrated payment and menu systems
-- See SCOPE.md for full documentation
-
+[View Project Scope Document](./SCOPE.md)
 
 ---
 
@@ -73,6 +63,11 @@ The platform enables:
 | Backend | .NET Core MVC (C#) |
 | Database | SQL Server |
 
+### 2.2 Entity-Relationship Diagram  
+The following diagram outlines the database structure for the entire application:
+
+[View ERD Diagram](./ERD.drawio)  
+> *Note: The ERD includes schemas for Reservations, Orders, Users, Payments, Inventory, and more. Refer to this diagram when reviewing each system component.*
 
 ---
 
@@ -89,28 +84,6 @@ The platform enables:
 - Each location has its own plan
 - Real-time booking status
 
-
-#### Database:
-```sql
-Table: Tables
-- TableID (PK)
-- LocationID (FK)
-- PositionX
-- PositionY
-- SizeX
-- SizeY
-- Capacity
-
-
-Table: Reservations
-- ReservationID (PK)
-- TableID (FK)
-- UserID (FK)
-- DateTime
-- Status (Pending, Confirmed, Cancelled)
-```
-
-
 ---
 
 
@@ -123,27 +96,6 @@ Table: Reservations
 - Menu pulled dynamically from database
 - Pre-ordering and scheduling
 
-
-#### Database:
-```sql
-Table: Orders
-- OrderID (PK)
-- UserID (FK)
-- OrderType (Enum)
-- Status (Pending, Preparing, Completed, Cancelled)
-- ScheduledTime
-- TotalPrice
-- DeliveryFee
-- Address
-
-
-Table: OrderItems
-- OrderItemID (PK)
-- OrderID (FK)
-- MenuItemID (FK)
-- Quantity
-```
-
 ---
 
 
@@ -155,20 +107,6 @@ Table: OrderItems
 - Each item links to dietary info, availability, and pricing
 - Updated in real-time based on inventory
 
-
-#### Database:
-```sql
-Table: MenuItems
-- MenuItemID (PK)
-- Name
-- Description
-- Price
-- Category
-- IsAvailable (Bool)
-- ImageURL
-```
-
-
 ---
 
 
@@ -179,27 +117,6 @@ Table: MenuItems
 - Points system based on order history
 - Preferences stored per user (fav dishes, payment info)
 - Rewards and discount logic engine
-
-
-#### Database:
-```sql
-Table: Users
-- UserID (PK)
-- Email
-- PasswordHash
-- Phone
-- Address
-- SavedPaymentInfo
-- RewardPoints
-
-
-Table: UserPreferences
-- PreferenceID (PK)
-- UserID (FK)
-- FavoriteDish
-- DietaryNotes
-```
-
 
 ---
 
@@ -213,23 +130,6 @@ Table: UserPreferences
 - Inventory deductions as orders are made
 - Alerts when inventory is low
 
-
-#### Database:
-```sql
-Table: Ingredients
-- IngredientID (PK)
-- Name
-- QuantityAvailable
-- Unit
-
-
-Table: MenuItemIngredients
-- MenuItemID (FK)
-- IngredientID (FK)
-- QuantityNeeded
-```
-
-
 ---
 
 
@@ -240,7 +140,6 @@ Table: MenuItemIngredients
 - Simulated payment gateway integration
 - Cart interface with order summary
 - Multiple payment types (credit, debit, Apple/Google Pay)
-
 
 ---
 
@@ -295,7 +194,13 @@ User → Grid UI → SQL DB
 
 ## 8. Deployment
 
-- Database seeding for test data
+- Database seeding for test data:
+  - 5 sample users (admin, customer, kitchen staff)
+  - 20+ sample menu items across 3 categories
+  - 3 floorplan CSVs
+  - Sample reservation and order entries
+
 
 
 ---
+
