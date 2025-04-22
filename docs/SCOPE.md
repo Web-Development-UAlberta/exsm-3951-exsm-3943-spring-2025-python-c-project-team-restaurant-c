@@ -64,17 +64,6 @@ All transactions will be handled through the web portal with support for card pa
 
 ---
 
-### 3.3 Project Planning Reference Documents
-- [Example Scope of Work Project Planning 1.0 – Triad Resource Center](https://triadcentral.clu-in.org/tools/contracting/documents/sample_systematic_planning_advisor_sow.pdf)
-- [Example Markdown Proposal – JamesDLacroix](https://gist.github.com/jamesdlacroix/5a99eec3d11a5c745504)
-
----
-
-## 4.0 Qualifications
-The development team includes students from the Full-Stack Development program at the University of Alberta. Each team member has prior industry experience, including a professional graphic designer.
-
----
-
 ## 5.0 Timeline
 
 | Week | Tasks |
