@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" pages="8">
     <diagram name="Homepage" id="2cc2dc42-3aac-f2a9-1cec-7a8b7cbee084">
-        <mxGraphModel dx="2424" dy="2124" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="140" background="none" math="0" shadow="0">
+        <mxGraphModel dx="647" dy="1327" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="140" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -93,7 +93,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="jKSVlLMPVBb6-cc41A_m" name="MenuPage">
-        <mxGraphModel dx="965" dy="1526" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="120" math="0" shadow="0">
+        <mxGraphModel dx="-253" dy="1187" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="120" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -526,7 +526,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="E-z30H7KrzAFG70qOk4Z" name="Login/RegisterPage">
-        <mxGraphModel dx="-530" dy="1653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="-1903" dy="1187" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
