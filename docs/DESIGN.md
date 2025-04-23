@@ -185,7 +185,7 @@ User → Grid UI → SQL DB
 | Test Type | Tools |
 |-----------|-------|
 | Unit Tests | xUnit (.NET) |
-| UI Testing | Bunit, xUnit |
+| UI Testing | xUnit |
 | Manual QA | Admin/Customer test flows |
 
 
@@ -195,7 +195,7 @@ User → Grid UI → SQL DB
 ## 8. Deployment
 
 - Database seeding for test data:
-  - 5 sample users (admin, customer, kitchen staff)
+  - 5 sample users (admin, customer)
   - 20+ sample menu items across 3 categories
   - 3 floorplan CSVs
   - Sample reservation and order entries
