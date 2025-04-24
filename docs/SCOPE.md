@@ -33,36 +33,35 @@ All transactions will be handled through the web portal with support for card pa
 
 ### 3.2 Deliverables
 
-#### **Table Reservation GUI**
-- 50x50 grid floor plan  
-- Interactable table selection  
-- Real-time updates to prevent double bookings  
-
 #### **Online Ordering**
 - Registered users may pre-order for dine-in, takeout, or delivery  
-- Items dynamically updated based on availability  
-- Delivery fees calculated based on proximity to the restaurant  
 
 #### **Online Menus**
 - Accessible to both registered and non-registered users  
-- Menu dynamically updates based on item availability  
 
 #### **Loyalty Program**
 - Registered users earn rewards based on spending  
-- Discounts available for returning customers  
-- User preferences (payment info, address, favorite dishes, etc.) will be stored  
+- User preferences (payment info, address, dietary notes, favorite dishes, etc.) will be stored  
 
 #### **Order Checkout**
-- Accepts all payment types (cards, mobile wallets, etc.)  
-- Detailed receipt of items and price totals  
-- Additional delivery information included (expected delivery time, address, etc.)  
+- Accepts card payment type
+- Detailed receipt of items and price totals
+- Specific notes to orders   
+- Additional delivery information included (address, etc.)  
 
 #### **Kitchen Portal**
 - Kitchen staff notified when new orders are placed  
 - Orders include order type (pre-order, ASAP, or delivery)  
-- Ingredient inventory tracked based on orders  
 
 ---
+
+## 4.0 Out of Scope
+- Real-time update to prevent double booking
+- Items dynamically updated based on availability
+- Delivery Fees calculated based on proximity
+- Discounts for returning customers
+- Ingredient inventory tracked based on orders
+- Table Reservation GUI
 
 ## 5.0 Timeline
 
