@@ -31,7 +31,7 @@ All transactions will be handled through the web portal with support for card pa
 
 ---
 
-### 3.2 Deliverables
+### 3.2 Deliverables (In-Scope)
 
 #### **Online Ordering**
 - Registered users may pre-order for dine-in, takeout, or delivery  
@@ -69,7 +69,7 @@ All transactions will be handled through the web portal with support for card pa
 |------|-------|
 | **Week 1** | Documentation Reviewed |
 | **Week 2** | Documentation Finalized |
-| **Week 3** | Table Reservation GUI / Online Menus |
+| **Week 3** | Table Reservation / Online Menus |
 | **Week 4** | Ordering Systems / Payment Processing |
 | **Week 5** | First Release Candidate / Kitchen Portal |
 | **Week 6** | Final Release |
