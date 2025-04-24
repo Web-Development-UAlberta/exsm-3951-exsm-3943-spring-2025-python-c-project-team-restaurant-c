@@ -79,10 +79,9 @@ The following diagram outlines the database structure for the entire application
 
 
 #### Features:
-- (Out of Scope) GUI reservation interface (e.g., 50x50 grid floor plan) has been deferred for future development.
-- Table layouts pulled from CSV files
-- Each location has its own plan
 - Basic reservation handling supported (date/time, table ID, customer info), but no real-time booking conflict detection is included in this phase.
+- (Out of Scope) GUI reservation interface (e.g., 50x50 grid floor plan) has been deferred for future development.
+- (Out of Scope) Table layouts pulled from CSV files
 
 ---
 
@@ -93,7 +92,7 @@ The following diagram outlines the database structure for the entire application
 #### Features:
 - User login to view 
 - Dine-in, Pickup, and Delivery options
-- Flat delivery fee applied (no proximity-based calculations in this version)
+- Flat delivery fee applied (no proximity-based calculations in this phase)
 - Menu pulled from database
 - Pre-ordering and scheduling
 > *Note: Distance-based delivery fees are excluded per project scope and may be implemented in a future release.*
@@ -117,7 +116,7 @@ The following diagram outlines the database structure for the entire application
 #### Features:
 - Points system based on order history
 - Preferences stored per user (fav dishes, payment info)
-- Discount or redemption engine not implemented in this version
+- (Out of Scope) Discount or redemption engine
 > *Note: Users accumulate points, but rewards or automatic discounts are excluded from initial release.*
 ---
 
@@ -129,8 +128,8 @@ The following diagram outlines the database structure for the entire application
 - Admin can login to kitchen portal
 - Order queue (filtered by order type)
 - Itemized breakdown per order
-- Ingredient inventory tracking is not integrated with order processing in this phase
-- Admin can edit menu (out of scope)
+- (Out of Scope) Ingredient inventory tracking integration with order processing
+- (Out of Scope) Admin can edit menu
 -  
 
 ---
@@ -143,7 +142,7 @@ The following diagram outlines the database structure for the entire application
 - Simulated payment gateway integration
 - Cart interface with order summary
 - Card payment types (credit, debit)
-
+> *Note: All payment processing is simulated in this phase.*
 ---
 
 
@@ -200,7 +199,6 @@ User → Reservation Form → SQL DB
 - Database seeding for test data:
   - 5 sample users (admin, customer)
   - 20+ sample menu items across 3 categories
-  - 3 floorplan CSVs
   - Sample reservation and order entries
 
 
