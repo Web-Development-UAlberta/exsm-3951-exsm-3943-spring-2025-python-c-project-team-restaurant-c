@@ -10,7 +10,7 @@ This document outlines the test plan for the restaurant web platform project. Th
 
 | Component | Success Condition | Error Conditions |
 |----------|--------------------|------------------|
-Reservation | Prevents double-booking via table_id, date, and time. | Foreign key mismatch (customer_id, table_id).
+Reservation | Prevents max-capacity via location, date, and time. | Exceeds max capacity for location.
 Order | Links valid customer_id, order_id, orderstatus, orderitems. | Missing payment method, delivery fee invalid.
 MenuItem | Properly links to category, isAvailable, and price. | Missing category, no price, or invalid availability.
 Customer | Enforces unique email and username. | Duplicate emails or usernames.
