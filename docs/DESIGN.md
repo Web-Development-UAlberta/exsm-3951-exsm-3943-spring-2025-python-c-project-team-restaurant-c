@@ -79,10 +79,10 @@ The following diagram outlines the database structure for the entire application
 
 
 #### Features:
-- Interactive 50x50 grid floor plan UI
+- (Out of Scope) GUI reservation interface (e.g., 50x50 grid floor plan) has been deferred for future development.
 - Table layouts pulled from CSV files
 - Each location has its own plan
-- Real-time booking status
+- Basic reservation handling supported (date/time, table ID, customer info), but no real-time booking conflict detection is included in this phase.
 
 ---
 
@@ -91,11 +91,12 @@ The following diagram outlines the database structure for the entire application
 
 
 #### Features:
+- User login to view 
 - Dine-in, Pickup, and Delivery options
-- Delivery fee calculation using distance API (e.g., Google Maps Distance Matrix)
-- Menu pulled dynamically from database
+- Flat delivery fee applied (no proximity-based calculations in this version)
+- Menu pulled from database
 - Pre-ordering and scheduling
-
+> *Note: Distance-based delivery fees are excluded per project scope and may be implemented in a future release.*
 ---
 
 
@@ -105,8 +106,8 @@ The following diagram outlines the database structure for the entire application
 #### Features:
 - Menu browsable without login
 - Each item links to dietary info, availability, and pricing
-- Updated in real-time based on inventory
-
+- Menu updates are performed manually by the admin; real-time availability updates are not supported in this phase.
+> *Note: Dynamic updates tied to inventory levels are outside the current scope.*
 ---
 
 
@@ -116,8 +117,8 @@ The following diagram outlines the database structure for the entire application
 #### Features:
 - Points system based on order history
 - Preferences stored per user (fav dishes, payment info)
-- Rewards and discount logic engine
-
+- Discount or redemption engine not implemented in this version
+> *Note: Users accumulate points, but rewards or automatic discounts are excluded from initial release.*
 ---
 
 
@@ -125,10 +126,12 @@ The following diagram outlines the database structure for the entire application
 
 
 #### Features:
+- Admin can login to kitchen portal
 - Order queue (filtered by order type)
 - Itemized breakdown per order
-- Inventory deductions as orders are made
-- Alerts when inventory is low
+- Ingredient inventory tracking is not integrated with order processing in this phase
+- Admin can edit menu (out of scope)
+-  
 
 ---
 
@@ -139,7 +142,7 @@ The following diagram outlines the database structure for the entire application
 #### Features:
 - Simulated payment gateway integration
 - Cart interface with order summary
-- Multiple payment types (credit, debit, Apple/Google Pay)
+- Card payment types (credit, debit)
 
 ---
 
@@ -149,13 +152,13 @@ The following diagram outlines the database structure for the entire application
 
 ### 4.1 Pages/Views :
 - HomePage: Overview and links
-- ReservationPage: 50x50 grid w/ table picker
+- ReservationPage: Reservation Form
 - MenuPage: Menu items + filters
 - OrderPage: Cart + order type
 - CheckoutPage: Payment & summary
 - Login/RegisterPage: Auth flow
-- Dashboard: Loyalty points, saved info
-- AdminPanel: Floorplan upload, inventory status
+- Dashboard: Loyalty points, saved user info
+- AdminPanel: Kitchen Portal, Order Queue table
 
 ---
 
@@ -172,10 +175,10 @@ The following diagram outlines the database structure for the entire application
 
 ### Table Reservation Flow:
 ```
-User → Grid UI → SQL DB 
-→ Reservation table updated → update to other users
+User → Reservation Form → SQL DB 
+→ Reservation entry created (manual validation only)
 ```
-
+> *Note: No real-time updates for preventing double bookings; handled via manual processes or future phase logic.*
 ---
 
 
