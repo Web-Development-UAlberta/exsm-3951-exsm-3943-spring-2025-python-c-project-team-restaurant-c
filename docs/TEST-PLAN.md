@@ -14,7 +14,6 @@ Reservation | Prevents max-capacity via location, date, and time. | Exceeds max 
 Order | Links valid customer_id, order_id, orderstatus, orderitems. | Missing payment method, delivery fee invalid.
 MenuItem | Properly links to category, isAvailable, and price. | Missing category, no price, or invalid availability.
 Customer | Enforces unique email and username. | Duplicate emails or usernames.
-UserAddress | Complete address info tied to a valid customer_id. | Null fields or broken foreign key link.
 PaymentMethod | Includes valid card, type, and security code. | Expired or insecure data (test mode).
 
 ---
@@ -46,7 +45,6 @@ add_payment_method | Saves PaymentMethod for checkout (simulation mode). | Missi
 /reservation | Allows Reservation input | Overlapping bookings, invalid date/time, form errors
 /checkout | Shows order summary, uses saved UserAddress and PaymentMethod if available | Missing fields, invalid card info, address not linked to customer
 /dashboard | Loads Customer profile, rewardpoints, saved UserAddress and preferences | Expired session: redirect to /login, data loading errors
-/kitchen | Displays current Order queue, sorted by ordertype | Empty queue, backend sync delay
 
 ---
 
