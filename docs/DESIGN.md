@@ -34,8 +34,6 @@
 7. [Testing Strategy](#7-testing-strategy)  
    - [Types & Tools](#types--tools)  
 
-8. [Deployment](#8-deployment)
-
 ---
 
 ## 1. Overview
@@ -183,25 +181,16 @@ User → Reservation Form → SQL DB
 
 ## 7. Testing Strategy
 
+- Database seeding for test data:
+  - 5 sample users (admin, customer)
+  - 20+ sample menu items across 3 categories
+  - Sample reservation and order entries
 
 | Test Type | Tools |
 |-----------|-------|
 | Unit Tests | xUnit (.NET) |
 | UI Testing | xUnit |
 | Manual QA | Admin/Customer test flows |
-
-
----
-
-
-## 8. Deployment
-
-- Database seeding for test data:
-  - 5 sample users (admin, customer)
-  - 20+ sample menu items across 3 categories
-  - Sample reservation and order entries
-
-
 
 ---
 
