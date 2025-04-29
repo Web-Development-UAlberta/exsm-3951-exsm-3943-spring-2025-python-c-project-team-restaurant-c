@@ -2,7 +2,38 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero bg-light text-dark d-flex align-items-center" style="min-height: 70vh;">
+    <div class="container">
+        <h1>harvest & hearth<br />farm to table</h1>
+        <a asp-controller="Home" asp-action="Menu" class="btn btn-primary mt-3">View Menu</a>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <img src="~/images/feature1.jpg" class="img-fluid" alt="Feature 1" />
+        </div>
+        <div class="col-md-6">
+            <h5>Harvest & Hearth</h5>
+            <p>At Harvest & Hearth, we're passionate about bringing the flavors of Alberta to your table. Nestled in
+                downtown Edmonton, our modern Canadian bistro focuses on fresh, local ingredients, creating a dining
+                experience that's as sustainable as it is unforgettable. Whether you're an urban professional, a food
+                enthusiast, or someone who cares about sustainability, we're delighted to share our carefully crafted
+                menu with you.</p>
+        </div>
+    </div>
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6 order-md-2">
+            <img src="~/images/feature2.jpg" class="img-fluid" alt="Feature 2" />
+        </div>
+        <div class="col-md-6 order-md-1">
+            <h5>**Sed ut perspiciatis unde omnis**</h5>
+            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia...</p>
+        </div>
+    </div>
+</section>
+
+<section class="hero-footer bg-light" style="min-height: 40vh;">
+
+</section>

@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets/favicon.ico"
     },
     {
+      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/harvest_hearth_logo_hip_final.svg",
+      "PackagePath": "staticwebassets/images/harvest_hearth_logo_hip_final.svg"
+    },
+    {
       "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/js/site.js",
       "PackagePath": "staticwebassets/js/site.js"
     },
