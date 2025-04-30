@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RestaurantManager.Models;
+using RestaurantManager.Data;
 
 #nullable disable
 
 namespace RestaurantManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250430032821_InitialCreate")]
+    [Migration("20250430193831_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -216,101 +216,50 @@ namespace RestaurantManager.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RestaurantManager.Models.Customer", b =>
-                {
-                    b.Property<int>("CustomerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("DietaryNotes")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PasswordSalt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("RewardsActive")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RewardsPoints")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("CustomerId");
-
-                    b.ToTable("Customers");
-                });
-
             modelBuilder.Entity("RestaurantManager.Models.DietaryTag", b =>
                 {
-                    b.Property<int>("TagId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("name");
 
-                    b.HasKey("TagId");
+                    b.HasKey("Id");
 
                     b.ToTable("DietaryTags");
                 });
 
-            modelBuilder.Entity("RestaurantManager.Models.Employee", b =>
-                {
-                    b.Property<int>("EmployeeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PasswordSalt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("EmployeeId");
-
-                    b.ToTable("Employees");
-                });
-
             modelBuilder.Entity("RestaurantManager.Models.MenuItem", b =>
                 {
-                    b.Property<int>("MenuItemId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
 
                     b.Property<string>("Category")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("category");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("description");
 
                     b.Property<bool>("IsAvailable")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("is_available");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("name");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("price");
 
-                    b.HasKey("MenuItemId");
+                    b.HasKey("Id");
 
                     b.ToTable("MenuItems");
                 });
@@ -334,51 +283,66 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.Order", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
 
                     b.Property<int?>("AddressId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("address_id");
 
                     b.Property<decimal?>("DeliveryFee")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("delivery_fee");
 
                     b.Property<string>("DeliveryInstructions")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("delivery_instructions");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("notes");
 
                     b.Property<string>("OrderType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("order_type");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("price");
 
                     b.Property<int>("ReservationId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("reservation_id");
 
                     b.Property<DateTime?>("ScheduledTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("scheduled_time");
 
                     b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("status");
 
                     b.Property<decimal?>("TipAmount")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("tip_amount");
 
                     b.Property<decimal?>("TotalAmount")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("total_amount");
 
-                    b.HasKey("OrderId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("ReservationId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -405,115 +369,183 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.PaymentMethod", b =>
                 {
-                    b.Property<int>("PaymentMethodId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
 
                     b.Property<string>("CardNumber")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("card_number");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("expiry_date");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("name");
 
                     b.Property<string>("PostalCode")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("postal_code");
 
                     b.Property<string>("Type")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("type");
 
-                    b.HasKey("PaymentMethodId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("user_id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasKey("Id");
 
-                    b.ToTable("PaymentMethods");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("payment_method");
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.Reservation", b =>
                 {
-                    b.Property<int>("ReservationId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("created_at");
 
                     b.Property<int>("GuestCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("guest_count");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("notes");
 
                     b.Property<DateTime>("ReservationDateTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("reservation_datetime");
 
                     b.Property<string>("Status")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("status");
 
                     b.Property<int?>("TableNumber")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("table_number");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("updated_at");
 
-                    b.HasKey("ReservationId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("user_id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("OrderId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("reservation");
+                });
+
+            modelBuilder.Entity("RestaurantManager.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<string>("DietaryNotes")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("dietary_notes");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("email");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("last_name");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("PasswordSalt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("password_salt");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("phone");
+
+                    b.Property<int>("RewardsPoints")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("rewards_points");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("role");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("user");
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.UserAddress", b =>
                 {
-                    b.Property<int>("AddressId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
 
                     b.Property<string>("AddressLine1")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("address_line_1");
 
                     b.Property<string>("AddressLine2")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("address_line_2");
 
                     b.Property<string>("City")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("city");
 
                     b.Property<string>("Country")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("country");
 
                     b.Property<string>("PostalCode")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("postal_code");
 
                     b.Property<string>("Province")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("province");
 
-                    b.HasKey("AddressId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("user_id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasKey("Id");
 
-                    b.ToTable("UserAddresses");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("user_address");
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.UserDietaryTag", b =>
                 {
-                    b.Property<int>("CustomerId")
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER")
                         .HasColumnOrder(0);
 
@@ -521,7 +553,7 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnOrder(1);
 
-                    b.HasKey("CustomerId", "TagId");
+                    b.HasKey("UserId", "TagId");
 
                     b.HasIndex("TagId");
 
@@ -600,19 +632,27 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.Order", b =>
                 {
-                    b.HasOne("RestaurantManager.Models.UserAddress", "Address")
+                    b.HasOne("RestaurantManager.Models.UserAddress", "UserAddress")
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("RestaurantManager.Models.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
+                    b.HasOne("RestaurantManager.Models.Reservation", "Reservation")
+                        .WithMany()
+                        .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
+                    b.HasOne("RestaurantManager.Models.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("Reservation");
+
+                    b.Navigation("User");
+
+                    b.Navigation("UserAddress");
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.OrderMenuItem", b =>
@@ -636,75 +676,54 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.PaymentMethod", b =>
                 {
-                    b.HasOne("RestaurantManager.Models.Customer", "Customer")
+                    b.HasOne("RestaurantManager.Models.User", "User")
                         .WithMany("PaymentMethods")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.Reservation", b =>
                 {
-                    b.HasOne("RestaurantManager.Models.Customer", "Customer")
+                    b.HasOne("RestaurantManager.Models.User", "User")
                         .WithMany("Reservations")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RestaurantManager.Models.Order", "Order")
-                        .WithOne("Reservation")
-                        .HasForeignKey("RestaurantManager.Models.Reservation", "OrderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Order");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.UserAddress", b =>
                 {
-                    b.HasOne("RestaurantManager.Models.Customer", "Customer")
+                    b.HasOne("RestaurantManager.Models.User", "User")
                         .WithMany("UserAddresses")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.UserDietaryTag", b =>
                 {
-                    b.HasOne("RestaurantManager.Models.Customer", "Customer")
-                        .WithMany("UserDietaryTags")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
                         .WithMany("UserDietaryTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.HasOne("RestaurantManager.Models.User", "User")
+                        .WithMany("UserDietaryTags")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DietaryTag");
-                });
 
-            modelBuilder.Entity("RestaurantManager.Models.Customer", b =>
-                {
-                    b.Navigation("Orders");
-
-                    b.Navigation("PaymentMethods");
-
-                    b.Navigation("Reservations");
-
-                    b.Navigation("UserAddresses");
-
-                    b.Navigation("UserDietaryTags");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.DietaryTag", b =>
@@ -724,8 +743,19 @@ namespace RestaurantManager.Data.Migrations
             modelBuilder.Entity("RestaurantManager.Models.Order", b =>
                 {
                     b.Navigation("OrderMenuItems");
+                });
 
-                    b.Navigation("Reservation");
+            modelBuilder.Entity("RestaurantManager.Models.User", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("PaymentMethods");
+
+                    b.Navigation("Reservations");
+
+                    b.Navigation("UserAddresses");
+
+                    b.Navigation("UserDietaryTags");
                 });
 #pragma warning restore 612, 618
         }

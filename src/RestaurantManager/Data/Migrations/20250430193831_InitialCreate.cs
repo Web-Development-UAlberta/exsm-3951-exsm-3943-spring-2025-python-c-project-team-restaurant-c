@@ -51,69 +51,54 @@ namespace RestaurantManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
-                {
-                    CustomerId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Username = table.Column<string>(type: "TEXT", nullable: true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    Phone = table.Column<string>(type: "TEXT", nullable: true),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    PasswordSalt = table.Column<string>(type: "TEXT", nullable: true),
-                    RewardsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    RewardsPoints = table.Column<int>(type: "INTEGER", nullable: false),
-                    DietaryNotes = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.CustomerId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DietaryTags",
                 columns: table => new
                 {
-                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    name = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DietaryTags", x => x.TagId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Employees",
-                columns: table => new
-                {
-                    EmployeeId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Username = table.Column<string>(type: "TEXT", nullable: true),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    PasswordSalt = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Employees", x => x.EmployeeId);
+                    table.PrimaryKey("PK_DietaryTags", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "MenuItems",
                 columns: table => new
                 {
-                    MenuItemId = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Category = table.Column<string>(type: "TEXT", nullable: true),
-                    IsAvailable = table.Column<bool>(type: "INTEGER", nullable: false)
+                    name = table.Column<string>(type: "TEXT", nullable: true),
+                    description = table.Column<string>(type: "TEXT", nullable: true),
+                    price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    category = table.Column<string>(type: "TEXT", nullable: true),
+                    is_available = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuItems", x => x.MenuItemId);
+                    table.PrimaryKey("PK_MenuItems", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "user",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    first_name = table.Column<string>(type: "TEXT", nullable: false),
+                    last_name = table.Column<string>(type: "TEXT", nullable: false),
+                    email = table.Column<string>(type: "TEXT", nullable: true),
+                    phone = table.Column<string>(type: "TEXT", nullable: true),
+                    password_hash = table.Column<string>(type: "TEXT", nullable: true),
+                    password_salt = table.Column<string>(type: "TEXT", nullable: true),
+                    rewards_points = table.Column<int>(type: "INTEGER", nullable: false),
+                    dietary_notes = table.Column<string>(type: "TEXT", nullable: true),
+                    role = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,79 +208,6 @@ namespace RestaurantManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentMethods",
-                columns: table => new
-                {
-                    PaymentMethodId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CustomerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Type = table.Column<string>(type: "TEXT", nullable: true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    CardNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    ExpiryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PostalCode = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PaymentMethods", x => x.PaymentMethodId);
-                    table.ForeignKey(
-                        name: "FK_PaymentMethods_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserAddresses",
-                columns: table => new
-                {
-                    AddressId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CustomerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AddressLine1 = table.Column<string>(type: "TEXT", nullable: true),
-                    AddressLine2 = table.Column<string>(type: "TEXT", nullable: true),
-                    City = table.Column<string>(type: "TEXT", nullable: true),
-                    Province = table.Column<string>(type: "TEXT", nullable: true),
-                    PostalCode = table.Column<string>(type: "TEXT", nullable: true),
-                    Country = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserAddresses", x => x.AddressId);
-                    table.ForeignKey(
-                        name: "FK_UserAddresses_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserDietaryTags",
-                columns: table => new
-                {
-                    CustomerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserDietaryTags", x => new { x.CustomerId, x.TagId });
-                    table.ForeignKey(
-                        name: "FK_UserDietaryTags_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserDietaryTags_DietaryTags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "DietaryTags",
-                        principalColumn: "TagId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MenuItemDietaryTags",
                 columns: table => new
                 {
@@ -309,13 +221,112 @@ namespace RestaurantManager.Data.Migrations
                         name: "FK_MenuItemDietaryTags_DietaryTags_TagId",
                         column: x => x.TagId,
                         principalTable: "DietaryTags",
-                        principalColumn: "TagId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MenuItemDietaryTags_MenuItems_MenuItemId",
                         column: x => x.MenuItemId,
                         principalTable: "MenuItems",
-                        principalColumn: "MenuItemId",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "payment_method",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    user_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    type = table.Column<string>(type: "TEXT", nullable: true),
+                    name = table.Column<string>(type: "TEXT", nullable: true),
+                    card_number = table.Column<string>(type: "TEXT", nullable: true),
+                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    postal_code = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_payment_method", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_payment_method_user_user_id",
+                        column: x => x.user_id,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "reservation",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    user_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    reservation_datetime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    guest_count = table.Column<int>(type: "INTEGER", nullable: false),
+                    notes = table.Column<string>(type: "TEXT", nullable: true),
+                    status = table.Column<string>(type: "TEXT", nullable: true),
+                    table_number = table.Column<int>(type: "INTEGER", nullable: true),
+                    created_at = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_reservation", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_reservation_user_user_id",
+                        column: x => x.user_id,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "user_address",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    user_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    address_line_1 = table.Column<string>(type: "TEXT", nullable: true),
+                    address_line_2 = table.Column<string>(type: "TEXT", nullable: true),
+                    city = table.Column<string>(type: "TEXT", nullable: true),
+                    province = table.Column<string>(type: "TEXT", nullable: true),
+                    postal_code = table.Column<string>(type: "TEXT", nullable: true),
+                    country = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user_address", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_user_address_user_user_id",
+                        column: x => x.user_id,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserDietaryTags",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserDietaryTags", x => new { x.UserId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_UserDietaryTags_DietaryTags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "DietaryTags",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserDietaryTags_user_UserId",
+                        column: x => x.UserId,
+                        principalTable: "user",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -323,35 +334,41 @@ namespace RestaurantManager.Data.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    OrderId = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CustomerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ReservationId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AddressId = table.Column<int>(type: "INTEGER", nullable: true),
-                    OrderType = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    TipAmount = table.Column<decimal>(type: "TEXT", nullable: true),
-                    TotalAmount = table.Column<decimal>(type: "TEXT", nullable: true),
-                    Notes = table.Column<string>(type: "TEXT", nullable: true),
-                    DeliveryFee = table.Column<decimal>(type: "TEXT", nullable: true),
-                    DeliveryInstructions = table.Column<string>(type: "TEXT", nullable: true),
-                    ScheduledTime = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    user_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    reservation_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    address_id = table.Column<int>(type: "INTEGER", nullable: true),
+                    order_type = table.Column<string>(type: "TEXT", nullable: true),
+                    status = table.Column<string>(type: "TEXT", nullable: true),
+                    price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    tip_amount = table.Column<decimal>(type: "TEXT", nullable: true),
+                    total_amount = table.Column<decimal>(type: "TEXT", nullable: true),
+                    notes = table.Column<string>(type: "TEXT", nullable: true),
+                    delivery_fee = table.Column<decimal>(type: "TEXT", nullable: true),
+                    delivery_instructions = table.Column<string>(type: "TEXT", nullable: true),
+                    scheduled_time = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.OrderId);
+                    table.PrimaryKey("PK_Orders", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Orders_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerId",
+                        name: "FK_Orders_reservation_reservation_id",
+                        column: x => x.reservation_id,
+                        principalTable: "reservation",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_UserAddresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "UserAddresses",
-                        principalColumn: "AddressId");
+                        name: "FK_Orders_user_address_address_id",
+                        column: x => x.address_id,
+                        principalTable: "user_address",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_Orders_user_user_id",
+                        column: x => x.user_id,
+                        principalTable: "user",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -369,47 +386,14 @@ namespace RestaurantManager.Data.Migrations
                         name: "FK_OrderMenuItems_MenuItems_MenuItemId",
                         column: x => x.MenuItemId,
                         principalTable: "MenuItems",
-                        principalColumn: "MenuItemId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OrderMenuItems_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "OrderId",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reservations",
-                columns: table => new
-                {
-                    ReservationId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    CustomerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrderId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ReservationDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    GuestCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    Notes = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<string>(type: "TEXT", nullable: true),
-                    TableNumber = table.Column<int>(type: "INTEGER", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reservations", x => x.ReservationId);
-                    table.ForeignKey(
-                        name: "FK_Reservations_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reservations_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -460,35 +444,34 @@ namespace RestaurantManager.Data.Migrations
                 column: "MenuItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_AddressId",
+                name: "IX_Orders_address_id",
                 table: "Orders",
-                column: "AddressId");
+                column: "address_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerId",
+                name: "IX_Orders_reservation_id",
                 table: "Orders",
-                column: "CustomerId");
+                column: "reservation_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentMethods_CustomerId",
-                table: "PaymentMethods",
-                column: "CustomerId");
+                name: "IX_Orders_user_id",
+                table: "Orders",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_CustomerId",
-                table: "Reservations",
-                column: "CustomerId");
+                name: "IX_payment_method_user_id",
+                table: "payment_method",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_OrderId",
-                table: "Reservations",
-                column: "OrderId",
-                unique: true);
+                name: "IX_reservation_user_id",
+                table: "reservation",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAddresses_CustomerId",
-                table: "UserAddresses",
-                column: "CustomerId");
+                name: "IX_user_address_user_id",
+                table: "user_address",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserDietaryTags_TagId",
@@ -515,19 +498,13 @@ namespace RestaurantManager.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Employees");
-
-            migrationBuilder.DropTable(
                 name: "MenuItemDietaryTags");
 
             migrationBuilder.DropTable(
                 name: "OrderMenuItems");
 
             migrationBuilder.DropTable(
-                name: "PaymentMethods");
-
-            migrationBuilder.DropTable(
-                name: "Reservations");
+                name: "payment_method");
 
             migrationBuilder.DropTable(
                 name: "UserDietaryTags");
@@ -548,10 +525,13 @@ namespace RestaurantManager.Data.Migrations
                 name: "DietaryTags");
 
             migrationBuilder.DropTable(
-                name: "UserAddresses");
+                name: "reservation");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "user_address");
+
+            migrationBuilder.DropTable(
+                name: "user");
         }
     }
 }
