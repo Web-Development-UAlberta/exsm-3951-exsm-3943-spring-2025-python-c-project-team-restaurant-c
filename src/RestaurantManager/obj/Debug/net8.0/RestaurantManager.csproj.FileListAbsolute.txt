@@ -305,3 +305,4 @@ C:/Users/A/Documents/VS Code/EXSM 3943 LEC SP1 - Spring 2025 - C# Project/exsm-3
 /Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/obj/Debug/net8.0/RestaurantManager.pdb
 /Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/obj/Debug/net8.0/RestaurantManager.genruntimeconfig.cache
 /Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/obj/Debug/net8.0/ref/RestaurantManager.dll
+/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/bin/Debug/net8.0/RestaurantManager.db

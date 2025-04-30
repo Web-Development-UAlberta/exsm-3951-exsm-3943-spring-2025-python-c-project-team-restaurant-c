@@ -1,0 +1,41 @@
+@model IEnumerable<MenuItem>
+
+@{
+    ViewBag.Title = "Menu";
+}
+
+<div class="container">
+    <header>
+        <h2>We Offer Delivery, Pickup<br />& In Restaurant Dinning</h2>
+    </header>
+
+    <section class="banner">
+
+    </section>
+
+    <aside>
+        <h4>Menu</h4>
+        <ul>
+            <li><a href="#">Menu Label</a></li>
+            <li><a href="#">Menu Label</a></li>
+            <li><a href="#">Menu Label</a></li>
+        </ul>
+        <div>
+            <p><span>⭐</span> Vegetarian</p>
+            <p><span>⭐</span> Gluten Free</p>
+        </div>
+    </aside>
+
+    <main>
+        <div class="menu-items">
+            @foreach (var item in Model)
+            {
+                <div class="menu-item">
+                    <h3>@item.Name</h3>
+                    <p>@item.Description</p>
+                    <p>Price: $@item.Price</p>
+                    <p>Category: @item.Category</p>
+                </div>
+            }
+    </main>
+</div>

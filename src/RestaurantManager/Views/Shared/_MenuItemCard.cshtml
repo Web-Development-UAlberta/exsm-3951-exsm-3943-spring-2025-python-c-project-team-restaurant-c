@@ -1,0 +1,20 @@
+@model MenuItem
+
+<div class="menu-card">
+    <h4>@Model.Name</h4>
+    <p>@Model.Description</p>
+    <p class="price">$@Model.Price.ToString("F2")</p>
+
+    @if (Model.MenuItemDietaryTags != null && Model.MenuItemDietaryTags.Any())
+    {
+        <p class="dietary-tags">
+            @foreach (var tagLink in Model.MenuItemDietaryTags)
+            {
+                if (tagLink.DietaryTag != null)
+                {
+                    <span class="tag">@tagLink.DietaryTag.Name</span>
+                }
+            }
+        </p>
+    }
+</div>

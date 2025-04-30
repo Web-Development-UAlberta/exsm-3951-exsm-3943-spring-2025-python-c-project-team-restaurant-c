@@ -27,11 +27,37 @@ public class ApplicationDbContext : IdentityDbContext
     modelBuilder.Entity<UserDietaryTag>()
         .HasKey(udt => new { udt.UserId, udt.TagId });
 
-    modelBuilder.Entity<MenuItemDietaryTag>()
-        .HasKey(mdt => new { mdt.MenuItemId, mdt.TagId });
+    // Seed MenuItems
+    modelBuilder.Entity<MenuItem>().HasData(
+        new MenuItem { Id = 1, Name = "Vegan Pizza", Description = "A delicious vegan pizza with gluten-free crust.", Price = 12.99M },
+        new MenuItem { Id = 2, Name = "Chicken Wrap", Description = "A tasty chicken wrap with fresh vegetables.", Price = 9.99M },
+        new MenuItem { Id = 3, Name = "Caesar Salad", Description = "A classic Caesar salad with creamy dressing.", Price = 7.99M }
+    );
 
-    modelBuilder.Entity<OrderMenuItem>()
-        .HasKey(omi => new { omi.OrderId, omi.MenuItemId });
+    // Seed DietaryTags
+    modelBuilder.Entity<DietaryTag>().HasData(
+        new DietaryTag { Id = 1, Name = "Vegan" },
+        new DietaryTag { Id = 2, Name = "Gluten-Free" },
+        new DietaryTag { Id = 3, Name = "Dairy-Free" }
+    );
+
+    // Seed MenuItemDietaryTags
+    modelBuilder.Entity<MenuItemDietaryTag>(entity =>
+    {
+      entity.HasKey(m => new { m.MenuItemId, m.TagId });
+      entity.HasData(
+        new MenuItemDietaryTag { MenuItemId = 1, TagId = 1 },
+        new MenuItemDietaryTag { MenuItemId = 1, TagId = 2 },
+        new MenuItemDietaryTag { MenuItemId = 2, TagId = 3 }
+        );
+    });
+
+    // Seed OrderMenuItems (Example Order data)
+    modelBuilder.Entity<OrderMenuItem>(entity =>
+    {
+      entity.HasKey(omi => new { omi.OrderId, omi.MenuItemId });
+    });
+
 
     base.OnModelCreating(modelBuilder);
   }

@@ -98,3 +98,7 @@ h6 {
 .navbar {
   border: none;
 }
+
+.navbar-toggler {
+  color: var(--forest-green);
+}

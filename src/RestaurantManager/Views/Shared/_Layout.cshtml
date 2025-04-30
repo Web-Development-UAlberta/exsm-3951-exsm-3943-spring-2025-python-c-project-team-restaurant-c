@@ -24,7 +24,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg border-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light border-bottom">
             <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     <img src="~/images/harvest_hearth_logo_hip_final.svg" alt="harvest & hearth" height="100" />
@@ -38,7 +38,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
                     <ul class="navbar-nav align-items-center">
                         <li class="nav-item me-4">
-                            <a asp-controller="Home" asp-action="Menu" class="nav-link menu-link d-block">Menu</a>
+                            <a asp-controller="Menu" asp-action="Index" class="nav-link menu-link d-block">Menu</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -81,7 +81,7 @@
                 style="max-width: 150px;">
         </div>
         <div class="mb-3">
-            <a asp-controller="Home" asp-action="Menu" class="nav-link menu-link d-block">Menu</a>
+            <a asp-controller="Menu" asp-action="Index" class="nav-link menu-link d-block">Menu</a>
         </div>
         <div class="mb-3">
             <div><strong>Opening Hours</strong></div>

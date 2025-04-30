@@ -1,29 +1,20 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantManager.Models;
+using System.Text.Json;
 
 namespace RestaurantManager.Controllers;
 
-public class HomeController : Controller
+public class MenuController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly IWebHostEnvironment _env;
 
-    public HomeController(ILogger<HomeController> logger)
+    public MenuController(IWebHostEnvironment env)
     {
-        _logger = logger;
+        _env = env;
     }
 
     public IActionResult Index()
-    {
-        return View();
-    }
-
-    public IActionResult Menu()
-    {
-        return View();
-    }
-
-    public IActionResult Privacy()
     {
         return View();
     }
