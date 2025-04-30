@@ -2,9 +2,11 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RestaurantManager.Models{
+namespace RestaurantManager.Models
+{
 
-    public class MenuItemDietaryTag{
+    public class MenuItemDietaryTag
+    {
 
         [Key, Column(Order = 0)]
         [ForeignKey("MenuItem")]
@@ -14,7 +16,7 @@ namespace RestaurantManager.Models{
         [ForeignKey("DietaryTag")]
         public int TagId { get; set; }
 
-        public MenuItem MenuItem { get; set; }
-        public DietaryTag DietaryTag{ get; set; }
+        public MenuItem? MenuItem { get; set; }
+        public DietaryTag? DietaryTag { get; set; }
     }
 }

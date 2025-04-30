@@ -1,9 +1,11 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema; 
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RestaurantManager.Models{
-    public class Reservation{
+namespace RestaurantManager.Models
+{
+    public class Reservation
+    {
         [Key]
         public int ReservationId { get; set; }
 
@@ -15,13 +17,13 @@ namespace RestaurantManager.Models{
 
         public DateTime ReservationDateTime { get; set; }
         public int GuestCount { get; set; }
-        public string Notes { get; set; }
-        public string Status { get; set; }
+        public string? Notes { get; set; }
+        public string? Status { get; set; }
         public int? TableNumber { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public Customer Customer { get; set; }
-        public Order Order { get; set; }
+        public Customer? Customer { get; set; }
+        public Order? Order { get; set; }
     }
 }
