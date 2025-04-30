@@ -1,11 +1,16 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
 
-<section class="hero bg-light text-dark d-flex align-items-center" style="min-height: 70vh;">
+<section class="hero bg-light text-dark d-flex align-items-center"
+    style="min-height: 70vh; background-image: url('@Url.Content("~/images/pexels-ella-olsson-572949-1640772.jpg")'); background-size: cover; background-position: center; width: 100%;">
     <div class="container">
-        <h1>harvest & hearth<br />farm to table</h1>
-        <a asp-controller="Home" asp-action="Menu" class="btn btn-primary mt-3">View Menu</a>
+        <div class="col-md-6">
+            <h1 class="display-4">harvest & hearth</h1>
+            <h2>farm to table - Edmonton</h2>
+            <a asp-controller="Home" asp-action="Menu" class="btn btn-primary mt-3">View Menu</a>
+        </div>
     </div>
 </section>
 
@@ -35,5 +40,4 @@
 </section>
 
 <section class="hero-footer bg-light" style="min-height: 40vh;">
-
 </section>

@@ -1,0 +1,9 @@
+.hero {
+    min-height: 70vh;
+    background-image: url('@Url.Content("~/images/pexels-ella-olsson-572949-1640772.jpg")');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+}

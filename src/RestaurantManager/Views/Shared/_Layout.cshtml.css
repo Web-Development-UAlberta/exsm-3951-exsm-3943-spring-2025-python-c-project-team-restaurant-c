@@ -18,22 +18,15 @@ a {
   color: var(--forest-green);
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: var(--forest-green);
-  border-color: #244628;
-}
+
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
-  color: #fff;
+  color: var(--cream);
   background-color: var(--terracotta);
-  border-color: #a8562f;
+
 }
 
-.border-top {
-  border-top: 1px solid var(--charcoal);
-}
 
 .border-bottom {
   border-bottom: 1px solid var(--charcoal);

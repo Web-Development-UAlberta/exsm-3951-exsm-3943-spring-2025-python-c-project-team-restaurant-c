@@ -14,8 +14,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - harvest & hearth</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RestaurantManager.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap"
         rel="stylesheet">
@@ -24,7 +24,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <nav class="navbar navbar-expand-lg border-bottom">
             <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     <img src="~/images/harvest_hearth_logo_hip_final.svg" alt="harvest & hearth" height="100" />
@@ -38,16 +38,16 @@
                 <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
                     <ul class="navbar-nav align-items-center">
                         <li class="nav-item me-4">
-                            <a class="nav-link text-primary" asp-controller="Home" asp-action="Menu">Menu</a>
+                            <a asp-controller="Home" asp-action="Menu" class="nav-link menu-link d-block">Menu</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="btn btn-outline-primary btn-sm me-2" asp-controller="Order"
+                                <a class="btn btn-outline-primary btn-lg me-2" asp-controller="Order"
                                     asp-action="Index">Order</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-primary btn-sm" asp-controller="Reservation" asp-action="Book">Book
+                                <a class="btn btn-primary btn-lg" asp-controller="Reservation" asp-action="Book">Book
                                     Table</a>
                             </li>
                         }
@@ -68,21 +68,20 @@
     </header>
 
 
-    <div class="container">
+    <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="bg-white border-top mt-5 py-5 pt-5 pb-10"></footer>
+    <footer class="border-top mt-5 py-5 pt-5 pb-10"></footer>
     <div class="container d-flex flex-wrap justify-content-between">
         <div class="mb-3">
             <img src="~/images/harvest_hearth_logo_hip_final.svg" alt="harvest & hearth" class="logo"
                 style="max-width: 150px;">
         </div>
-
         <div class="mb-3">
-            <a asp-controller="Home" asp-action="Menu" class="d-block">Menu</a>
+            <a asp-controller="Home" asp-action="Menu" class="nav-link menu-link d-block">Menu</a>
         </div>
         <div class="mb-3">
             <div><strong>Opening Hours</strong></div>

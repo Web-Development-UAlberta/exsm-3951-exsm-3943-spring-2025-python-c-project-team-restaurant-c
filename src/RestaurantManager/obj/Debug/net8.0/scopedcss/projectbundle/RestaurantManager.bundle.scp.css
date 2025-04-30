@@ -19,22 +19,15 @@ a[b-934v3247aq] {
   color: var(--forest-green);
 }
 
-.btn-primary[b-934v3247aq] {
-  color: #fff;
-  background-color: var(--forest-green);
-  border-color: #244628;
-}
+
 
 .nav-pills .nav-link.active[b-934v3247aq],
 .nav-pills .show>.nav-link[b-934v3247aq] {
-  color: #fff;
+  color: var(--cream);
   background-color: var(--terracotta);
-  border-color: #a8562f;
+
 }
 
-.border-top[b-934v3247aq] {
-  border-top: 1px solid var(--charcoal);
-}
 
 .border-bottom[b-934v3247aq] {
   border-bottom: 1px solid var(--charcoal);

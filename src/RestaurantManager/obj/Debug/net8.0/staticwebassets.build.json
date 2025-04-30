@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "AJ+AcKv+M/cUYtdp0pW+HkilgU4h0zzMG8oqVB6E4PA=",
+  "Hash": "sEsBXL4DvXXv3syQ3BbTkbde/vpq1o5NTeaomETzSKE=",
   "Source": "RestaurantManager",
   "BasePath": "_content/RestaurantManager",
   "Mode": "Default",
@@ -1250,6 +1250,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/images/harvest_hearth_logo_hip_final.svg"
+    },
+    {
+      "Identity": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/pexels-ella-olsson-572949-1640772.jpg",
+      "SourceId": "RestaurantManager",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/",
+      "BasePath": "_content/RestaurantManager",
+      "RelativePath": "images/pexels-ella-olsson-572949-1640772.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/images/pexels-ella-olsson-572949-1640772.jpg"
     },
     {
       "Identity": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/js/site.js",

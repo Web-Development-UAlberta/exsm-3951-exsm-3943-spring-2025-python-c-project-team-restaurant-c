@@ -1,13 +1,58 @@
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
 }
 
 :root {
   --forest-green: #2C5530;
+  --forest-green-hover: #244628;
+  --forest-green-active: #1a361f;
+
   --terracotta: #C96D3A;
+  --terracotta-hover: #a8562f;
+  --terracotta-active: #8a4320;
+
   --cream: #F5F1E8;
   --charcoal: #3A3E3B;
+  --bs-white: #fff;
 }
+
+/* Outline Primary */
+.btn-outline-primary {
+  color: var(--forest-green);
+  border-color: var(--forest-green);
+  background-color: transparent;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: var(--forest-green);
+  color: var(--cream);
+  border-color: var(--forest-green);
+}
+
+/* Filled Primary */
+.btn-primary {
+  background-color: var(--forest-green);
+  border-color: var(--forest-green);
+  color: var(--cream) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--forest-green-hover);
+  border-color: var(--forest-green-hover);
+  color: var(--cream);
+}
+
+.btn-primary:active {
+  background-color: var(--forest-green-active);
+  border-color: var(--forest-green-active);
+  color: var(--cream);
+}
+
+
 
 @media (min-width: 768px) {
   html {
@@ -16,6 +61,8 @@ html {
 }
 
 body {
+  margin-bottom: 60px;
+  background-color: var(--cream);
   font-family: 'Montserrat', sans-serif;
   /* You can replace with 'Nunito' if preferred */
 }
@@ -28,6 +75,7 @@ h5,
 h6 {
   font-family: 'Libre Baskerville', serif;
   /* Or 'Playfair Display' */
+  color: (var(--terracotta));
 }
 
 
@@ -36,14 +84,17 @@ h6 {
 .btn-link.nav-link:focus,
 .form-control:focus,
 .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--terracotta);
+  box-shadow: 0 0 0 0.1rem var(--cream), 0 0 0 0.25rem var(--terracotta);
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.menu-link {
+  color: var(--forest-green);
 }
 
-body {
-  margin-bottom: 60px;
+.menu-link:hover {
+  color: var(--forest-green-hover);
+}
+
+.navbar {
+  border: none;
 }
