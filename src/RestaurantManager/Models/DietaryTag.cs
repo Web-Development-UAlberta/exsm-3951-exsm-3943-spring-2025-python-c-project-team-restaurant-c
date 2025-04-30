@@ -1,19 +1,20 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestaurantManager.Models
 {
 
-    public class DietaryTag
-    {
+  public class DietaryTag
+  {
 
-        [Key]
-        public int TagId { get; set; }
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        public string? Name { get; set; }
+    [Column("name")]
+    public string? Name { get; set; }
 
-        public List<MenuItemDietaryTag>? MenuItemDietaryTags { get; set; }
-        public List<UserDietaryTag>? UserDietaryTags { get; set; }
-    }
+    public IEnumerable<MenuItemDietaryTag>? MenuItemDietaryTags { get; set; }
+    public IEnumerable<UserDietaryTag>? UserDietaryTags { get; set; }
+  }
 }

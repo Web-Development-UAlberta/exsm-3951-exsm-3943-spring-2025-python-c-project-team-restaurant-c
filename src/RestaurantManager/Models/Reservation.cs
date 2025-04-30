@@ -1,29 +1,40 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestaurantManager.Models
 {
-    public class Reservation
-    {
-        [Key]
-        public int ReservationId { get; set; }
+  [Table("reservation")]
+  public class Reservation
+  {
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        [ForeignKey("Customer")]
-        public int CustomerId { get; set; }
+    [Column("user_id")]
+    public int UserId { get; set; }
 
-        [ForeignKey("Order")]
-        public int OrderId { get; set; }
+    [Column("reservation_datetime")]
+    public DateTime ReservationDateTime { get; set; }
 
-        public DateTime ReservationDateTime { get; set; }
-        public int GuestCount { get; set; }
-        public string? Notes { get; set; }
-        public string? Status { get; set; }
-        public int? TableNumber { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+    [Column("guest_count")]
+    public int GuestCount { get; set; }
 
-        public Customer? Customer { get; set; }
-        public Order? Order { get; set; }
-    }
+    [Column("notes")]
+    public string? Notes { get; set; }
+
+    [Column("status")]
+    public string? Status { get; set; }
+
+    [Column("table_number")]
+    public int? TableNumber { get; set; }
+
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; }
+
+    [Column("updated_at")]
+    public DateTime UpdatedAt { get; set; }
+
+    [ForeignKey("UserId")]
+    public User? User { get; set; }
+  }
 }

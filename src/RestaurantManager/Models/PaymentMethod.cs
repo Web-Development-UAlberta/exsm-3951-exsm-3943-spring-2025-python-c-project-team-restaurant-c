@@ -1,25 +1,35 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestaurantManager.Models
 {
+  [Table("payment_method")]
+  public class PaymentMethod
+  {
 
-    public class PaymentMethod
-    {
+    [Key]
+    [Column("id")]
+    public int Id { get; set; }
 
-        [Key]
-        public int PaymentMethodId { get; set; }
+    [Column("user_id")]
+    public int UserId { get; set; }
 
-        [ForeignKey("Customer")]
-        public int CustomerId { get; set; }
+    [Column("type")]
+    public string? Type { get; set; }
 
-        public string? Type { get; set; }
-        public string? Name { get; set; }
-        public string? CardNumber { get; set; }
-        public DateTime ExpiryDate { get; set; }
-        public string? PostalCode { get; set; }
+    [Column("name")]
+    public string? Name { get; set; }
 
-        public Customer? Customer { get; set; }
-    }
+    [Column("card_number")]
+    public string? CardNumber { get; set; }
+
+    [Column("expiry_date")]
+    public DateTime ExpiryDate { get; set; }
+
+    [Column("postal_code")]
+    public string? PostalCode { get; set; }
+
+    [ForeignKey("UserId")]
+    public User? User { get; set; }
+  }
 }
