@@ -27,15 +27,9 @@
     </aside>
 
     <main>
-        <div class="menu-items">
-            @foreach (var item in Model)
-            {
-                <div class="menu-item">
-                    <h3>@item.Name</h3>
-                    <p>@item.Description</p>
-                    <p>Price: $@item.Price</p>
-                    <p>Category: @item.Category</p>
-                </div>
-            }
+        @foreach (var item in Model)
+        {
+            <partial name="_MenuItemCard" model="item" />
+        }
     </main>
 </div>

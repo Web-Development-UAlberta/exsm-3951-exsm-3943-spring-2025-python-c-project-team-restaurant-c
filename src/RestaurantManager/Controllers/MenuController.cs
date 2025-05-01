@@ -1,22 +1,28 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Models;
-using System.Text.Json;
+using RestaurantManager.Data;
 
 namespace RestaurantManager.Controllers;
 
 public class MenuController : Controller
 {
-    private readonly IWebHostEnvironment _env;
+    private readonly ApplicationDbContext _context;
 
-    public MenuController(IWebHostEnvironment env)
+    public MenuController(ApplicationDbContext context)
     {
-        _env = env;
+        _context = context;
     }
 
     public IActionResult Index()
     {
-        return View();
+        var menuItems = _context.MenuItems
+        .Include(m => m.MenuItemDietaryTags)
+            .ThenInclude(tagLink => tagLink.DietaryTag)
+        .ToList();
+
+        return View(menuItems);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
