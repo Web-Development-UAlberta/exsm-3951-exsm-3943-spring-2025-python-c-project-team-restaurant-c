@@ -16,7 +16,7 @@ namespace RestaurantManager.Models
     public int UserId { get; set; }
 
     [Column("reservation_id")]
-    public int ReservationId { get; set; }
+    public int? ReservationId { get; set; }
 
     [Column("address_id")]
     public int? AddressId { get; set; }
