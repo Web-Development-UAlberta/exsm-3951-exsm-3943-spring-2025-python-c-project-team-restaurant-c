@@ -19,15 +19,11 @@ a[b-934v3247aq] {
   color: var(--forest-green);
 }
 
-
-
 .nav-pills .nav-link.active[b-934v3247aq],
 .nav-pills .show>.nav-link[b-934v3247aq] {
   color: var(--cream);
   background-color: var(--terracotta);
-
 }
-
 
 .border-bottom[b-934v3247aq] {
   border-bottom: 1px solid var(--charcoal);
@@ -42,12 +38,16 @@ button.accept-policy[b-934v3247aq] {
   line-height: inherit;
 }
 
-.footer[b-934v3247aq] {
-  position: absolute;
-  bottom: 0;
+footer[b-934v3247aq] {
   width: 100%;
   white-space: nowrap;
   line-height: 60px;
-  background-color: var(--cream);
-  color: var(--charcoal);
+  background-color: var(--terracotta);
+  color: var(--cream);
+}
+
+footer a:hover[b-934v3247aq],
+footer td[b-934v3247aq],
+footer a[b-934v3247aq] {
+  color: var(--bs-white);
 }

@@ -18,15 +18,11 @@ a {
   color: var(--forest-green);
 }
 
-
-
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
   color: var(--cream);
   background-color: var(--terracotta);
-
 }
-
 
 .border-bottom {
   border-bottom: 1px solid var(--charcoal);
@@ -41,12 +37,16 @@ button.accept-policy {
   line-height: inherit;
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
+footer {
   width: 100%;
   white-space: nowrap;
   line-height: 60px;
-  background-color: var(--cream);
-  color: var(--charcoal);
+  background-color: var(--terracotta);
+  color: var(--cream);
+}
+
+footer a:hover,
+footer td,
+footer a {
+  color: var(--bs-white);
 }
