@@ -2,7 +2,7 @@
 
 ## 1.0 Project Description
 
-Converting the restaurant’s website to allow customers to engage with the restaurant through order processing, bookings, loyalty programs, and online menus. Logistical applications will also be created for the kitchen staff.
+Converting the Harvest & Hearth's restaurant website to allow customers to enhance their experience through order processing, bookings, loyalty programs, and online menus. Logistical applications will also be created for the kitchen staff to manage incoming customer requests and streamline their order processing.
 
 ---
 
@@ -10,12 +10,12 @@ Converting the restaurant’s website to allow customers to engage with the rest
 
 Create a web portal which allows customers to:
 
-- Reserve specific tables inside the restaurant
 - Order food for dine-in, pickup, or delivery
 - Create customer accounts for order history and loyalty programs
+- Browse restaurants current menu
+- Redeem points and add gratuities during the checkout process
 
-All transactions will be handled through the web portal with support for card payments and mobile wallets. Backend operations will enable the restaurant to track orders and manage inventory.
-
+All transactions will be handled through the web portal with support for card payments and mobile wallets. Backend operations will enable the restaurant to track and manage customer's orders.
 ---
 
 ## 3.0 Description of Work
@@ -40,27 +40,33 @@ All transactions will be handled through the web portal with support for card pa
 
 #### **Online Ordering**
 
-- Registered users may pre-order for dine-in, takeout, or delivery at a single restaurant location
+- Registered users may pre-order for dine-in, takeout, or delivery during business hours.
+- Delivery orders will be accepted up to 30 minutes before restaurants close.
+- Tipping options will be available on checkout.
 
 #### **Online Menus**
 
 - Accessible to both registered and non-registered users
+- Orders will be created through the menu
 
 #### **Loyalty Program**
 
 - Registered users earn rewards based on spending
-- User preferences (payment info, address, dietary notes, favorite dishes, etc.) will be stored
+- Users earn 1 point per $1 spent
+- May redeem 250 points for a $20 Harvest & Hearth discount
+- User preferences (payment info, address, etc.) will be stored
 
 #### **Order Checkout**
 
 - Accepts card payment type
-- Detailed receipt of items and price totals
+- Detailed receipt of items, price totals and loyalty points earned
 - Specific notes to orders
 - Additional delivery information included (address, etc.)
 
 #### **Kitchen Portal**
 
 - Kitchen staff notified when new orders are placed
+- Order tracking with Received, Preparing, Read, Out for Delivery and Completed statuses. 
 - Orders include order type (pre-order, ASAP, or delivery)
 
 ---
