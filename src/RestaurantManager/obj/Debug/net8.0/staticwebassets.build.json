@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "FlEvbaoepH9in5aZ5Bz011FpG+o4bk6H6it8MntYjr0=",
+  "Hash": "oH+E6nKjRersFrB+5R9Teo/nOmfQegkExquuqv8m2us=",
   "Source": "RestaurantManager",
   "BasePath": "_content/RestaurantManager",
   "Mode": "Default",
@@ -1212,6 +1212,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/css/home.css"
+    },
+    {
+      "Identity": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/css/login.css",
+      "SourceId": "RestaurantManager",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/",
+      "BasePath": "_content/RestaurantManager",
+      "RelativePath": "css/login.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/css/login.css"
     },
     {
       "Identity": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/css/site.css",

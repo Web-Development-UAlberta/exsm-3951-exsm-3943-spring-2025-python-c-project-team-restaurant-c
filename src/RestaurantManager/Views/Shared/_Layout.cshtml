@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="~/RestaurantManager.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap"
         rel="stylesheet">
@@ -43,13 +44,17 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item me-4">
+                                <a asp-controller="Account" asp-action="Index" class="nav-link menu-link d-block">Account
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a class="btn btn-outline-primary btn-lg me-2" asp-controller="Order"
                                     asp-action="Index">Order</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-primary btn-lg" asp-controller="Reservation" asp-action="Book">Book
-                                    Table</a>
+                                <a class="btn btn-primary btn-lg" asp-controller="Reservation" asp-action="Book"> Book
+                                    Table </a>
                             </li>
                         }
                         else
@@ -70,7 +75,7 @@
 
 
     <div>
-        <main role="main" class="pb-3">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
@@ -120,8 +125,16 @@
             </div>
 
             <div class="mb-3 d-flex flex-column">
-                <a asp-controller="Reservation" asp-action="Book" class="btn btn-sm btn-primary mb-2">Book Table</a>
-                <a asp-controller="Order" asp-action="Index" class="btn btn-sm btn-outline-primary">Order</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Reservation" asp-action="Book" class="btn btn-sm btn-primary mb-2">Book Table</a>
+                    <a asp-controller="Order" asp-action="Index" class="btn btn-sm btn-outline-primary">Order</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-primary mb-2">Book Table</a>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-primary">Order</a>
+                }
                 <a asp-controller="Menu" asp-action="Index" class="nav-link menu-link d-block">Menu</a>
             </div>
         </div>

@@ -1,0 +1,45 @@
+@model RestaurantManager.Models.User
+@{
+    var isLogin = ViewBag.IsLogin ?? true;
+}
+
+<h2 class="mb-4">@((isLogin) ? "Login" : "Register")</h2>
+
+<form asp-controller="Account" asp-action="@(isLogin ? "Login" : "Register")" method="post">
+    <div class="mb-3">
+        @Html.LabelFor(model => model.Email, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", placeholder = "Enter your email" })
+        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        @Html.LabelFor(model => model.PasswordHash, new { @class = "form-label" })
+        @Html.PasswordFor(model => model.PasswordHash, new { @class = "form-control", placeholder = "Enter your password" })
+        @Html.ValidationMessageFor(model => model.PasswordHash, "", new { @class = "text-danger" })
+    </div>
+
+    @if (!isLogin)
+    {
+        <div class="mb-3">
+            @Html.Label("ConfirmPassword", "Confirm Password", new { @class = "form-label" })
+            <input type="password" name="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
+        </div>
+    }
+
+    <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-primary">@((isLogin) ? "Login" : "Register")</button>
+    </div>
+</form>
+
+<div class="text-center mt-3">
+    <p>
+        @if (isLogin)
+        {
+            <span>Don't have an account? <a asp-action="Register">Create Account</a></span>
+        }
+        else
+        {
+            <span>Already have an account? <a asp-action="Login">Login</a></span>
+        }
+    </p>
+</div>

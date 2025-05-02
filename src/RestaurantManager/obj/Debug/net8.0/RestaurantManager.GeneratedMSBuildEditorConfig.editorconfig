@@ -18,8 +18,12 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = /Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager
 build_property._RazorSourceGeneratorDebug = 
 
-[/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/Views/Authentication/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXV0aGVudGljYXRpb24vTG9naW4uY3NodG1s
+[/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9Mb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9SZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/Views/Home/Index.cshtml]
@@ -40,6 +44,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/Views/Shared/_MenuItemCard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19NZW51SXRlbUNhcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/Views/Shared/_UserFormPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19Vc2VyRm9ybVBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/Views/Shared/_ValidationScriptsPartial.cshtml]

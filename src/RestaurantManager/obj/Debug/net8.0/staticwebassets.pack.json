@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets/css/home.css"
     },
     {
+      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/css/login.css",
+      "PackagePath": "staticwebassets/css/login.css"
+    },
+    {
       "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },
