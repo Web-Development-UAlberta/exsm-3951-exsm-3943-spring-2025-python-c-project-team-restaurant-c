@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets/RestaurantManager.bundle.scp.css"
     },
     {
+      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/css/home.css",
+      "PackagePath": "staticwebassets/css/home.css"
+    },
+    {
       "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },
@@ -13,12 +17,28 @@
       "PackagePath": "staticwebassets/favicon.ico"
     },
     {
+      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/beef-img.png",
+      "PackagePath": "staticwebassets/images/beef-img.png"
+    },
+    {
+      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/cheese-img.png",
+      "PackagePath": "staticwebassets/images/cheese-img.png"
+    },
+    {
       "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/harvest_hearth_logo_hip_final.svg",
       "PackagePath": "staticwebassets/images/harvest_hearth_logo_hip_final.svg"
     },
     {
-      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/pexels-ella-olsson-572949-1640772.jpg",
-      "PackagePath": "staticwebassets/images/pexels-ella-olsson-572949-1640772.jpg"
+      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/hero-img.png",
+      "PackagePath": "staticwebassets/images/hero-img.png"
+    },
+    {
+      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/restaurant.png",
+      "PackagePath": "staticwebassets/images/restaurant.png"
+    },
+    {
+      "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/images/saskatoon-pie-img.png",
+      "PackagePath": "staticwebassets/images/saskatoon-pie-img.png"
     },
     {
       "Id": "/Users/amcarthur/Desktop/EXSM-3951-Restaurant Project/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager/wwwroot/js/site.js",
