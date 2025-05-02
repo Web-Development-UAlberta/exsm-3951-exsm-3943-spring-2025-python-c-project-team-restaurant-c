@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RestaurantManager.Enums;
 
 namespace RestaurantManager.Models
 {
@@ -21,7 +22,7 @@ namespace RestaurantManager.Models
     public decimal Price { get; set; }
 
     [Column("category")]
-    public string? Category { get; set; }
+    public MenuItemCategory Category { get; set; }
 
     [Column("is_available")]
     public bool IsAvailable { get; set; }

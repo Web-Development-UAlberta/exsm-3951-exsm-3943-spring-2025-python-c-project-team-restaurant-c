@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantManager.Data;
 
@@ -10,9 +11,11 @@ using RestaurantManager.Data;
 namespace RestaurantManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250502073334_UpdateUserRole")]
+    partial class UpdateUserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -254,7 +257,6 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("category");
 
@@ -282,7 +284,6 @@ namespace RestaurantManager.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Category = "Appetizer",
                             Description = "A delicious vegan pizza with gluten-free crust.",
                             IsAvailable = false,
                             Name = "Vegan Pizza",
@@ -291,7 +292,6 @@ namespace RestaurantManager.Data.Migrations
                         new
                         {
                             Id = 2,
-                            Category = "Appetizer",
                             Description = "A tasty chicken wrap with fresh vegetables.",
                             IsAvailable = false,
                             Name = "Chicken Wrap",
@@ -300,7 +300,6 @@ namespace RestaurantManager.Data.Migrations
                         new
                         {
                             Id = 3,
-                            Category = "Appetizer",
                             Description = "A classic Caesar salad with creamy dressing.",
                             IsAvailable = false,
                             Name = "Caesar Salad",
@@ -366,6 +365,10 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("notes");
 
+                    b.Property<string>("OrderType")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("order_type");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT")
                         .HasColumnName("price");
@@ -379,7 +382,6 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("scheduled_time");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("status");
 
@@ -390,11 +392,6 @@ namespace RestaurantManager.Data.Migrations
                     b.Property<decimal?>("TotalAmount")
                         .HasColumnType("TEXT")
                         .HasColumnName("total_amount");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("order_type");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER")

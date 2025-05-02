@@ -11,7 +11,7 @@ public class ApplicationDbContext : IdentityDbContext
   {
   }
 
-  public DbSet<User> Users { get; set; }
+  public new DbSet<User> Users { get; set; }
   public DbSet<UserAddress> UserAddresses { get; set; }
   public DbSet<PaymentMethod> PaymentMethods { get; set; }
   public DbSet<Reservation> Reservations { get; set; }
@@ -24,15 +24,37 @@ public class ApplicationDbContext : IdentityDbContext
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
+    modelBuilder.Entity<User>()
+        .Property(u => u.Role)
+        .HasConversion<string>();
+
     modelBuilder.Entity<UserDietaryTag>()
-        .HasKey(udt => new { udt.UserId, udt.TagId });
+          .HasKey(udt => new
+          {
+            udt.UserId,
+            udt.TagId
+          });
+
+    modelBuilder.Entity<Order>()
+        .Property(o => o.Status)
+        .HasConversion<string>();
+
+    modelBuilder.Entity<Order>()
+        .Property(o => o.Type)
+        .HasConversion<string>();
 
     // Seed MenuItems
-    modelBuilder.Entity<MenuItem>().HasData(
-        new MenuItem { Id = 1, Name = "Vegan Pizza", Description = "A delicious vegan pizza with gluten-free crust.", Price = 12.99M },
-        new MenuItem { Id = 2, Name = "Chicken Wrap", Description = "A tasty chicken wrap with fresh vegetables.", Price = 9.99M },
-        new MenuItem { Id = 3, Name = "Caesar Salad", Description = "A classic Caesar salad with creamy dressing.", Price = 7.99M }
-    );
+    modelBuilder.Entity<MenuItem>(entity =>
+  {
+    entity.Property(m => m.Category)
+      .HasConversion<string>();
+
+    entity.HasData(
+      new MenuItem { Id = 1, Name = "Vegan Pizza", Description = "A delicious vegan pizza with gluten-free crust.", Price = 12.99M },
+      new MenuItem { Id = 2, Name = "Chicken Wrap", Description = "A tasty chicken wrap with fresh vegetables.", Price = 9.99M },
+      new MenuItem { Id = 3, Name = "Caesar Salad", Description = "A classic Caesar salad with creamy dressing.", Price = 7.99M }
+  );
+  });
 
     // Seed DietaryTags
     modelBuilder.Entity<DietaryTag>().HasData(

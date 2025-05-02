@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RestaurantManager.Enums;
 
 namespace RestaurantManager.Models;
 
@@ -35,7 +36,7 @@ public partial class User
   public string? DietaryNotes { get; set; }
 
   [Column("role")]
-  public string? Role { get; set; }
+  public UserRole Role { get; set; }
 
   public IEnumerable<PaymentMethod>? PaymentMethods { get; set; }
 

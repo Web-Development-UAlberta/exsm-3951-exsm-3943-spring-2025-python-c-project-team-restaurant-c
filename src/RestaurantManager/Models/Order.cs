@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using RestaurantManager.Enums;
 
 namespace RestaurantManager.Models
 {
@@ -22,10 +22,10 @@ namespace RestaurantManager.Models
     public int? AddressId { get; set; }
 
     [Column("order_type")]
-    public string? OrderType { get; set; }
+    public OrderType Type { get; set; }
 
     [Column("status")]
-    public string? Status { get; set; }
+    public OrderStatus Status { get; set; }
 
     [Column("price")]
     public decimal Price { get; set; }
