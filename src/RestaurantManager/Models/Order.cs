@@ -27,14 +27,17 @@ namespace RestaurantManager.Models
     [Column("status")]
     public OrderStatus Status { get; set; }
 
-    [Column("price")]
-    public decimal Price { get; set; }
+    [Column("subtotal")]
+    public decimal Subtotal { get; set; }
+
+    [Column("tax")]
+    public decimal Tax { get; set; }
 
     [Column("tip_amount")]
     public decimal? TipAmount { get; set; }
 
-    [Column("total_amount")]
-    public decimal? TotalAmount { get; set; }
+    [Column("total")]
+    public decimal? Total { get; set; }
 
     [Column("notes")]
     public string? Notes { get; set; }

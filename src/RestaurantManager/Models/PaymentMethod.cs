@@ -20,8 +20,8 @@ namespace RestaurantManager.Models
     [Column("name")]
     public string? Name { get; set; }
 
-    [Column("card_number")]
-    public string? CardNumber { get; set; }
+    [Column("payment_processor_token")]
+    public string PaymentProcessorToken { get; set; }
 
     [Column("expiry_date")]
     public DateTime ExpiryDate { get; set; }
