@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestaurantManager.Models
 {
-
+  [Table("menu_item_dietary_tag")]
   public class MenuItemDietaryTag
   {
 

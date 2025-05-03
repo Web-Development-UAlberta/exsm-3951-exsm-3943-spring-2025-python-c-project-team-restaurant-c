@@ -4,7 +4,7 @@ using RestaurantManager.Enums;
 
 namespace RestaurantManager.Models
 {
-
+  [Table("menu_item")]
   public class MenuItem
   {
 

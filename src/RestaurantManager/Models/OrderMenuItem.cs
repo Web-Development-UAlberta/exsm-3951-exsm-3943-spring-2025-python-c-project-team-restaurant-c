@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestaurantManager.Models
 {
-
+  [Table("order_menu_item")]
   public class OrderMenuItem
   {
     [Key, Column(Order = 0)]
