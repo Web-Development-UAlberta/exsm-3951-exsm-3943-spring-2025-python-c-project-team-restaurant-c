@@ -2,20 +2,14 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using RestaurantManager.Models;
-using RestaurantManager.Data;
 
 
 namespace RestaurantManager.Controllers;
 
 [Authorize(Roles = "Admin, Staff, Manager")]
-public class KitchenController : Controller
+public class KitchenController(ILogger<KitchenController> logger) : Controller
 {
-    private readonly ILogger<KitchenController> _logger;
-
-    public KitchenController(ILogger<KitchenController> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<KitchenController> _logger = logger;
 
     public IActionResult Dashboard()
     {

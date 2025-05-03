@@ -6,14 +6,9 @@ using RestaurantManager.Data;
 
 namespace RestaurantManager.Controllers;
 
-public class MenuController : Controller
+public class MenuController(ApplicationDbContext context) : Controller
 {
-    private readonly ApplicationDbContext _context;
-
-    public MenuController(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    private readonly ApplicationDbContext _context = context;
 
     public IActionResult Index()
     {

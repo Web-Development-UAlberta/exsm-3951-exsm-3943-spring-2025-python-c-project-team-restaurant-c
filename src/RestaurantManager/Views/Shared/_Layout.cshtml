@@ -48,12 +48,20 @@
                                 <a asp-controller="Account" asp-action="Index" class="nav-link menu-link d-block">Account
                                 </a>
                             </li>
+                            <li class="nav-item me-4">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                        class="nav-link menu-link d-block border-0 bg-transparent">Logout</button>
+                                </form>
+                            </li>
+
                             <li class="nav-item">
-                                <a class="btn btn-outline-primary btn-lg me-2" asp-controller="Order"
+                                <a class="btn btn-outline-primary btn-sm me-2" asp-controller="Order"
                                     asp-action="Index">Order</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-primary btn-lg" asp-controller="Reservation" asp-action="Book"> Book
+                                <a class="btn btn-primary btn-sm" asp-controller="Reservation" asp-action="Book"> Book
                                     Table </a>
                             </li>
                         }
@@ -141,7 +149,7 @@
 
         <div class="container d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
             <small class="mb-0">&copy; harvest & hearth, Inc. 2025.</small>
-            <a asp-controller="Admin" asp-action="Login" class="small">Admin Login</a>
+            <a asp-controller="Account" asp-action="Login" class="small">Admin Login</a>
         </div>
     </footer>
 
