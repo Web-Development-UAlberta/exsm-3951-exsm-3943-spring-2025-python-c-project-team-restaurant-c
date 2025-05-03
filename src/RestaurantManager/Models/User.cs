@@ -38,8 +38,6 @@ public partial class User
   [Column("role")]
   public UserRole Role { get; set; }
 
-  public IEnumerable<PaymentMethod>? PaymentMethods { get; set; }
-
   public IEnumerable<UserAddress>? UserAddresses { get; set; }
 
   public IEnumerable<Reservation>? Reservations { get; set; }

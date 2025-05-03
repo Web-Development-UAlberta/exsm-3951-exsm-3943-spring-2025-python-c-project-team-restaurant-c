@@ -13,7 +13,6 @@ public class ApplicationDbContext : IdentityDbContext
 
   public new DbSet<User> Users { get; set; }
   public DbSet<UserAddress> UserAddresses { get; set; }
-  public DbSet<PaymentMethod> PaymentMethods { get; set; }
   public DbSet<Reservation> Reservations { get; set; }
   public DbSet<Order> Orders { get; set; }
   public DbSet<OrderMenuItem> OrderMenuItems { get; set; }
