@@ -7,17 +7,17 @@ namespace RestaurantManager.Models
   public class OrderMenuItem
   {
     [Key, Column(Order = 0)]
-    public int OrderId { get; set; }
+    public required int OrderId { get; set; }
 
     [Key, Column(Order = 1)]
-    public int MenuItemId { get; set; }
+    public required int MenuItemId { get; set; }
 
-    public int Quantity { get; set; }
+    public required int Quantity { get; set; }
 
     [ForeignKey("OrderId")]
-    public Order? Order { get; set; }
+    public required Order Order { get; set; }
 
     [ForeignKey("MenuItemId")]
-    public MenuItem? MenuItem { get; set; }
+    public required MenuItem MenuItem { get; set; }
   }
 }

@@ -10,22 +10,28 @@ namespace RestaurantManager.Models
 
     [Key]
     [Column("id")]
-    public int Id { get; set; }
+    [Required]
+    public required int Id { get; set; }
 
     [Column("name")]
-    public string? Name { get; set; }
+    [Required]
+    public required string Name { get; set; }
 
     [Column("description")]
-    public string? Description { get; set; }
+    [Required]
+    public required string Description { get; set; }
 
     [Column("price")]
-    public decimal Price { get; set; }
+    [Required]
+    public required decimal Price { get; set; }
 
     [Column("category")]
-    public MenuItemCategory Category { get; set; }
+    [Required]
+    public required MenuItemCategory Category { get; set; }
 
     [Column("is_available")]
-    public bool IsAvailable { get; set; }
+    [Required]
+    public required bool IsAvailable { get; set; }
 
     public IEnumerable<OrderMenuItem>? OrderMenuItems { get; set; }
     public IEnumerable<MenuItemDietaryTag>? MenuItemDietaryTags { get; set; }

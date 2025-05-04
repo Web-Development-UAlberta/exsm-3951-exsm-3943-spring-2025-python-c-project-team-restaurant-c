@@ -8,15 +8,15 @@ namespace RestaurantManager.Models
   {
 
     [Key, Column(Order = 0)]
-    public int UserId { get; set; }
+    public required int UserId { get; set; }
 
     [Key, Column(Order = 1)]
-    public int TagId { get; set; }
+    public required int TagId { get; set; }
 
     [ForeignKey("UserId")]
-    public User? User { get; set; }
+    public required User User { get; set; }
 
     [ForeignKey("TagId")]
-    public DietaryTag? DietaryTag { get; set; }
+    public required DietaryTag DietaryTag { get; set; }
   }
 }

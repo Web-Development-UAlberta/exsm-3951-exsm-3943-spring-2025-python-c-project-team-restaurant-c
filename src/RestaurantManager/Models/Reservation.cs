@@ -8,31 +8,38 @@ namespace RestaurantManager.Models
   {
     [Key]
     [Column("id")]
-    public int Id { get; set; }
+    [Required]
+    public required int Id { get; set; }
 
     [Column("user_id")]
-    public int UserId { get; set; }
+    [Required]
+    public required int UserId { get; set; }
 
     [Column("reservation_datetime")]
-    public DateTime ReservationDateTime { get; set; }
+    [Required]
+    public required DateTime ReservationDateTime { get; set; }
 
     [Column("guest_count")]
-    public int GuestCount { get; set; }
+    [Required]
+    public required int GuestCount { get; set; }
 
     [Column("notes")]
     public string? Notes { get; set; }
 
     [Column("status")]
-    public string? Status { get; set; }
+    [Required]
+    public required string Status { get; set; }
 
     [Column("table_number")]
-    public int? TableNumber { get; set; }
+    [Required]
+    public required int TableNumber { get; set; }
 
     [Column("created_at")]
-    public DateTime CreatedAt { get; set; }
+    [Required]
+    public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column("updated_at")]
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     [ForeignKey("UserId")]
     public User? User { get; set; }

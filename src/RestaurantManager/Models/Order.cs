@@ -10,10 +10,12 @@ namespace RestaurantManager.Models
 
     [Key]
     [Column("id")]
-    public int Id { get; set; }
+    [Required]
+    public required int Id { get; set; }
 
     [Column("user_id")]
-    public int UserId { get; set; }
+    [Required]
+    public required int UserId { get; set; }
 
     [Column("reservation_id")]
     public int? ReservationId { get; set; }
@@ -22,22 +24,28 @@ namespace RestaurantManager.Models
     public int? AddressId { get; set; }
 
     [Column("order_type")]
-    public OrderType Type { get; set; }
+    [Required]
+    public required OrderType Type { get; set; }
 
     [Column("status")]
-    public OrderStatus Status { get; set; }
+    [Required]
+    public required OrderStatus Status { get; set; }
 
     [Column("subtotal")]
-    public decimal Subtotal { get; set; }
+    [Required]
+    public required decimal Subtotal { get; set; }
 
     [Column("tax")]
-    public decimal Tax { get; set; }
+    [Required]
+    public required decimal Tax { get; set; }
 
     [Column("tip_amount")]
-    public decimal? TipAmount { get; set; }
+    [Required]
+    public required decimal? TipAmount { get; set; }
 
     [Column("total")]
-    public decimal? Total { get; set; }
+    [Required]
+    public required decimal? Total { get; set; }
 
     [Column("notes")]
     public string? Notes { get; set; }
@@ -52,7 +60,7 @@ namespace RestaurantManager.Models
     public DateTime? ScheduledTime { get; set; }
 
     [ForeignKey("UserId")]
-    public User? User { get; set; }
+    public required User User { get; set; }
 
     [ForeignKey("ReservationId")]
     public Reservation? Reservation { get; set; }

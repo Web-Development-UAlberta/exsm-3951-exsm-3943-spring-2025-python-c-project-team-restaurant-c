@@ -9,10 +9,12 @@ namespace RestaurantManager.Models
 
     [Key]
     [Column("id")]
-    public int Id { get; set; }
+    [Required]
+    public required int Id { get; set; }
 
     [Column("name")]
-    public string? Name { get; set; }
+    [Required]
+    public required string Name { get; set; }
 
     public IEnumerable<MenuItemDietaryTag>? MenuItemDietaryTags { get; set; }
     public IEnumerable<UserDietaryTag>? UserDietaryTags { get; set; }
