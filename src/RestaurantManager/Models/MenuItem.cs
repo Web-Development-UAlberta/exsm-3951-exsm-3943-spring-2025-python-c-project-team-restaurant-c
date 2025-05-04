@@ -25,7 +25,7 @@ namespace RestaurantManager.Models
 
     [Column("price")]
     [Required]
-    [Range(0.01, 20000, ErrorMessage = "Price must be between $0.01 and $20,000")]
+    [Range(0.00, 20000, ErrorMessage = "Price must be between $0.01 and $20,000")]
     //There has to be a $20,000 bottle of something in the world, right?
     public required decimal Price { get; set; }
 

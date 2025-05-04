@@ -1,0 +1,29 @@
+name: .NET Core CI
+
+on:
+  push:
+    branches: [ main ] 
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c.sln
+
+    - name: Build solution
+      run: dotnet build exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c.sln --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c.sln --no-build --configuration Release --logger "console;verbosity=detailed"

@@ -1,0 +1,39 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6AEAF020-7AA8-4AB6-ABCD-D1CB0720AE96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantManager", "src\RestaurantManager\RestaurantManager.csproj", "{D9C19758-9732-43D4-AFF1-AF787200EA3B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestaurantManager.Tests", "RestaurantManager.Tests", "{7932D67A-4852-49E1-BFF4-7EF1C254FCF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantManager.Tests.BackEnd", "src\RestaurantManager.Tests\BackEnd\RestaurantManager.Tests.BackEnd.csproj", "{87BF2C3C-A6AC-49C0-A732-45ACE2285D71}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9C19758-9732-43D4-AFF1-AF787200EA3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9C19758-9732-43D4-AFF1-AF787200EA3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9C19758-9732-43D4-AFF1-AF787200EA3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9C19758-9732-43D4-AFF1-AF787200EA3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87BF2C3C-A6AC-49C0-A732-45ACE2285D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87BF2C3C-A6AC-49C0-A732-45ACE2285D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87BF2C3C-A6AC-49C0-A732-45ACE2285D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87BF2C3C-A6AC-49C0-A732-45ACE2285D71}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD32BCCD-6C2F-4E2B-9768-0897387CC013}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D9C19758-9732-43D4-AFF1-AF787200EA3B} = {6AEAF020-7AA8-4AB6-ABCD-D1CB0720AE96}
+		{7932D67A-4852-49E1-BFF4-7EF1C254FCF1} = {6AEAF020-7AA8-4AB6-ABCD-D1CB0720AE96}
+		{87BF2C3C-A6AC-49C0-A732-45ACE2285D71} = {7932D67A-4852-49E1-BFF4-7EF1C254FCF1}
+	EndGlobalSection
+EndGlobal
