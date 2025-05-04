@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantManager.Data;
 
@@ -10,9 +11,11 @@ using RestaurantManager.Data;
 namespace RestaurantManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250503233359_RemovePaymentMethodTable")]
+    partial class RemovePaymentMethodTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -221,7 +224,6 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("name");
 
@@ -260,7 +262,6 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("category");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("description");
 
@@ -269,7 +270,6 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("is_available");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("name");
 
@@ -285,27 +285,27 @@ namespace RestaurantManager.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Category = "MainCourse",
+                            Category = "Appetizer",
                             Description = "A delicious vegan pizza with gluten-free crust.",
-                            IsAvailable = true,
+                            IsAvailable = false,
                             Name = "Vegan Pizza",
                             Price = 12.99m
                         },
                         new
                         {
                             Id = 2,
-                            Category = "MainCourse",
+                            Category = "Appetizer",
                             Description = "A tasty chicken wrap with fresh vegetables.",
-                            IsAvailable = true,
+                            IsAvailable = false,
                             Name = "Chicken Wrap",
                             Price = 9.99m
                         },
                         new
                         {
                             Id = 3,
-                            Category = "MainCourse",
+                            Category = "Appetizer",
                             Description = "A classic Caesar salad with creamy dressing.",
-                            IsAvailable = true,
+                            IsAvailable = false,
                             Name = "Caesar Salad",
                             Price = 7.99m
                         });
@@ -391,12 +391,10 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("tax");
 
                     b.Property<decimal?>("TipAmount")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("tip_amount");
 
                     b.Property<decimal?>("Total")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("total");
 
@@ -464,15 +462,14 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("reservation_datetime");
 
                     b.Property<string>("Status")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("status");
 
-                    b.Property<int>("TableNumber")
+                    b.Property<int?>("TableNumber")
                         .HasColumnType("INTEGER")
                         .HasColumnName("table_number");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT")
                         .HasColumnName("updated_at");
 
@@ -499,7 +496,6 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("dietary_notes");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("email");
 
@@ -514,17 +510,14 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("last_name");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("PasswordSalt")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("password_salt");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("phone");
 
@@ -550,7 +543,6 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("AddressLine1")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("address_line_1");
 
@@ -559,22 +551,18 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("address_line_2");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("country");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("postal_code");
 
                     b.Property<string>("Province")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("province");
 

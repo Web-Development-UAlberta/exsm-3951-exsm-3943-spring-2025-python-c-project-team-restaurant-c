@@ -8,10 +8,10 @@ namespace RestaurantManager.Models
   {
 
     [ForeignKey("MenuItemId")]
-    public int MenuItemId { get; set; }
+    public required int MenuItemId { get; set; }
 
     [ForeignKey("TagId")]
-    public int TagId { get; set; }
+    public required int TagId { get; set; }
 
     public MenuItem? MenuItem { get; set; }
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Models;
+using RestaurantManager.Enums;
 
 namespace RestaurantManager.Data;
 
@@ -13,7 +14,6 @@ public class ApplicationDbContext : IdentityDbContext
 
   public new DbSet<User> Users { get; set; }
   public DbSet<UserAddress> UserAddresses { get; set; }
-  public DbSet<PaymentMethod> PaymentMethods { get; set; }
   public DbSet<Reservation> Reservations { get; set; }
   public DbSet<Order> Orders { get; set; }
   public DbSet<OrderMenuItem> OrderMenuItems { get; set; }
@@ -50,9 +50,9 @@ public class ApplicationDbContext : IdentityDbContext
       .HasConversion<string>();
 
     entity.HasData(
-      new MenuItem { Id = 1, Name = "Vegan Pizza", Description = "A delicious vegan pizza with gluten-free crust.", Price = 12.99M },
-      new MenuItem { Id = 2, Name = "Chicken Wrap", Description = "A tasty chicken wrap with fresh vegetables.", Price = 9.99M },
-      new MenuItem { Id = 3, Name = "Caesar Salad", Description = "A classic Caesar salad with creamy dressing.", Price = 7.99M }
+      new MenuItem { Id = 1, Name = "Vegan Pizza", Description = "A delicious vegan pizza with gluten-free crust.", Price = 12.99M, Category = MenuItemCategory.MainCourse, IsAvailable = true },
+      new MenuItem { Id = 2, Name = "Chicken Wrap", Description = "A tasty chicken wrap with fresh vegetables.", Price = 9.99M, Category = MenuItemCategory.MainCourse, IsAvailable = true },
+      new MenuItem { Id = 3, Name = "Caesar Salad", Description = "A classic Caesar salad with creamy dressing.", Price = 7.99M, Category = MenuItemCategory.MainCourse, IsAvailable = true }
   );
   });
 
