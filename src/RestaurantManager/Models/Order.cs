@@ -33,27 +33,36 @@ namespace RestaurantManager.Models
 
     [Column("subtotal")]
     [Required]
+    [Range(0, 100000, ErrorMessage = "Subtotal must be between $0 and $100,000.")]
     public required decimal Subtotal { get; set; }
 
     [Column("tax")]
     [Required]
+    [Range(0, 10000, ErrorMessage= "Tax must be between $0 and $10,000")]
     public required decimal Tax { get; set; }
 
     [Column("tip_amount")]
     [Required]
+    [Range(0, 100000, ErrorMessage="Tip amount must be between $0 and $100,000.")]
+    //Should we put a limit on tips?
     public required decimal? TipAmount { get; set; }
 
     [Column("total")]
     [Required]
+    [Range(0, 250000, ErrorMessage="Total must be between $250,000")]
+    //If there's no limit on tips, should we have a total limit?
     public required decimal? Total { get; set; }
 
     [Column("notes")]
+    [StringLength(500, ErrorMessage="Notes must be under 500 characters.")]
     public string? Notes { get; set; }
 
     [Column("delivery_fee")]
+    [Range(0, 1000, ErrorMessage="Delivery Fee must be under $1000")]
     public decimal? DeliveryFee { get; set; }
 
     [Column("delivery_instructions")]
+    [StringLength(500, ErrorMessage = "Delivery Instructions must be under 500 characters.")]
     public string? DeliveryInstructions { get; set; }
 
     [Column("scheduled_time")]

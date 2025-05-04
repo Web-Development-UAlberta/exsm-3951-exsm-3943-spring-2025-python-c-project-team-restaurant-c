@@ -14,6 +14,7 @@ namespace RestaurantManager.Models
 
     [Column("name")]
     [Required]
+    [StringLength(50, ErrorMessage = "Dietary Tag Name must be under 50 characters.")]
     public required string Name { get; set; }
 
     public IEnumerable<MenuItemDietaryTag>? MenuItemDietaryTags { get; set; }

@@ -14,18 +14,24 @@ public partial class User
 
   [Column("first_name")]
   [Required]
+  [StringLength(100, MinimumLength = 2, ErrorMessage = "First name must be between 2 and 100 characters.")]
   public required string FirstName { get; set; }
 
   [Column("last_name")]
   [Required]
+  [StringLength(100, MinimumLength = 2, ErrorMessage = "Last name mus tbe betwen 2 and 100 characters.")]
   public required string LastName { get; set; }
 
   [Column("email")]
   [Required]
+  [EmailAddress(ErrorMessage ="Invalid Email format.")]
+  [StringLength(100, ErrorMessage = "Email cannot be greater than 100 characters.")]
   public required string Email { get; set; }
 
   [Column("phone")]
   [Required]
+  [Phone(ErrorMessage = "Invalid Phone number format.")]
+  [StringLength(20, ErrorMessage = "Phone number must be under 20 characters.")]
   public required string Phone { get; set; }
 
   [Column("password_hash")]
@@ -38,9 +44,11 @@ public partial class User
 
   [Column("rewards_points")]
   [Required]
+  [Range(0, int.MaxValue, ErrorMessage = "Reward points must be positive.")]
   public required int RewardsPoints { get; set; }
 
   [Column("dietary_notes")]
+  [StringLength(500, ErrorMessage = "Dietary Notes cannot exceed 500 characters.")]
   public string? DietaryNotes { get; set; }
 
   [Column("role")]
