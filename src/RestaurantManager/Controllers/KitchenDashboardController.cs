@@ -7,18 +7,13 @@ using RestaurantManager.Models;
 namespace RestaurantManager.Controllers;
 
 [Authorize(Roles = "Admin, Staff, Manager")]
-public class KitchenController(ILogger<KitchenController> logger) : Controller
+public class KitchenDashboardController(ILogger<KitchenDashboardController> logger) : Controller
 {
-    private readonly ILogger<KitchenController> _logger = logger;
+    private readonly ILogger<KitchenDashboardController> _logger = logger;
 
-    public IActionResult Dashboard()
+    public IActionResult Index()
     {
-        var role = TempData["UserRole"] as string;
-
-        if (role != "Admin")
-        {
-            return RedirectToAction("Login", "Account");
-        }
+        // var role = TempData["UserRole"] as string;
 
         return View();
     }

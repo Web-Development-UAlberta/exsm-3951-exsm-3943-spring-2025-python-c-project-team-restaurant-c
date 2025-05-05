@@ -18,7 +18,7 @@ public partial class User
 
   [Column("last_name")]
   [Required]
-  public required string LastName { get; set; }
+  public required string? LastName { get; set; }
 
   [Column("email")]
   [Required]
@@ -33,18 +33,15 @@ public partial class User
   public required string PasswordHash { get; set; }
 
   [Column("password_salt")]
-  [Required]
   public required string PasswordSalt { get; set; }
 
   [Column("rewards_points")]
-  [Required]
   public required int RewardsPoints { get; set; }
 
   [Column("dietary_notes")]
   public string? DietaryNotes { get; set; }
 
   [Column("role")]
-  [Required]
   public required UserRole Role { get; set; }
 
   public IEnumerable<UserAddress>? UserAddresses { get; set; }

@@ -12,10 +12,9 @@ public class MenuController(ApplicationDbContext context) : Controller
 
     public IActionResult Index()
     {
-        var menuItems = _context.MenuItems
-        .Include(m => m.MenuItemDietaryTags)
-            .ThenInclude(tagLink => tagLink.DietaryTag)
-        .ToList();
+        List<MenuItem> menuItems = [.. _context.MenuItems
+            .Include(m => m.MenuItemDietaryTags)
+                .ThenInclude(tagLink => tagLink.DietaryTag)];
 
         return View(menuItems);
     }

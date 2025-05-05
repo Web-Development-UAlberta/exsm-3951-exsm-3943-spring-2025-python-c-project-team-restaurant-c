@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantManager.Data;
 
@@ -10,9 +11,11 @@ using RestaurantManager.Data;
 namespace RestaurantManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250504033419_DeleteRequiredAnnotations")]
+    partial class DeleteRequiredAnnotations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -540,20 +543,6 @@ namespace RestaurantManager.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("user");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 2,
-                            Email = "admin@gmail.com",
-                            FirstName = "Admin",
-                            LastName = "Test",
-                            PasswordHash = "+1fzEaaKIt+hxB8eZ5RK6sywJXqY5Qkn7CxNoG6ckxc=",
-                            PasswordSalt = "hHA0qDG/iJSbc9PEUXJ8UQ==",
-                            Phone = "111-111-1111",
-                            RewardsPoints = 0,
-                            Role = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.UserAddress", b =>

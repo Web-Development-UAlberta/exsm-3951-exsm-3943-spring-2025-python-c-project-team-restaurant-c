@@ -80,6 +80,14 @@ public class ApplicationDbContext : IdentityDbContext
       entity.HasKey(omi => new { omi.OrderId, omi.MenuItemId });
     });
 
+    // See User
+    modelBuilder.Entity<User>(entity =>
+    {
+      entity.HasData(
+        new User { Id = 2, FirstName = "Admin", LastName = "Test", Email = "admin@gmail.com", Phone = "111-111-1111", PasswordHash = "+1fzEaaKIt+hxB8eZ5RK6sywJXqY5Qkn7CxNoG6ckxc=", PasswordSalt = "hHA0qDG/iJSbc9PEUXJ8UQ==", RewardsPoints = 0, Role = UserRole.Admin });
+    });
+
+
 
     base.OnModelCreating(modelBuilder);
   }
