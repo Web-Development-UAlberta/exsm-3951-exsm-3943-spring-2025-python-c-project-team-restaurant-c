@@ -42,7 +42,7 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
                 var claims = new List<Claim>
                 {
                     new(ClaimTypes.Name, user.Email),
-                    new(ClaimTypes.Role, user.Role.ToString())
+                    new(ClaimTypes.Role, user.Role.ToString()),
                 };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
