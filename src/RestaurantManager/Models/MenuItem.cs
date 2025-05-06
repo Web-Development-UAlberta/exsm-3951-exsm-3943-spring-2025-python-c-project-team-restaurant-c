@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
 using RestaurantManager.Enums;
 
 namespace RestaurantManager.Models
@@ -8,29 +10,24 @@ namespace RestaurantManager.Models
   public class MenuItem
   {
 
-    [Key]
-    [Column("id")]
-    [Required]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Column("id", TypeName = "INTEGER"), Required, Key]
     public required int Id { get; set; }
 
-    [Column("name")]
-    [Required]
+    [Column("name", TypeName = "VARCHAR(255)"), Required]
     public required string Name { get; set; }
 
-    [Column("description")]
-    [Required]
+    [Column("description", TypeName = "VARCHAR(255)"), Required]
     public required string Description { get; set; }
 
-    [Column("price")]
+    [Column("price", TypeName = "REAL"), Precision(10, 2)]
     [Required]
     public required decimal Price { get; set; }
 
-    [Column("category")]
-    [Required]
+    [Column("category", TypeName = "INTEGER"), Required]
     public required MenuItemCategory Category { get; set; }
 
-    [Column("is_available")]
-    [Required]
+    [Column("is_available", TypeName = "INTEGER"), Required]
     public required bool IsAvailable { get; set; }
 
     public IEnumerable<OrderMenuItem>? OrderMenuItems { get; set; }
