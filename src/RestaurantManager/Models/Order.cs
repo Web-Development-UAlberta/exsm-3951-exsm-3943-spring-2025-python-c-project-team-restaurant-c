@@ -37,7 +37,7 @@ namespace RestaurantManager.Models
     [Column("tip_amount", TypeName = "REAL"), Required, Precision(10, 2)]
     public required decimal TipAmount { get; set; }
 
-    [Column("total", TypeName = "REAL"), Required, Precision(10, 2)]
+    [Column("total_amount", TypeName = "REAL"), Required, Precision(10, 2)]
     public required decimal Total { get; set; }
 
     [Column("notes", TypeName = "TEXT")]
