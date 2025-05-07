@@ -36,7 +36,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 UserId = 1,
                 AddressLine1 = new string('A', 101),
                 City = "Edmonton",
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = "Alberta",
                 Country = "Canada",
                 User = testUser
@@ -55,7 +55,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 UserId = 1,
                 AddressLine1 = "AA",
                 City = "Edmonton",
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = "Alberta",
                 Country = "Canada",
                 User = testUser
@@ -74,7 +74,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 UserId = 1,
                 AddressLine1 = "AAA",
                 City = new string('B', 51),
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = "Alberta",
                 Country = "Canada",
                 User = testUser
@@ -93,7 +93,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 UserId = 1,
                 AddressLine1 = "AAA",
                 City = "",
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = "Alberta",
                 Country = "Canada",
                 User = testUser
@@ -112,7 +112,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 UserId = 1,
                 AddressLine1 = "AAA",
                 City = "Edmonton",
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = new string ('B', 51),
                 Country = "Canada",
                 User = testUser
@@ -131,7 +131,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 UserId = 1,
                 AddressLine1 = "AAA",
                 City = "Edmonton",
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = "A",
                 Country = "Canada",
                 User = testUser
@@ -150,7 +150,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 UserId = 1,
                 AddressLine1 = "AAA",
                 City = "Edmonton",
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = "Alberta",
                 Country = "C",
                 User = testUser
@@ -169,7 +169,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 UserId = 1,
                 AddressLine1 = "AAA",
                 City = "Edmonton",
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = "Alberta",
                 Country = new string ('B', 51),
                 User = testUser
@@ -208,7 +208,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
                 AddressLine1 = "AAA",
                 AddressLine2 = new string('B', 101),
                 City = "Edmonton",
-                PostalCode = "T3F8HJ9",
+                PostalCode = "T3F8H9",
                 Province = "Alberta",
                 Country = "Canada",
                 User = testUser

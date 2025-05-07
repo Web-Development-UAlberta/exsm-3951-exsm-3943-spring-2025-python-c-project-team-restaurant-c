@@ -33,7 +33,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation{
         public void DietaryTagNameTooLong_ShouldFail(){
             var tag = new DietaryTag{
                 Id = 1,
-                Name = new string('B', 51)
+                Name = new string('B', 101)
             };
 
             var results = ValidateModel(tag);

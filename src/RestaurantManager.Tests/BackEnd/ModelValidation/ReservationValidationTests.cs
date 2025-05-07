@@ -22,7 +22,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation {
                 UserId = 1,
                 ReservationDateTime = DateTime.Now.AddDays(2),
                 GuestCount = 51,
-                Status = "Confirmed",
+                Status = OrderStatus.Pending,
                 TableNumber= 4,
                 CreatedAt = DateTime.Now
             };
@@ -40,7 +40,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation {
                 UserId = 1,
                 ReservationDateTime = DateTime.Now.AddDays(2),
                 GuestCount = 0,
-                Status = "Confirmed",
+                Status = OrderStatus.Pending,
                 TableNumber= 4,
                 CreatedAt = DateTime.Now
             };
@@ -58,7 +58,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation {
                 UserId = 1,
                 ReservationDateTime = DateTime.Now.AddDays(2),
                 GuestCount = 6,
-                Status = "Confirmed",
+                Status = OrderStatus.Pending,
                 TableNumber= 7,
                 CreatedAt = DateTime.Now
             };
@@ -75,7 +75,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation {
                 UserId = 1,
                 ReservationDateTime = DateTime.Now.AddDays(2),
                 GuestCount = 6,
-                Status = "Confirmed",
+                Status = OrderStatus.Pending,
                 TableNumber= 0,
                 CreatedAt = DateTime.Now
             };
@@ -92,7 +92,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation {
                 UserId = 1,
                 ReservationDateTime = DateTime.Now.AddDays(2),
                 GuestCount = 6,
-                Status = "Confirmed",
+                Status = OrderStatus.Pending,
                 TableNumber= 31,
                 CreatedAt = DateTime.Now
             };
@@ -111,7 +111,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation {
                 ReservationDateTime = DateTime.Now.AddDays(2),
                 GuestCount = 6,
                 Notes = "",
-                Status = "Confirmed",
+                Status = OrderStatus.Pending,
                 TableNumber= 7,
                 CreatedAt = DateTime.Now
             };
@@ -130,7 +130,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation {
                 ReservationDateTime = DateTime.Now.AddDays(2),
                 GuestCount = 6,
                 Notes = new string('B', 501),
-                Status = "Confirmed",
+                Status = OrderStatus.Pending,
                 TableNumber= 0,
                 CreatedAt = DateTime.Now
             };
@@ -149,7 +149,7 @@ namespace RestaurantManager.Tests.BackEnd.ModelValidation {
                 ReservationDateTime = DateTime.Now.AddDays(2),
                 GuestCount = 6,
                 Notes = "",
-                Status = "Confirmed",
+                Status = OrderStatus.Pending,
                 TableNumber= 7,
                 CreatedAt = DateTime.Now
             };

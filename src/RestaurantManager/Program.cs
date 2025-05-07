@@ -54,4 +54,12 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var userCount = context.Users.Count();
+    Console.WriteLine($"✅ There are {userCount} users in the database.");
+}    
+
 app.Run();
