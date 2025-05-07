@@ -21,10 +21,10 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore RestaurantManager.sln
+      run: dotnet restore src/RestaurantManager.sln
 
     - name: Build solution
-      run: dotnet build RestaurantManager.sln --no-restore --configuration Release
+      run: dotnet build src/RestaurantManager.sln --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test RestaurantManager.sln --no-build --configuration Release --logger "console;verbosity=detailed"
+      run: dotnet test src/RestaurantManager.sln --no-build --configuration Release --logger "console;verbosity=detailed"
