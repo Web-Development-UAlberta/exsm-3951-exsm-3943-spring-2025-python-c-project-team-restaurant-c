@@ -271,6 +271,23 @@ footer .btn {
   border-radius: 8px;
 }
 
+.banner-image {
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+.banner-image img {
+  object-fit: cover;
+  height: 100%;
+}
+
+.banner-text {
+  color: var(--light-cream);
+  z-index: 2;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
 /* Footer content styling for small screens (mobile) */
 @media (max-width: 767px) {
   html {

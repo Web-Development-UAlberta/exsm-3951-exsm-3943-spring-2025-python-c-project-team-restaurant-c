@@ -6,11 +6,14 @@
     var dietaryTags = ViewBag.DietaryTags as List<DietaryTag>;
 }
 
-<div class="container py-5">
-    <header class="text-center mb-5">
-        <h2 class="fw-bold">Order for Pickup or Delivery</h2>
-    </header>
+<div class="banner-image position-relative text-white text-center">
+    <img src="~/images/patio.png" class="img-fluid w-100" alt="Restaurant Image" />
+    <div class="banner-text position-absolute top-50 start-50 translate-middle">
+        <h2 class="fw-bold text-light display-4">Order for Pickup or Delivery</h2>
+    </div>
+</div>
 
+<div class="container py-5">
     <div class="row">
         <partial name="_MenuSidebar" model="dietaryTags" />
         <main class="col-md-9">
