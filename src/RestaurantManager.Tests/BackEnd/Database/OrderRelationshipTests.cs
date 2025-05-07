@@ -144,8 +144,10 @@ namespace RestaurantManager.UnitTests.BackEnd.Database{
 
         //Add MenuItems to an Order and checks if they've been added correctly
         [Fact]
-        public async Task AbleToLoadMenuItemsCorrectly(){
+        public async Task AbleToLoadMenuItemsCorrectly_ShouldPass(){
 
+            //Load the Order from the db
+            //Inclue MenuItems 
             var order = await _context.Orders
                 .Include(o => o.OrderMenuItems!)
                 .ThenInclude(omi => omi.MenuItem)
@@ -179,6 +181,85 @@ namespace RestaurantManager.UnitTests.BackEnd.Database{
             Assert.NotNull(mozza);
             Assert.Equal("Mozza Sticks", mozza.MenuItem.Name);
             Assert.Equal(3.99M, mozza.MenuItem.Price);            
+        }
+
+        [Fact]
+
+        public async Task AbleToRemoveMenuItemFromOrder_ShouldPass(){
+
+            //Load the Order from the db
+            //Include MenuItems 
+            var order = await _context.Orders
+                .Include(o => o.OrderMenuItems!)
+                .ThenInclude(omi => omi.MenuItem)
+                .FirstOrDefaultAsync(o => o.Id ==1);
+
+            //Test if order loaded
+            Assert.NotNull(order);
+
+            //Find the MenuItem that we want to remove and test that we located it
+            var itemToRemove = order!.OrderMenuItems!.FirstOrDefault(o => o.MenuItemId==2);
+            Assert.NotNull(itemToRemove);
+
+            //Remove the MenuItem and save the database
+            _context.OrderMenuItems.Remove(itemToRemove);
+            await _context.SaveChangesAsync();
+
+            //Load the new order with MenuItem removed
+            var updateOrder =  await _context.Orders
+                .Include(o => o.OrderMenuItems)
+                .FirstOrDefaultAsync(o => o.Id==1);
+
+            //Check that there's only one MenuItem and that it doesn't contain MenuItem 2
+            Assert.Single(updateOrder!.OrderMenuItems!);
+            Assert.DoesNotContain(updateOrder.OrderMenuItems!, omi => omi.MenuItemId == 2);
+
+        }
+
+        [Fact]
+        public async Task AddLotsOfMenuItemsToOrder_ShouldPass(){
+
+            //Load order from the db
+            var order = await _context.Orders.FirstAsync(o => o.Id == 1);
+
+            //Add 100 new items  over top of the existing 2
+            for(int i = 3; i < 103; i++){
+
+                //Create new MenuItem
+                var item = new MenuItem{
+                    Id = i,
+                    Name=$"Item #{i}",
+                    Description = $"Description #{i}",
+                    Price = 19.99M,
+                    Category = MenuItemCategory.MainCourse,
+                    IsAvailable = true
+                };
+                //Add the MenuItem to the db
+                _context.MenuItems.Add(item);
+
+                //Create new OrderMenuItem
+                //Link to the Order/MenuItem is belongs to 
+                var orderItem = new OrderMenuItem{
+                    OrderId = order.Id,
+                    MenuItemId = i,
+                    Quantity = 1,
+                    Order = order,
+                    MenuItem = item
+                };
+                //Add OrderMenuItem to the db
+                _context.OrderMenuItems.Add(orderItem);
+            }
+            //Save the new OrderMenuItems and MenuItems to the db
+            await _context.SaveChangesAsync();
+
+            //Reload the order with 100+ menu items
+            var largeOrder = await _context.Orders
+                .Include(o => o.OrderMenuItems!)
+                .ThenInclude(omi => omi.MenuItem)
+                .FirstOrDefaultAsync(o => o.Id ==1);
+
+            //Check if there are now 102 menuitems added to the order
+            Assert.Equal(102, largeOrder!.OrderMenuItems!.Count());
         }
 
         //Clean up
