@@ -25,5 +25,5 @@ dotnet run --project src/RestaurantManager/RestaurantManager.csproj
 ## Contributors:
 
 - [Arlyssa](https://github.com/Arlyssa)
-- [Pewpy](https://github.com/Pewpy)
+- [Alex](https://github.com/Pewpy)
 - [jmantei](https://github.com/jmantei)
