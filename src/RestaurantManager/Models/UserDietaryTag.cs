@@ -1,22 +1,24 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantManager.Models
 {
   [Table("user_dietary_tag")]
+  [PrimaryKey(nameof(UserId), nameof(TagId))]
   public class UserDietaryTag
   {
 
-    [Key, Column(Order = 0)]
+    [Column("user_id", TypeName = "INTEGER"), Required]
     public required int UserId { get; set; }
 
-    [Key, Column(Order = 1)]
+    [Column("tag_id", TypeName = "INTEGER"), Required]
     public required int TagId { get; set; }
 
     [ForeignKey("UserId")]
-    public required User User { get; set; }
+    public User? User { get; set; }
 
     [ForeignKey("TagId")]
-    public required DietaryTag DietaryTag { get; set; }
+    public DietaryTag? DietaryTag { get; set; }
   }
 }

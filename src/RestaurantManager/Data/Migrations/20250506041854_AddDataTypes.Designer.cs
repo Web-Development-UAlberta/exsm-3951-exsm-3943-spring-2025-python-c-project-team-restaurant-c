@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantManager.Data;
 
@@ -10,9 +11,11 @@ using RestaurantManager.Data;
 namespace RestaurantManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506041854_AddDataTypes")]
+    partial class AddDataTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -314,16 +317,17 @@ namespace RestaurantManager.Data.Migrations
             modelBuilder.Entity("RestaurantManager.Models.MenuItemDietaryTag", b =>
                 {
                     b.Property<int>("MenuItemId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("menu_item_id");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TagId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("tag_id");
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DietaryTagId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("MenuItemId", "TagId");
 
-                    b.HasIndex("TagId");
+                    b.HasIndex("DietaryTagId");
 
                     b.ToTable("menu_item_dietary_tag");
 
@@ -424,15 +428,14 @@ namespace RestaurantManager.Data.Migrations
                 {
                     b.Property<int>("OrderId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("order_id");
+                        .HasColumnOrder(0);
 
                     b.Property<int>("MenuItemId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("menu_item_id");
+                        .HasColumnOrder(1);
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("quantity");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("OrderId", "MenuItemId");
 
@@ -592,11 +595,11 @@ namespace RestaurantManager.Data.Migrations
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("user_id");
+                        .HasColumnOrder(0);
 
                     b.Property<int>("TagId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("tag_id");
+                        .HasColumnOrder(1);
 
                     b.HasKey("UserId", "TagId");
 
@@ -658,15 +661,13 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.MenuItemDietaryTag", b =>
                 {
+                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
+                        .WithMany("MenuItemDietaryTags")
+                        .HasForeignKey("DietaryTagId");
+
                     b.HasOne("RestaurantManager.Models.MenuItem", "MenuItem")
                         .WithMany("MenuItemDietaryTags")
                         .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
-                        .WithMany("MenuItemDietaryTags")
-                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
