@@ -4,10 +4,10 @@ namespace RestaurantManager.Enums
 {
   public enum OrderType
   {
-    [Display(Name = "DineIn")]
+    [Display(Name = "Dine In")]
     DineIn,
 
-    [Display(Name = "TakeOut")]
+    [Display(Name = "Take Out")]
     TakeOut,
 
     [Display(Name = "Delivery")]

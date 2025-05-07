@@ -13,7 +13,7 @@ namespace RestaurantManager.Enums
     [Display(Name = "Cancelled")]
     Cancelled = 2,
 
-    [Display(Name = "InProgress")]
+    [Display(Name = "In Progress")]
     InProgress = 3,
   }
 

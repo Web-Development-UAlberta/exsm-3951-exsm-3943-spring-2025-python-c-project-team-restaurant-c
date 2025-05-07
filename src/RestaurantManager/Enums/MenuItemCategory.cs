@@ -4,16 +4,16 @@ namespace RestaurantManager.Enums
 {
   public enum MenuItemCategory
   {
-    [Display(Name = "Appetizer")]
+    [Display(Name = "Appetizers")]
     Appetizer = 0,
 
-    [Display(Name = "MainCourse")]
+    [Display(Name = "Mains")]
     MainCourse = 1,
 
-    [Display(Name = "Dessert")]
+    [Display(Name = "Desserts")]
     Dessert = 2,
 
-    [Display(Name = "Beverage")]
+    [Display(Name = "Beverages")]
     Beverage = 3,
   }
 
