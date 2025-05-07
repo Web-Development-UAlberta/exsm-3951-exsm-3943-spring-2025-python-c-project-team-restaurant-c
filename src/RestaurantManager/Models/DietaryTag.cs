@@ -7,11 +7,13 @@ namespace RestaurantManager.Models
   public class DietaryTag
   {
 
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id", TypeName = "INTEGER"), Required, Key]
+    [Key]
+    [Column("id")]
+    [Required]
     public required int Id { get; set; }
 
-    [Column("name", TypeName = "VARCHAR(100)"), Required]
+    [Column("name")]
+    [Required]
     public required string Name { get; set; }
 
     public IEnumerable<MenuItemDietaryTag>? MenuItemDietaryTags { get; set; }

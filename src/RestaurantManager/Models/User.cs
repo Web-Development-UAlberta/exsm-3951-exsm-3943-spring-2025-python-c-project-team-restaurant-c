@@ -7,35 +7,44 @@ namespace RestaurantManager.Models;
 [Table("user")]
 public partial class User
 {
-  [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-  [Column("id", TypeName = "INTEGER"), Required, Key]
+  [Key]
+  [Column("id")]
+  [Required]
   public required int Id { get; set; }
 
-  [Column("first_name", TypeName = "VARCHAR(255)"), Required]
+  [Column("first_name")]
+  [Required]
   public required string FirstName { get; set; }
 
-  [Column("last_name", TypeName = "VARCHAR(255)"), Required]
+  [Column("last_name")]
+  [Required]
   public required string LastName { get; set; }
 
-  [Column("email", TypeName = "VARCHAR(255)"), Required, EmailAddress]
+  [Column("email")]
+  [Required]
   public required string Email { get; set; }
 
-  [Column("phone", TypeName = "VARCHAR(50)"), Required, Phone]
+  [Column("phone")]
+  [Required]
   public required string Phone { get; set; }
 
-  [Column("password_hash", TypeName = "VARCHAR(255)"), Required]
+  [Column("password_hash")]
+  [Required]
   public required string PasswordHash { get; set; }
 
-  [Column("password_salt", TypeName = "VARCHAR(255)"), Required]
+  [Column("password_salt")]
+  [Required]
   public required string PasswordSalt { get; set; }
 
-  [Column("rewards_points", TypeName = "INTEGER"), Required]
+  [Column("rewards_points")]
+  [Required]
   public required int RewardsPoints { get; set; }
 
-  [Column("dietary_notes", TypeName = "TEXT")]
+  [Column("dietary_notes")]
   public string? DietaryNotes { get; set; }
 
-  [Column("role", TypeName = "INTEGER"), Required]
+  [Column("role")]
+  [Required]
   public required UserRole Role { get; set; }
 
   public IEnumerable<UserAddress>? UserAddresses { get; set; }

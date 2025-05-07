@@ -1,38 +1,44 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using RestaurantManager.Enums;
 
 namespace RestaurantManager.Models
 {
   [Table("reservation")]
   public class Reservation
   {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id", TypeName = "INTEGER"), Required, Key]
+    [Key]
+    [Column("id")]
+    [Required]
     public required int Id { get; set; }
 
-    [Column("user_id", TypeName = "INTEGER"), Required]
+    [Column("user_id")]
+    [Required]
     public required int UserId { get; set; }
 
-    [Column("reservation_datetime", TypeName = "TEXT"), Required]
+    [Column("reservation_datetime")]
+    [Required]
     public required DateTime ReservationDateTime { get; set; }
 
-    [Column("guest_count", TypeName = "INTEGER"), Required]
+    [Column("guest_count")]
+    [Required]
     public required int GuestCount { get; set; }
 
-    [Column("notes", TypeName = "TEXT")]
+    [Column("notes")]
     public string? Notes { get; set; }
 
-    [Column("status", TypeName = "INTEGER"), Required]
-    public required OrderStatus Status { get; set; }
+    [Column("status")]
+    [Required]
+    public required string Status { get; set; }
 
-    [Column("table_number", TypeName = "INT"), Required]
+    [Column("table_number")]
+    [Required]
     public required int TableNumber { get; set; }
 
-    [Column("created_at", TypeName = "TEXT"), Required]
+    [Column("created_at")]
+    [Required]
     public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    [Column("updated_at", TypeName = "TEXT")]
+    [Column("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
     [ForeignKey("UserId")]

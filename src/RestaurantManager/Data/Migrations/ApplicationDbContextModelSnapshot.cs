@@ -222,7 +222,7 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -254,13 +254,14 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("id");
 
-                    b.Property<int>("Category")
-                        .HasColumnType("INTEGER")
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
                         .HasColumnName("category");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("description");
 
                     b.Property<bool>("IsAvailable")
@@ -269,12 +270,11 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("name");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("REAL")
+                        .HasColumnType("TEXT")
                         .HasColumnName("price");
 
                     b.HasKey("Id");
@@ -285,7 +285,7 @@ namespace RestaurantManager.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Category = 1,
+                            Category = "MainCourse",
                             Description = "A delicious vegan pizza with gluten-free crust.",
                             IsAvailable = true,
                             Name = "Vegan Pizza",
@@ -294,7 +294,7 @@ namespace RestaurantManager.Data.Migrations
                         new
                         {
                             Id = 2,
-                            Category = 1,
+                            Category = "MainCourse",
                             Description = "A tasty chicken wrap with fresh vegetables.",
                             IsAvailable = true,
                             Name = "Chicken Wrap",
@@ -303,7 +303,7 @@ namespace RestaurantManager.Data.Migrations
                         new
                         {
                             Id = 3,
-                            Category = 1,
+                            Category = "MainCourse",
                             Description = "A classic Caesar salad with creamy dressing.",
                             IsAvailable = true,
                             Name = "Caesar Salad",
@@ -314,16 +314,17 @@ namespace RestaurantManager.Data.Migrations
             modelBuilder.Entity("RestaurantManager.Models.MenuItemDietaryTag", b =>
                 {
                     b.Property<int>("MenuItemId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("menu_item_id");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("TagId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("tag_id");
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DietaryTagId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("MenuItemId", "TagId");
 
-                    b.HasIndex("TagId");
+                    b.HasIndex("DietaryTagId");
 
                     b.ToTable("menu_item_dietary_tag");
 
@@ -357,8 +358,7 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("address_id");
 
                     b.Property<decimal?>("DeliveryFee")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("REAL")
+                        .HasColumnType("TEXT")
                         .HasColumnName("delivery_fee");
 
                     b.Property<string>("DeliveryInstructions")
@@ -377,32 +377,32 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("scheduled_time");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
                         .HasColumnName("status");
 
                     b.Property<decimal>("Subtotal")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("REAL")
+                        .HasColumnType("TEXT")
                         .HasColumnName("subtotal");
 
                     b.Property<decimal>("Tax")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("REAL")
+                        .HasColumnType("TEXT")
                         .HasColumnName("tax");
 
-                    b.Property<decimal>("TipAmount")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("REAL")
+                    b.Property<decimal?>("TipAmount")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
                         .HasColumnName("tip_amount");
 
-                    b.Property<decimal>("Total")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("REAL")
+                    b.Property<decimal?>("Total")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
                         .HasColumnName("total");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("INTEGER")
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
                         .HasColumnName("order_type");
 
                     b.Property<int>("UserId")
@@ -424,15 +424,14 @@ namespace RestaurantManager.Data.Migrations
                 {
                     b.Property<int>("OrderId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("order_id");
+                        .HasColumnOrder(0);
 
                     b.Property<int>("MenuItemId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("menu_item_id");
+                        .HasColumnOrder(1);
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("quantity");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("OrderId", "MenuItemId");
 
@@ -464,12 +463,13 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("reservation_datetime");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
                         .HasColumnName("status");
 
                     b.Property<int>("TableNumber")
-                        .HasColumnType("INT")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("table_number");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -500,40 +500,41 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("last_name");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("PasswordSalt")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("password_salt");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(50)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("phone");
 
                     b.Property<int>("RewardsPoints")
                         .HasColumnType("INTEGER")
                         .HasColumnName("rewards_points");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER")
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
                         .HasColumnName("role");
 
                     b.HasKey("Id");
@@ -550,31 +551,31 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("AddressLine1")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("address_line_1");
 
                     b.Property<string>("AddressLine2")
-                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("address_line_2");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("country");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(20)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("postal_code");
 
                     b.Property<string>("Province")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("province");
 
                     b.Property<int>("UserId")
@@ -592,11 +593,11 @@ namespace RestaurantManager.Data.Migrations
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("user_id");
+                        .HasColumnOrder(0);
 
                     b.Property<int>("TagId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("tag_id");
+                        .HasColumnOrder(1);
 
                     b.HasKey("UserId", "TagId");
 
@@ -658,15 +659,13 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.MenuItemDietaryTag", b =>
                 {
+                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
+                        .WithMany("MenuItemDietaryTags")
+                        .HasForeignKey("DietaryTagId");
+
                     b.HasOne("RestaurantManager.Models.MenuItem", "MenuItem")
                         .WithMany("MenuItemDietaryTags")
                         .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
-                        .WithMany("MenuItemDietaryTags")
-                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

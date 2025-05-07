@@ -26,11 +26,7 @@ public class ApplicationDbContext : IdentityDbContext
   {
     modelBuilder.Entity<User>()
         .Property(u => u.Role)
-        .HasConversion<int>();
-
-    modelBuilder.Entity<Reservation>()
-    .Property(u => u.Status)
-    .HasConversion<int>();
+        .HasConversion<string>();
 
     modelBuilder.Entity<UserDietaryTag>()
           .HasKey(udt => new
@@ -41,17 +37,17 @@ public class ApplicationDbContext : IdentityDbContext
 
     modelBuilder.Entity<Order>()
         .Property(o => o.Status)
-        .HasConversion<int>();
+        .HasConversion<string>();
 
     modelBuilder.Entity<Order>()
         .Property(o => o.Type)
-        .HasConversion<int>();
+        .HasConversion<string>();
 
     // Seed MenuItems
     modelBuilder.Entity<MenuItem>(entity =>
   {
     entity.Property(m => m.Category)
-      .HasConversion<int>();
+      .HasConversion<string>();
 
     entity.HasData(
       new MenuItem { Id = 1, Name = "Vegan Pizza", Description = "A delicious vegan pizza with gluten-free crust.", Price = 12.99M, Category = MenuItemCategory.MainCourse, IsAvailable = true },

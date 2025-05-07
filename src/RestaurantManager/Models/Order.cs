@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Enums;
 
 namespace RestaurantManager.Models
@@ -9,47 +8,55 @@ namespace RestaurantManager.Models
   public class Order
   {
 
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id", TypeName = "INTEGER"), Required, Key]
+    [Key]
+    [Column("id")]
+    [Required]
     public required int Id { get; set; }
 
-    [Column("user_id", TypeName = "INTEGER"), Required]
+    [Column("user_id")]
+    [Required]
     public required int UserId { get; set; }
 
-    [Column("reservation_id", TypeName = "INTEGER")]
+    [Column("reservation_id")]
     public int? ReservationId { get; set; }
 
-    [Column("address_id", TypeName = "INTEGER")]
+    [Column("address_id")]
     public int? AddressId { get; set; }
 
-    [Column("order_type", TypeName = "INTEGER"), Required]
+    [Column("order_type")]
+    [Required]
     public required OrderType Type { get; set; }
 
-    [Column("status", TypeName = "INTEGER"), Required]
+    [Column("status")]
+    [Required]
     public required OrderStatus Status { get; set; }
 
-    [Column("subtotal", TypeName = "REAL"), Required, Precision(10, 2)]
+    [Column("subtotal")]
+    [Required]
     public required decimal Subtotal { get; set; }
 
-    [Column("tax", TypeName = "REAL"), Required, Precision(10, 2)]
+    [Column("tax")]
+    [Required]
     public required decimal Tax { get; set; }
 
-    [Column("tip_amount", TypeName = "REAL"), Required, Precision(10, 2)]
-    public required decimal TipAmount { get; set; }
+    [Column("tip_amount")]
+    [Required]
+    public required decimal? TipAmount { get; set; }
 
-    [Column("total_amount", TypeName = "REAL"), Required, Precision(10, 2)]
-    public required decimal Total { get; set; }
+    [Column("total")]
+    [Required]
+    public required decimal? Total { get; set; }
 
-    [Column("notes", TypeName = "TEXT")]
+    [Column("notes")]
     public string? Notes { get; set; }
 
-    [Column("delivery_fee", TypeName = "REAL"), Precision(10, 2)]
+    [Column("delivery_fee")]
     public decimal? DeliveryFee { get; set; }
 
-    [Column("delivery_instructions", TypeName = "TEXT")]
+    [Column("delivery_instructions")]
     public string? DeliveryInstructions { get; set; }
 
-    [Column("scheduled_time", TypeName = "TEXT")]
+    [Column("scheduled_time")]
     public DateTime? ScheduledTime { get; set; }
 
     [ForeignKey("UserId")]
