@@ -21,9 +21,11 @@ namespace RestaurantManager.Models
 
     [Column("guest_count")]
     [Required]
+    [Range(1, 50, ErrorMessage = "Guest count may only be between 1 and 50.")]
     public required int GuestCount { get; set; }
 
     [Column("notes")]
+    [StringLength(500, ErrorMessage = "Notes must be under 500 characters.")]
     public string? Notes { get; set; }
 
     [Column("status")]
@@ -32,6 +34,7 @@ namespace RestaurantManager.Models
 
     [Column("table_number")]
     [Required]
+    [Range(1, 30, ErrorMessage = "Table number must be between 1 and 30.")]
     public required int TableNumber { get; set; }
 
     [Column("created_at")]

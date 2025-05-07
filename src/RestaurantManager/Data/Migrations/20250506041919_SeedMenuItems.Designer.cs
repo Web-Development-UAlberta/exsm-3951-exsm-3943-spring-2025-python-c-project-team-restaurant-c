@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantManager.Data;
 
@@ -10,9 +11,11 @@ using RestaurantManager.Data;
 namespace RestaurantManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506041919_SeedMenuItems")]
+    partial class SeedMenuItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -222,7 +225,6 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT")
                         .HasColumnName("name");
 
@@ -262,7 +264,6 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("description");
 
@@ -272,7 +273,6 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnName("name");
 
@@ -475,9 +475,12 @@ namespace RestaurantManager.Data.Migrations
                     b.Property<int>("TagId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("DietaryTagId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("MenuItemId", "TagId");
 
-                    b.HasIndex("TagId");
+                    b.HasIndex("DietaryTagId");
 
                     b.ToTable("menu_item_dietary_tag");
 
@@ -515,12 +518,10 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("delivery_fee");
 
                     b.Property<string>("DeliveryInstructions")
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("delivery_instructions");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("notes");
 
@@ -611,7 +612,6 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("guest_count");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("notes");
 
@@ -651,25 +651,21 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("DietaryNotes")
-                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("dietary_notes");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnName("email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnName("last_name");
 
@@ -685,7 +681,6 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasMaxLength(20)
                         .HasColumnType("TEXT")
                         .HasColumnName("phone");
 
@@ -726,36 +721,30 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("AddressLine1")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnName("address_line_1");
 
                     b.Property<string>("AddressLine2")
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnName("address_line_2");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT")
                         .HasColumnName("country");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
-                        .HasMaxLength(7)
                         .HasColumnType("TEXT")
                         .HasColumnName("postal_code");
 
                     b.Property<string>("Province")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT")
                         .HasColumnName("province");
 
@@ -840,15 +829,13 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.MenuItemDietaryTag", b =>
                 {
+                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
+                        .WithMany("MenuItemDietaryTags")
+                        .HasForeignKey("DietaryTagId");
+
                     b.HasOne("RestaurantManager.Models.MenuItem", "MenuItem")
                         .WithMany("MenuItemDietaryTags")
                         .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
-                        .WithMany("MenuItemDietaryTags")
-                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

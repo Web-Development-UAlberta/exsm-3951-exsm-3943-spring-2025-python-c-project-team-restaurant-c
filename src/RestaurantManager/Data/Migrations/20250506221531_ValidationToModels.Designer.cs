@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantManager.Data;
 
@@ -10,9 +11,11 @@ using RestaurantManager.Data;
 namespace RestaurantManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506221531_ValidationToModels")]
+    partial class ValidationToModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -475,9 +478,12 @@ namespace RestaurantManager.Data.Migrations
                     b.Property<int>("TagId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("DietaryTagId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("MenuItemId", "TagId");
 
-                    b.HasIndex("TagId");
+                    b.HasIndex("DietaryTagId");
 
                     b.ToTable("menu_item_dietary_tag");
 
@@ -840,15 +846,13 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.MenuItemDietaryTag", b =>
                 {
+                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
+                        .WithMany("MenuItemDietaryTags")
+                        .HasForeignKey("DietaryTagId");
+
                     b.HasOne("RestaurantManager.Models.MenuItem", "MenuItem")
                         .WithMany("MenuItemDietaryTags")
                         .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
-                        .WithMany("MenuItemDietaryTags")
-                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

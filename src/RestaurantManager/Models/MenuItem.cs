@@ -15,14 +15,17 @@ namespace RestaurantManager.Models
 
     [Column("name")]
     [Required]
+    [StringLength(100, ErrorMessage = "Name must be under 100 characters.")]
     public required string Name { get; set; }
 
     [Column("description")]
     [Required]
+    [StringLength(500, ErrorMessage = "Description must be under 500 characters.")]
     public required string Description { get; set; }
 
     [Column("price")]
     [Required]
+    [Range(0.01, 20000, ErrorMessage = "Price must be between $0.01 and $20,000")]
     public required decimal Price { get; set; }
 
     [Column("category")]

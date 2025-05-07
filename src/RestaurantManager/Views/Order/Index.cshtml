@@ -2,13 +2,13 @@
 @using RestaurantManager.Models
 
 @{
-    ViewBag.Title = "Menu";
+    ViewBag.Title = "Order";
     var dietaryTags = ViewBag.DietaryTags as List<DietaryTag>;
 }
 
 <div class="container py-5">
     <header class="text-center mb-5">
-        <h2 class="fw-bold">We Offer Delivery, Pickup & In-Restaurant Dining</h2>
+        <h2 class="fw-bold">Order for Pickup or Delivery</h2>
     </header>
 
     <div class="row">
@@ -17,6 +17,10 @@
             <partial name="_MenuGroupedItems" model="Model" />
         </main>
     </div>
+
+    <!-- Cart Partial View -->
+    @* @Html.Partial("_Cart", Model.OrderMenuItems) *@
+
 </div>
 
 @section Scripts {
