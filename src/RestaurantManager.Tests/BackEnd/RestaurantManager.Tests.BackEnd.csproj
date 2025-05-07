@@ -20,4 +20,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\RestaurantManager\RestaurantManager.csproj" />
+  </ItemGroup>
+
+
 </Project>

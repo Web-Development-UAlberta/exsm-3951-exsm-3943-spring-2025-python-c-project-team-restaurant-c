@@ -1,19 +1,20 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace RestaurantManager.Enums
 {
-    public enum MenuItemCategory
-    {
-        [Display(Name = "Appetizers")]
-        Appetizer,
+  public enum MenuItemCategory
+  {
+    [Display(Name = "Appetizer")]
+    Appetizer = 0,
 
-        [Display(Name = "Mains")]
-        MainCourse,
+    [Display(Name = "MainCourse")]
+    MainCourse = 1,
 
-        [Display(Name = "Desserts")]
-        Dessert,
+    [Display(Name = "Dessert")]
+    Dessert = 2,
 
-        [Display(Name = "Beverages")]
-        Beverage,
-    }
+    [Display(Name = "Beverage")]
+    Beverage = 3,
+  }
 
 }
