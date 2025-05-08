@@ -1,0 +1,33 @@
+@model List<RestaurantManager.Models.OrderMenuItem>
+
+<div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h4>Your Cart</h4>
+        <button id="close-cart-btn" class="btn-close" onclick="toggleCart()"></button>
+    </div>
+
+    <div class="cart-body">
+        @if (Model.Any())
+        {
+            @* <ul class="cart-items">
+                @foreach (var item in Model)
+                {
+                    <li class="cart-item">
+                        <span>@item.Name</span> - $@item.Price
+                    </li>
+                }
+            </ul>
+            <div class="cart-total">
+                <strong>Total: </strong>$@Model.Sum(x => x.Price)
+            </div> *@
+        }
+        else
+        {
+            <p>Your cart is empty.</p>
+        }
+    </div>
+
+    <div class="cart-footer">
+        <button class="btn btn-primary w-100" onclick="payNow()">Pay Now</button>
+    </div>
+</div>
