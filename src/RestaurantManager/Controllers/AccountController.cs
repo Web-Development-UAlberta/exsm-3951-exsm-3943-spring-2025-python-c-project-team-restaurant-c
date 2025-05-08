@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RestaurantManager.Controllers;
 
@@ -16,15 +17,22 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
     private readonly ApplicationDbContext _context = context;
 
     // GET: Account/Login
-    public IActionResult Login()
+    public IActionResult Login(int userType)
     {
+        ViewBag.UserType = userType;
         ViewBag.IsLogin = true;
         return View("Login");  // Return the Login view
     }
+
     // POST: Account/Login
     [HttpPost]
     public async Task<IActionResult> Login(User userInput)
     {
+        ModelState.Remove("PasswordSalt");
+        ModelState.Remove("FirstName");
+        ModelState.Remove("LastName");
+        ModelState.Remove("Phone");
+
         if (ModelState.IsValid)
         {
             var user = _context.Users.FirstOrDefault(u => u.Email == userInput.Email);
@@ -34,7 +42,7 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
                 var claims = new List<Claim>
                 {
                     new(ClaimTypes.Name, user.Email),
-                    new(ClaimTypes.Role, user.Role.ToString())
+                    new(ClaimTypes.Role, user.Role.ToString()),
                 };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -48,22 +56,35 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
+                // if ((userInput.Role == Enums.UserRole.Customer && ViewBag.UserType == 0) ||
+                //     ((userInput.Role == Enums.UserRole.Admin || userInput.Role == Enums.UserRole.Manager || userInput.Role == Enums.UserRole.Staff) && ViewBag.UserType == 1))
+
                 // Redirect based on role
                 return user.Role switch
                 {
-                    Enums.UserRole.Admin or Enums.UserRole.Staff or Enums.UserRole.Manager => RedirectToAction("Dashboard", "Kitchen"),
+                    Enums.UserRole.Admin or Enums.UserRole.Staff or Enums.UserRole.Manager => RedirectToAction("Index", "KitchenDashboard"),
                     _ => RedirectToAction("Index", "Home"),
                 };
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login credentials.");
         }
+        else
+        {
+            foreach (KeyValuePair<string, ModelStateEntry?> m in ModelState.Where(m => m.Value?.ValidationState == ModelValidationState.Invalid))
+            {
+                ModelErrorCollection? errors = m.Value?.Errors;
+                if (errors != null && errors.Any())
+                {
+                    foreach (var error in errors)
+                        ModelState.AddModelError(string.Empty, $"{m.Key} failed validation: {error.ErrorMessage}");
+                }
+            }
+        }
 
         ViewBag.IsLogin = true;
         return View("Login", userInput);
     }
-
-
 
     // GET: Account/Register
     public IActionResult Register()
@@ -71,7 +92,6 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
         ViewBag.IsLogin = false;
         return View("Register");  // Return the Register view
     }
-
 
     // POST: Account/Register
     [HttpPost]
@@ -106,7 +126,6 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
                     _logger.LogError(ex, "Failed to save user");
                     ModelState.AddModelError("", "An error occurred saving the user.");
                 }
-
 
                 Console.WriteLine("User saved: " + user.Email);
 

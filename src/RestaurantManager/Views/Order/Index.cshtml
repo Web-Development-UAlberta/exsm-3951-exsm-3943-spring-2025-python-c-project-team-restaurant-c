@@ -1,0 +1,41 @@
+@model IEnumerable<RestaurantManager.Models.MenuItem>
+@using RestaurantManager.Models
+
+@{
+    ViewBag.Title = "Order";
+    var dietaryTags = ViewBag.DietaryTags as List<DietaryTag>;
+}
+
+<div class="banner-image position-relative text-white text-center">
+    <img src="~/images/patio.png" class="img-fluid w-100" alt="Restaurant Image" />
+    <div class="banner-text position-absolute top-50 start-50 translate-middle">
+        <h2 class="fw-bold text-light display-4">Order for Pickup or Delivery</h2>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <partial name="_MenuSidebar" model="dietaryTags" />
+        <main class="col-md-9">
+            <partial name="_MenuGroupedItems" model="Model" />
+        </main>
+    </div>
+
+    <!-- Cart Partial View -->
+    @* @Html.Partial("_Cart", Model.OrderMenuItems) *@
+
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.filter-link').forEach(link => {
+            link.addEventListener('click', function () {
+                const tag = this.dataset.tag;
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    const itemTags = item.dataset.tags.split(',');
+                    item.style.display = (tag === 'all' || itemTags.includes(tag)) ? '' : 'none';
+                });
+            });
+        });
+    </script>
+}

@@ -222,7 +222,8 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(100)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -256,12 +257,13 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("category");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(500)
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("description");
 
                     b.Property<bool>("IsAvailable")
@@ -270,11 +272,13 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("name");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("TEXT")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("REAL")
                         .HasColumnName("price");
 
                     b.HasKey("Id");
@@ -308,23 +312,175 @@ namespace RestaurantManager.Data.Migrations
                             IsAvailable = true,
                             Name = "Caesar Salad",
                             Price = 7.99m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Category = "MainCourse",
+                            Description = "Hearty beef lasagna with mozzarella cheese.",
+                            IsAvailable = true,
+                            Name = "Beef Lasagna",
+                            Price = 13.49m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Category = "MainCourse",
+                            Description = "Grilled salmon with lemon butter sauce.",
+                            IsAvailable = true,
+                            Name = "Grilled Salmon",
+                            Price = 15.99m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Category = "Appetizer",
+                            Description = "Toasted garlic bread with herbs.",
+                            IsAvailable = true,
+                            Name = "Garlic Bread",
+                            Price = 4.99m
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Category = "Appetizer",
+                            Description = "Tomatoes, garlic, basil on toasted baguette.",
+                            IsAvailable = true,
+                            Name = "Bruschetta",
+                            Price = 5.99m
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Category = "Appetizer",
+                            Description = "Mushrooms filled with cheese and herbs.",
+                            IsAvailable = true,
+                            Name = "Stuffed Mushrooms",
+                            Price = 6.99m
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Category = "Appetizer",
+                            Description = "Vegetable spring rolls with sweet chili sauce.",
+                            IsAvailable = true,
+                            Name = "Spring Rolls",
+                            Price = 5.49m
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Category = "Appetizer",
+                            Description = "Loaded nachos with cheese and jalapeños.",
+                            IsAvailable = true,
+                            Name = "Nachos",
+                            Price = 8.99m
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Category = "Dessert",
+                            Description = "Rich chocolate cake with fudge frosting.",
+                            IsAvailable = true,
+                            Name = "Chocolate Cake",
+                            Price = 6.99m
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Category = "Dessert",
+                            Description = "Creamy cheesecake with a graham cracker crust.",
+                            IsAvailable = true,
+                            Name = "Cheesecake",
+                            Price = 6.49m
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Category = "Dessert",
+                            Description = "Vanilla ice cream with toppings.",
+                            IsAvailable = true,
+                            Name = "Ice Cream Sundae",
+                            Price = 5.99m
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Category = "Dessert",
+                            Description = "Italian dessert with coffee and mascarpone.",
+                            IsAvailable = true,
+                            Name = "Tiramisu",
+                            Price = 7.49m
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Category = "Dessert",
+                            Description = "Fresh seasonal fruit medley.",
+                            IsAvailable = true,
+                            Name = "Fruit Salad",
+                            Price = 4.99m
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Category = "Beverage",
+                            Description = "Freshly brewed coffee.",
+                            IsAvailable = true,
+                            Name = "Coffee",
+                            Price = 2.99m
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Category = "Beverage",
+                            Description = "Chilled black tea with lemon.",
+                            IsAvailable = true,
+                            Name = "Iced Tea",
+                            Price = 2.99m
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Category = "Beverage",
+                            Description = "Blended fruit smoothie with yogurt.",
+                            IsAvailable = true,
+                            Name = "Smoothie",
+                            Price = 4.99m
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Category = "Beverage",
+                            Description = "Fresh squeezed lemonade.",
+                            IsAvailable = true,
+                            Name = "Lemonade",
+                            Price = 3.49m
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Category = "Beverage",
+                            Description = "Choice of Coke, Sprite, or Root Beer.",
+                            IsAvailable = true,
+                            Name = "Soda",
+                            Price = 2.49m
                         });
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.MenuItemDietaryTag", b =>
                 {
                     b.Property<int>("MenuItemId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("menu_item_id");
 
                     b.Property<int>("TagId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("DietaryTagId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("tag_id");
 
                     b.HasKey("MenuItemId", "TagId");
 
-                    b.HasIndex("DietaryTagId");
+                    b.HasIndex("TagId");
 
                     b.ToTable("menu_item_dietary_tag");
 
@@ -358,14 +514,17 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("address_id");
 
                     b.Property<decimal?>("DeliveryFee")
-                        .HasColumnType("TEXT")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("REAL")
                         .HasColumnName("delivery_fee");
 
                     b.Property<string>("DeliveryInstructions")
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("delivery_instructions");
 
                     b.Property<string>("Notes")
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("notes");
 
@@ -379,30 +538,32 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("status");
 
                     b.Property<decimal>("Subtotal")
-                        .HasColumnType("TEXT")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("REAL")
                         .HasColumnName("subtotal");
 
                     b.Property<decimal>("Tax")
-                        .HasColumnType("TEXT")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("REAL")
                         .HasColumnName("tax");
 
-                    b.Property<decimal?>("TipAmount")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
+                    b.Property<decimal>("TipAmount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("REAL")
                         .HasColumnName("tip_amount");
 
-                    b.Property<decimal?>("Total")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("total");
+                    b.Property<decimal>("Total")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("REAL")
+                        .HasColumnName("total_amount");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("order_type");
 
                     b.Property<int>("UserId")
@@ -424,14 +585,15 @@ namespace RestaurantManager.Data.Migrations
                 {
                     b.Property<int>("OrderId")
                         .HasColumnType("INTEGER")
-                        .HasColumnOrder(0);
+                        .HasColumnName("order_id");
 
                     b.Property<int>("MenuItemId")
                         .HasColumnType("INTEGER")
-                        .HasColumnOrder(1);
+                        .HasColumnName("menu_item_id");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("quantity");
 
                     b.HasKey("OrderId", "MenuItemId");
 
@@ -456,6 +618,7 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("guest_count");
 
                     b.Property<string>("Notes")
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("notes");
 
@@ -463,13 +626,12 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("reservation_datetime");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("status");
 
                     b.Property<int>("TableNumber")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("INT")
                         .HasColumnName("table_number");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -495,37 +657,42 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("DietaryNotes")
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT")
                         .HasColumnName("dietary_notes");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("last_name");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("PasswordSalt")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("password_salt");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR(50)")
                         .HasColumnName("phone");
 
                     b.Property<int>("RewardsPoints")
@@ -534,12 +701,26 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("role");
 
                     b.HasKey("Id");
 
                     b.ToTable("user");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Email = "admin@gmail.com",
+                            FirstName = "Admin",
+                            LastName = "Test",
+                            PasswordHash = "+1fzEaaKIt+hxB8eZ5RK6sywJXqY5Qkn7CxNoG6ckxc=",
+                            PasswordSalt = "hHA0qDG/iJSbc9PEUXJ8UQ==",
+                            Phone = "111-111-1111",
+                            RewardsPoints = 0,
+                            Role = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("RestaurantManager.Models.UserAddress", b =>
@@ -551,31 +732,37 @@ namespace RestaurantManager.Data.Migrations
 
                     b.Property<string>("AddressLine1")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("address_line_1");
 
                     b.Property<string>("AddressLine2")
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(100)
+                        .HasColumnType("VARCHAR(255)")
                         .HasColumnName("address_line_2");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(100)")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(100)")
                         .HasColumnName("country");
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(7)
+                        .HasColumnType("VARCHAR(20)")
                         .HasColumnName("postal_code");
 
                     b.Property<string>("Province")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasMaxLength(50)
+                        .HasColumnType("VARCHAR(100)")
                         .HasColumnName("province");
 
                     b.Property<int>("UserId")
@@ -593,11 +780,11 @@ namespace RestaurantManager.Data.Migrations
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER")
-                        .HasColumnOrder(0);
+                        .HasColumnName("user_id");
 
                     b.Property<int>("TagId")
                         .HasColumnType("INTEGER")
-                        .HasColumnOrder(1);
+                        .HasColumnName("tag_id");
 
                     b.HasKey("UserId", "TagId");
 
@@ -659,13 +846,15 @@ namespace RestaurantManager.Data.Migrations
 
             modelBuilder.Entity("RestaurantManager.Models.MenuItemDietaryTag", b =>
                 {
-                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
-                        .WithMany("MenuItemDietaryTags")
-                        .HasForeignKey("DietaryTagId");
-
                     b.HasOne("RestaurantManager.Models.MenuItem", "MenuItem")
                         .WithMany("MenuItemDietaryTags")
                         .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RestaurantManager.Models.DietaryTag", "DietaryTag")
+                        .WithMany("MenuItemDietaryTags")
+                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,20 +1,73 @@
-@model MenuItem
+@using RestaurantManager.Enums
+@model RestaurantManager.Models.MenuItem
 
-<div class="menu-card">
-    <h4>@Model.Name</h4>
-    <p>@Model.Description</p>
-    <p class="price">$@Model.Price.ToString("F2")</p>
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var showCart = currentController == "Order";
+}
 
+<div class="card menu-card custom-card h-100 p-3 d-flex flex-row" style="border: 1px solid #ddd; border-radius: 8px;">
+
+    <!-- Dietary Tags -->
     @if (Model.MenuItemDietaryTags != null && Model.MenuItemDietaryTags.Any())
     {
-        <p class="dietary-tags">
+        <div class="mb-2 w-20 d-flex flex-column">
             @foreach (var tagLink in Model.MenuItemDietaryTags)
             {
                 if (tagLink.DietaryTag != null)
                 {
-                    <span class="tag">@tagLink.DietaryTag.Name</span>
+                    <span class="badge">@tagLink.DietaryTag.Name?[0]</span>
                 }
             }
-        </p>
+        </div>
     }
+
+    <div class="card-body d-flex flex-column text-start align-items-start">
+        <!-- Menu Item Name -->
+        <h5 class="card-title fw-bold text-success">@Model.Name</h5>
+
+        <!-- Description -->
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <p class="card-text text-muted mb-3">@Model.Description</p>
+        }
+
+        <div class="d-flex justify-content-between align-items-end gap-3 w-100 mt-auto">
+            <!-- Price -->
+            <p class="fw-bold fs-5 text-orange mb-0">@Model.Price.ToString("C2")</p>
+
+            <!-- Quantity Buttons -->
+            @if (showCart)
+            {
+                <div class="pt-3 d-flex justify-content-center align-items-center gap-3">
+                    <button type="button" class="counter-btn btn-outline-secondary rounded-circle"
+                        onclick="decreaseQuantity('@Model.Id')">-</button>
+
+                    <span id="item-quantity-@Model.Id" class="fw-bold">0</span>
+
+                    <button type="button" class="counter-btn btn-outline-primary rounded-circle"
+                        onclick="increaseQuantity('@Model.Id')">+</button>
+                </div>
+            }
+        </div>
+
+    </div>
 </div>
+
+
+<!-- Edit this not in JAVA  -->
+<script>
+    function increaseQuantity(itemId) {
+        const quantityElement = document.getElementById(`item-quantity-${itemId}`);
+        let current = parseInt(quantityElement.textContent);
+        quantityElement.textContent = current + 1;
+    }
+
+    function decreaseQuantity(itemId) {
+        const quantityElement = document.getElementById(`item-quantity-${itemId}`);
+        let current = parseInt(quantityElement.textContent);
+        if (current > 0) {
+            quantityElement.textContent = current - 1;
+        }
+    }
+</script>

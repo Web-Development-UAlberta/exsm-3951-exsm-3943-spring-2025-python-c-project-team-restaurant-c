@@ -21,6 +21,7 @@ main {
   --terracotta-hover: #a8562f;
   --terracotta-active: #8a4320;
 
+  --light-cream: #FCFAF7;
   --cream: #F5F1E8;
   --charcoal: #3A3E3B;
   --bs-white: #fff;
@@ -30,11 +31,16 @@ main {
   padding: 0.5rem 2rem;
 }
 
+.counter-btn {
+  width: 3rem;
+  height: 3rem;
+  border: .125rem solid var(--forest-green);
+}
+
 /* Outline Primary */
 .btn-outline-primary {
   color: var(--forest-green);
-  border-color: var(--forest-green);
-  background-color: transparent;
+  border: .125rem solid var(--forest-green);
   font-weight: 600;
 }
 
@@ -174,6 +180,113 @@ footer .btn {
   padding: 0.5rem 2rem;
 }
 
+/* Sidebar Styling */
+.sticky-sidebar {
+  position: sticky;
+  top: 4rem;
+  height: 100vh;
+  background-color: var(--light-cream);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.category-link {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: var(--forest-green);
+}
+
+.category-link:hover {
+  color: var(--forest-green-hover);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.category-link:active {
+  color: var(--forest-green-active);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.filter-link {
+  display: flex;
+  align-items: center;
+  color: var(--forest-green);
+}
+
+.filter-link:hover {
+  color: var(--terracotta-hover);
+  cursor: pointer;
+}
+
+.filter-link:active {
+  color: var(--terracotta-active);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Menu Card */
+.menu-card {
+  background-color: var(--light-cream);
+  border-radius: 6px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.menu-card:hover {
+  transform: scale(1.05);
+}
+
+.card-title {
+  color: var(--charcoal);
+  font-size: 1.25rem;
+}
+
+.text-orange {
+  color: var(--terracotta);
+}
+
+.badge {
+  margin-top: 5px;
+  border: .125rem solid var(--terracotta);
+  color: var(--terracotta);
+  width: 2rem;
+  height: 2rem;
+  vertical-align: auto;
+  border-radius: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cart */
+.cart-sidebar {
+  position: sticky;
+  top: 100px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.banner-image {
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+.banner-image img {
+  object-fit: cover;
+  height: 100%;
+}
+
+.banner-text {
+  color: var(--light-cream);
+  z-index: 2;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
 
 /* Footer content styling for small screens (mobile) */
 @media (max-width: 767px) {

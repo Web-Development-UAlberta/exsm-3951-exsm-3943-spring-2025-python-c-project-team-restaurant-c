@@ -1,35 +1,37 @@
-@model IEnumerable<MenuItem>
+@model IEnumerable<RestaurantManager.Models.MenuItem>
+@using RestaurantManager.Models
 
 @{
     ViewBag.Title = "Menu";
+    var dietaryTags = ViewBag.DietaryTags as List<DietaryTag>;
 }
 
-<div class="container">
-    <header>
-        <h2>We Offer Delivery, Pickup<br />& In Restaurant Dinning</h2>
-    </header>
-
-    <section class="banner">
-
-    </section>
-
-    <aside>
-        <h4>Menu</h4>
-        <ul>
-            <li><a href="#">Menu Label</a></li>
-            <li><a href="#">Menu Label</a></li>
-            <li><a href="#">Menu Label</a></li>
-        </ul>
-        <div>
-            <p><span>⭐</span> Vegetarian</p>
-            <p><span>⭐</span> Gluten Free</p>
-        </div>
-    </aside>
-
-    <main>
-        @foreach (var item in Model)
-        {
-            <partial name="_MenuItemCard" model="item" />
-        }
-    </main>
+<div class="banner-image position-relative text-white text-center">
+    <img src="~/images/harvest-bowl-green-img.png" class="img-fluid w-100" alt="Restaurant Image" />
+    <div class="banner-text position-absolute top-50 start-50 translate-middle">
+        <h2 class="fw-bold text-light display-4">We Offer Delivery, Pickup & In-Restaurant Dining</h2>
+    </div>
 </div>
+
+<div class="container py-5">
+    <div class="row">
+        <partial name="_MenuSidebar" model="dietaryTags" />
+        <main class="col-md-9">
+            <partial name="_MenuGroupedItems" model="Model" />
+        </main>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.filter-link').forEach(link => {
+            link.addEventListener('click', function () {
+                const tag = this.dataset.tag;
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    const itemTags = item.dataset.tags.split(',');
+                    item.style.display = (tag === 'all' || itemTags.includes(tag)) ? '' : 'none';
+                });
+            });
+        });
+    </script>
+}
