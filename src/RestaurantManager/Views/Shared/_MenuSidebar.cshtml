@@ -22,18 +22,21 @@
                 </div>
             }
         </div>
-        <hr class="my-3" />
         <h4 class="mb-3 sidebar text-dark">Filter</h4>
         <div id="dietary-filters">
             @foreach (var tag in Model)
             {
-                <a class="filter-link text-decoration-none d-flex flex-row gap-2 mb-3" data-tag="@tag.Name">
+                <a href="@Url.Action("Index", "Menu", new { tag = tag.Name })"
+                    class="filter-link text-decoration-none d-flex flex-row gap-2 mb-3">
                     <span class="badge m-0">@tag.Name?[0]</span>
                     @tag.Name
                 </a>
             }
+
             <div class="list-group-item bg-transparent text-dark border-0">
-                <a class="filter-link text-decoration-none" data-tag="all">Show All</a>
+                <a href="@Url.Action("Index", "Menu", new { tag = "all" })" class="filter-link text-decoration-none">
+                    Show All
+                </a>
             </div>
         </div>
         @if (showCart)

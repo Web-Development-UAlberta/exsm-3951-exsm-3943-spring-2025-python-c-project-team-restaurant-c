@@ -15,6 +15,9 @@ namespace RestaurantManager.Enums
 
     [Display(Name = "In Progress")]
     InProgress = 3,
+
+    [Display(Name = "No Order")]
+    NoOrder = 4,
   }
 
 }

@@ -1,0 +1,45 @@
+@model RestaurantManager.Models.Reservation
+
+@{
+    ViewBag.Title = "Book a Table";
+}
+
+<div class="banner-image position-relative text-white text-center">
+    <img src="~/images/patio.png" class="img-fluid w-100" alt="Restaurant Image" />
+    <div class="banner-text position-absolute top-50 start-50 translate-middle">
+        <h2 class="fw-bold text-light display-4">Reservation</h2>
+    </div>
+</div>
+
+
+<!-- Customer contact -->
+
+<div class="container mt-5">
+    <h2>Book a Table</h2>
+
+    @using (Html.BeginForm("SubmitReservation", "Reservation", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group mb-3">
+            @Html.LabelFor(m => m.ReservationDateTime, "Reservation Date & Time")
+            @Html.TextBoxFor(m => m.ReservationDateTime, new { @class = "form-control", type = "datetime-local" })
+            @Html.ValidationMessageFor(m => m.ReservationDateTime, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.LabelFor(m => m.GuestCount, "Number of Guests")
+            @Html.TextBoxFor(m => m.GuestCount, new { @class = "form-control", type = "number", min = "1", max = "50" })
+            @Html.ValidationMessageFor(m => m.GuestCount, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.LabelFor(m => m.Notes, "Additional Reservation Requests")
+            @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", rows = 3 })
+            @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "text-danger" })
+        </div>
+
+        <button type="submit" class="btn btn-primary">Book Now</button>
+    }
+
+</div>

@@ -41,6 +41,7 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
                 // Create the identity with claims
                 var claims = new List<Claim>
                 {
+                    new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new(ClaimTypes.Name, user.Email),
                     new(ClaimTypes.Role, user.Role.ToString()),
                 };

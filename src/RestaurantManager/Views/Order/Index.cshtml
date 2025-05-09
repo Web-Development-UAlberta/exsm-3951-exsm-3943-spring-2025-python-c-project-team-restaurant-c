@@ -25,17 +25,3 @@
     @* @Html.Partial("_Cart", Model.OrderMenuItems) *@
 
 </div>
-
-@section Scripts {
-    <script>
-        document.querySelectorAll('.filter-link').forEach(link => {
-            link.addEventListener('click', function () {
-                const tag = this.dataset.tag;
-                document.querySelectorAll('.menu-item').forEach(item => {
-                    const itemTags = item.dataset.tags.split(',');
-                    item.style.display = (tag === 'all' || itemTags.includes(tag)) ? '' : 'none';
-                });
-            });
-        });
-    </script>
-}

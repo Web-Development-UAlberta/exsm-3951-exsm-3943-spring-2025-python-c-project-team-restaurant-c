@@ -3,40 +3,40 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Models;
 using RestaurantManager.Data;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace RestaurantManager.Controllers
+namespace RestaurantManager.Controllers;
+
+public class MenuController(ApplicationDbContext context) : Controller
 {
-    public class MenuController : Controller
+    private readonly ApplicationDbContext _context = context;
+
+    public async Task<IActionResult> Index(string tag = "all")
     {
-        private readonly ApplicationDbContext _context;
+        IQueryable<MenuItem> query = _context.MenuItems
+            .Where(m => m.IsAvailable)
+            .Include(m => m.MenuItemDietaryTags)
+                .ThenInclude(md => md.DietaryTag);
 
-        // Constructor that accepts ApplicationDbContext
-        public MenuController(ApplicationDbContext context)
+        if (tag != "all")
         {
-            _context = context;
+            query = query.Where(m =>
+                m.MenuItemDietaryTags != null &&
+                m.MenuItemDietaryTags.Any(md =>
+                    md.DietaryTag != null &&
+                    md.DietaryTag.Name.Equals(tag)));
         }
 
-        // Index action that retrieves menu items with their dietary tags
-        public async Task<IActionResult> Index()
-        {
-            // Fetch menu items with their dietary tags
-            var menuItems = await _context.MenuItems
-                .Include(m => m.MenuItemDietaryTags)
-                    .ThenInclude(tag => tag.DietaryTag) // Include DietaryTag details
-                .Where(m => m.IsAvailable) // Filter available menu items
-                .ToListAsync();
+        List<MenuItem> menuItems = await query.ToListAsync();
 
-            ViewBag.DietaryTags = await _context.DietaryTags.ToListAsync();
+        ViewBag.DietaryTags = await _context.DietaryTags.ToListAsync();
 
-            return View(menuItems); // Pass the menu items to the view
-        }
+        return View(menuItems);
+    }
 
-        // Error handling action
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+    // Error handling action
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
