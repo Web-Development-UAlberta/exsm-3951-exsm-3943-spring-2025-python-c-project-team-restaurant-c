@@ -14,7 +14,7 @@
             @foreach (var item in group)
             {
                 <div class="col-md-6 col-lg-4 menu-item"
-                    data-tags="@string.Join(",", item.MenuItemDietaryTags?.Where(tag => tag.DietaryTag != null).Select(tag => tag.DietaryTag.Name) ?? new List<string>())">
+                    data-tags="@string.Join(",", item.MenuItemDietaryTags?.Where(tag => tag != null && tag.DietaryTag != null).Select(tag => tag.DietaryTag.Name) ?? [])">
                     <partial name="_MenuItemCard" model="item" />
                 </div>
             }

@@ -1,14 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
-@{
-    Dictionary<string, string> pages = new Dictionary<string, string>()
-    {
-    {"Menu", $"Menu/Index"},
-    {"Order", $"Order/Index"},
-    };
-}
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,10 +35,11 @@
                         <li class="nav-item me-4">
                             <a asp-controller="Menu" asp-action="Index" class="nav-link menu-link d-block">Menu</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item me-4">
-                                <a asp-controller="CustomerDashboard" asp-action="Index" class="nav-link menu-link d-block">Account
+                                <a asp-controller="CustomerDashboard" asp-action="Index"
+                                    class="nav-link menu-link d-block">Account
                                 </a>
                             </li>
                             <li class="nav-item me-4">
@@ -140,8 +133,10 @@
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login" asp-route-userType="0" class="btn btn-sm btn-primary mb-2">Book Table</a>
-                    <a asp-controller="Account" asp-action="Login" asp-route-userType="0" class="btn btn-sm btn-outline-primary">Order</a>
+                    <a asp-controller="Account" asp-action="Login" asp-route-userType="0"
+                        class="btn btn-sm btn-primary mb-2">Book Table</a>
+                    <a asp-controller="Account" asp-action="Login" asp-route-userType="0"
+                        class="btn btn-sm btn-outline-primary">Order</a>
                 }
                 <a asp-controller="Menu" asp-action="Index" class="nav-link menu-link d-block">Menu</a>
             </div>

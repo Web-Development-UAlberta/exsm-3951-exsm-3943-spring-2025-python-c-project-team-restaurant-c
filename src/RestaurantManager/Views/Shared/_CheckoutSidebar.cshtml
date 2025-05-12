@@ -1,0 +1,173 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+
+@{
+    decimal subtotal = Model.OrderMenuItems?.Sum(item => item.Quantity * item.MenuItem.Price) ?? 0m;
+    decimal tax = subtotal * 0.05m;
+    decimal deliveryFee = Model.Type == OrderType.Delivery ? 5.00m : 0.00m;
+    decimal tip = Model.TipAmount == 0 ? 0m : Model.TipAmount; // Ensure it's always 0 or a valid amount
+    decimal total = subtotal + tax + tip + deliveryFee;
+
+    decimal tip10 = Math.Round(subtotal * 0.10m, 2);
+    decimal tip15 = Math.Round(subtotal * 0.15m, 2);
+    decimal tip20 = Math.Round(subtotal * 0.20m, 2);
+    bool isCustomTip = Model.TipAmount != 0 && Model.TipAmount != tip10 && Model.TipAmount != tip15 && Model.TipAmount !=
+    tip20;
+}
+
+<!-- Right: Summary -->
+<aside class="col-md-2 me-4 mb-4 sticky-sidebar d-flex flex-column"
+    style="position: sticky; max-height: 40rem; width: 400px; background-color: white;">
+    <div class="d-flex flex-column h-100">
+        <h5 class="mb-4">Your Order</h5>
+
+        <div class="d-flex justify-content-between mb-3">
+            <span>Subtotal</span>
+            <span>@subtotal.ToString("C2")</span>
+        </div>
+
+        <div class="d-flex justify-content-between mb-3">
+            <span>Tax (5%)</span>
+            <span>@tax.ToString("C2")</span>
+        </div>
+
+        <div class="border-top pt-3 mt-3">
+            <div class="d-flex justify-content-between mb-2">
+                <span>Tip</span>
+                <span id="tipDisplay">@Model.TipAmount.ToString("C2")</span>
+            </div>
+
+            <div class="btn-group w-100 mb-2" role="group" aria-label="Tip Options">
+                <input type="radio" class="btn-check tip-option" name="TipAmount" id="tip10" value="@tip10"
+                    @(Model.TipAmount == tip10 ? "checked" : "") autocomplete="off">
+                <label class="btn btn-outline-primary" for="tip10">10%</label>
+
+                <input type="radio" class="btn-check tip-option" name="TipAmount" id="tip15" value="@tip15"
+                    @(Model.TipAmount == tip15 ? "checked" : "") autocomplete="off">
+                <label class="btn btn-outline-primary" for="tip15">15%</label>
+
+                <input type="radio" class="btn-check tip-option" name="TipAmount" id="tip20" value="@tip20"
+                    @(Model.TipAmount == tip20 ? "checked" : "") autocomplete="off">
+                <label class="btn btn-outline-primary" for="tip20">20%</label>
+
+                <input type="radio" class="btn-check tip-option" name="TipAmount" id="tipOther" value="other"
+                    @(isCustomTip ? "checked" : "") autocomplete="off">
+                <label class="btn btn-outline-primary" for="tipOther">Other</label>
+            </div>
+
+            <input type="number" step="0.01" min="0" max="100000" name="CustomTipAmount" id="customTipInput"
+                class="form-control mt-2" placeholder="Enter custom tip amount"
+                value="@(isCustomTip? Model.TipAmount.ToString("C2") : "")" @(isCustomTip ? "" : "disabled") />
+        </div>
+
+        @if (Model.Type == OrderType.Delivery)
+        {
+            <div class="d-flex justify-content-between mt-4 mb-2">
+                <span>Delivery Fee</span>
+                <span>$@deliveryFee.ToString("C2")</span>
+            </div>
+        }
+
+        <hr class="my-3" />
+
+        <div class="d-flex justify-content-between fw-bold fs-5 mb-5">
+            <span>Total</span>
+            <span id="totalDisplay">@total.ToString("C2")</span>
+        </div>
+
+        @if (Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+        {
+            <form asp-controller="Order" asp-action="Receipt" class="mt-auto">
+                <button type="submit" class="btn btn-primary w-100">
+                    Place @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type) Order
+                </button>
+            </form>
+        }
+    </div>
+</aside>
+
+<style>
+    /* Custom selected tip button color */
+    .btn-check:checked+.btn-outline-primary {
+        background-color: var(--forest-green);
+        border-color: var(--forest-green);
+        color: white;
+    }
+
+    /* Optional: Hover effect to match */
+    .btn-outline-primary:hover {
+        background-color: var(--forest-green-hover);
+        border-color: var(--forest-green-hover);
+        color: white;
+    }
+</style>
+
+
+<script>
+    const subtotal = parseFloat("@subtotal");
+    const tax = parseFloat("@tax");
+    const deliveryFee = parseFloat("@deliveryFee");
+    const tipRadios = document.querySelectorAll('.tip-option');
+    const customTipInput = document.getElementById('customTipInput');
+    const tipDisplay = document.getElementById('tipDisplay');
+    const totalDisplay = document.getElementById('totalDisplay');
+
+    function updateTipAndTotal() {
+        let tipAmount = 0;
+        const selected = document.querySelector('input[name="TipAmount"]:checked');
+
+        if (selected) {
+            if (selected.value === "other") {
+                tipAmount = parseFloat(customTipInput.value) || 0;
+            } else {
+                tipAmount = parseFloat(selected.value);
+            }
+        }
+
+        tipDisplay.textContent = tipAmount.toFixed(2);
+        totalDisplay.textContent = (subtotal + tax + deliveryFee + tipAmount).toFixed(2);
+    }
+
+    tipRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.value === "other") {
+                customTipInput.disabled = false;
+                customTipInput.focus();
+            } else {
+                customTipInput.disabled = true;
+            }
+            updateTipAndTotal();
+        });
+    });
+
+    customTipInput.addEventListener('input', () => {
+        document.getElementById('tipOther').checked = true;
+        updateTipAndTotal();
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const tipOptions = document.querySelectorAll('input[name="TipAmount"]');
+        const customTipInput = document.getElementById("customTipInput");
+
+        function updateCustomTipVisibility() {
+            const selected = document.querySelector('input[name="TipAmount"]:checked');
+            if (selected && selected.id === "tipOther") {
+                customTipInput.disabled = false;
+                customTipInput.style.display = "block";
+            } else {
+                customTipInput.disabled = true;
+                customTipInput.style.display = "none";
+            }
+        }
+
+        tipOptions.forEach(option => {
+            option.addEventListener("change", updateCustomTipVisibility);
+        });
+
+        // Initialize visibility on page load
+        updateCustomTipVisibility();
+    });
+
+    // Initial update
+    updateTipAndTotal();
+</script>

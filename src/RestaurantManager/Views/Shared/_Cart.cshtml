@@ -1,33 +1,83 @@
-@model List<RestaurantManager.Models.OrderMenuItem>
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
 
-<div id="cart-sidebar" class="cart-sidebar">
-    <div class="cart-header">
-        <h4>Your Cart</h4>
-        <button id="close-cart-btn" class="btn-close" onclick="toggleCart()"></button>
-    </div>
+@{
+    decimal total = 0;
+}
 
-    <div class="cart-body">
-        @if (Model.Any())
-        {
-            @* <ul class="cart-items">
-                @foreach (var item in Model)
+<div class="cart-sidebar d-flex flex-column" style="width: 500px; z-index: 1050;">
+
+    <!-- Close button -->
+    <a href="@Url.Action("Index", "Order", new { selectedType = Model.Type })"
+        class="btn btn-link position-absolute top-0 start-0 m-3 text-dark"
+        style="font-size: 2.5rem; font-weight: semi-bold; line-height: 1;" aria-label="Close">
+        &times;
+    </a>
+
+    <!-- Scrollable cart content -->
+    <div class="flex-grow-1 overflow-auto px-4" style="min-height: 0;">
+        <!-- Header -->
+        <div class="pt-5 mt-3 px-4 border-bottom" style="z-index: 1;">
+            <h5 class="mb-1 mt-5">Your Cart</h5>
+            <div>
+                @if (Model != null)
                 {
-                    <li class="cart-item">
-                        <span>@item.Name</span> - $@item.Price
+                    <div class="text-muted small mb-2">
+                        <strong>Order Type:</strong>
+                        @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
+                    </div>
+                }
+            </div>
+
+        </div>
+
+
+        @if (Model != null && Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+        {
+            <ul class="list-group mb-4 pt-4">
+                @foreach (var item in Model.OrderMenuItems)
+                {
+                    var itemSubtotal = item.Quantity * item.MenuItem.Price;
+                    total += itemSubtotal;
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@item.MenuItem.Name</strong><br />
+                            <small class="text-muted">@item.MenuItem.Price.ToString("C2") each</small>
+                        </div>
+
+                        <div class="text-end">
+                            <form asp-action="UpdateQuantity" method="post" class="d-flex align-items-center gap-2">
+                                <input type="hidden" name="orderId" value="@Model.Id" />
+                                <input type="hidden" name="menuItemId" value="@item.MenuItem.Id" />
+
+                                <button name="action" value="decrease" type="submit"
+                                    class="btn btn-sm btn-outline-secondary">-</button>
+                                <span class="mx-2">@item.Quantity</span>
+                                <button name="action" value="increase" type="submit"
+                                    class="btn btn-sm btn-outline-secondary">+</button>
+                            </form>
+                            <small class="fw-bold d-block mt-2">@itemSubtotal.ToString("C2")</small>
+                        </div>
                     </li>
                 }
             </ul>
-            <div class="cart-total">
-                <strong>Total: </strong>$@Model.Sum(x => x.Price)
-            </div> *@
         }
         else
         {
-            <p>Your cart is empty.</p>
+            <p class="text-muted text-center pt-5">Your cart is empty.</p>
         }
     </div>
 
-    <div class="cart-footer">
-        <button class="btn btn-primary w-100" onclick="payNow()">Pay Now</button>
-    </div>
+    @if (Model != null && Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+    {
+        <div class="border-top p-4">
+            <form asp-controller="Order" asp-action="Checkout" method="get">
+                <input type="hidden" name="selectedType" value="@Model.Type" />
+                <button type="submit" class="btn btn-primary w-100">
+                    Checkout @total.ToString("C2")
+                </button>
+            </form>
+        </div>
+    }
 </div>

@@ -14,7 +14,7 @@ public class MenuController(ApplicationDbContext context) : Controller
     {
         IQueryable<MenuItem> query = _context.MenuItems
             .Where(m => m.IsAvailable)
-            .Include(m => m.MenuItemDietaryTags)
+            .Include(m => m.MenuItemDietaryTags!)
                 .ThenInclude(md => md.DietaryTag);
 
         if (tag != "all")

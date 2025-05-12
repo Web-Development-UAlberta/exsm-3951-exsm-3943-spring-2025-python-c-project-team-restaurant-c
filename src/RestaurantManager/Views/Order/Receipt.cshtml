@@ -1,0 +1,75 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+@using RestaurantManager.Models
+
+@{
+    ViewData["Title"] = "Receipt";
+}
+
+<div class="container py-5">
+    <h2>Receipt</h2>
+
+    <div class="alert alert-success">
+        <strong>Thank you for your order, @Model.User.FirstName!</strong>
+    </div>
+
+    <h4>Order Summary</h4>
+    <h4>Order Type:</h4>
+    <p>@RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                @foreach (var item in Model.OrderMenuItems)
+                {
+                    <tr>
+                        <td>@item.MenuItem.Name</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.MenuItem.Price.ToString("C2")</td>
+                        <td>@((item.Quantity * item.MenuItem.Price).ToString("C2"))</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <h4>Cost Breakdown</h4>
+    <table class="table table-sm">
+        <tr>
+            <td>Subtotal:</td>
+            <td>@Model.Subtotal.ToString("C2")</td>
+        </tr>
+        <tr>
+            <td>Tip:</td>
+            <td>@Model.TipAmount.ToString("C2")</td>
+        </tr>
+        <tr>
+            <td>Tax (5% GST):</td>
+            <td>@Model.Tax.ToString("C2")</td>
+        </tr>
+        <tr>
+            <td><strong>Total:</strong></td>
+            <td><strong>@Model.Total.ToString("C2")</strong></td>
+        </tr>
+    </table>
+
+    <h4>Extras</h4>
+    <ul>
+        <li><strong>Points Earned:</strong> @ViewBag.PointsEarned</li>
+        <li><strong>Sustainability:</strong> @ViewBag.SustainabilityMessage</li>
+    </ul>
+
+    <div class="alert alert-info">
+        <strong>@ViewBag.TipSuggestion</strong>
+    </div>
+
+    <a asp-controller="Menu" asp-action="Index" class="btn btn-secondary mt-3">Back to Menu</a>
+</div>

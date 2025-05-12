@@ -108,7 +108,7 @@ footer .btn-primary:active {
 
 body {
   margin-bottom: 60px;
-  background-color: var(--cream);
+  background-color: var(--light-cream);
   font-family: 'Montserrat', sans-serif;
   /* You can replace with 'Nunito' if preferred */
 }
@@ -263,12 +263,16 @@ footer .btn {
 
 /* Cart */
 .cart-sidebar {
-  position: sticky;
-  top: 100px;
-  max-height: calc(100vh - 120px);
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 500px;
+  z-index: 1050;
+  background: white;
+  border-left: 1px solid #ccc;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
-  background-color: #fff;
-  border-radius: 8px;
 }
 
 .banner-image {
@@ -287,6 +291,82 @@ footer .btn {
   z-index: 2;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
+
+.checkout-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.checkout-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.checkout-card {
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-card h4 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5rem;
+}
+
+.checkout-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.checkout-table th,
+.checkout-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.full-width-btn {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: var(--forest-green-active);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
 
 /* Footer content styling for small screens (mobile) */
 @media (max-width: 767px) {

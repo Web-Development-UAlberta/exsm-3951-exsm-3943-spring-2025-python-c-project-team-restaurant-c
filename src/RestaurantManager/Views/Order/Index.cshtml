@@ -1,9 +1,19 @@
 @model IEnumerable<RestaurantManager.Models.MenuItem>
-@using RestaurantManager.Models
+@using RestaurantManager.Enums
 
 @{
     ViewBag.Title = "Order";
-    var dietaryTags = ViewBag.DietaryTags as List<DietaryTag>;
+    var dietaryTags = (List<DietaryTag>)ViewBag.DietaryTags;
+    var viewCart = Context.Request.Query["viewCart"].ToString().ToLower() == "true";
+    var currentOrder = ViewBag.Cart as RestaurantManager.Models.Order;
+
+    var orderTypes = Enum.GetValues(typeof(RestaurantManager.Enums.OrderType))
+    .Cast<RestaurantManager.Enums.OrderType>()
+    .ToList();
+
+    var selectedType = (OrderType)(ViewBag.SelectedType ?? OrderType.TakeOut);
+
+    ViewBag.OrderTypes = orderTypes;
 }
 
 <div class="banner-image position-relative text-white text-center">
@@ -14,14 +24,35 @@
 </div>
 
 <div class="container py-5">
-    <div class="row">
-        <partial name="_MenuSidebar" model="dietaryTags" />
-        <main class="col-md-9">
-            <partial name="_MenuGroupedItems" model="Model" />
-        </main>
+    <div class="bg-light rounded-4 shadow-sm p-4 mb-5 border border-primary-subtle d-flex justify-content-center my-4">
+
+        <form id="orderTypeForm" asp-action="SaveOrder" method="post">
+            <div class="btn-group toggle-btn-group" role="group" aria-label="Order Type Toggle">
+                <!-- Take Out Radio Button -->
+                <input type="radio" class="btn-check" name="selectedType" value="TakeOut" id="takeOutBtn"
+                    autocomplete="off" @((selectedType == OrderType.TakeOut) ? "checked" : "")
+                    onchange="window.location.href='@Url.Action("Index", new { selectedType = OrderType.TakeOut })'">
+                <label class="btn btn-outline-primary" for="takeOutBtn">Take Out</label>
+
+                <!-- Delivery Radio Button -->
+                <input type="radio" class="btn-check" name="selectedType" value="Delivery" id="deliveryBtn"
+                    autocomplete="off" @((selectedType == OrderType.Delivery) ? "checked" : "")
+                    onchange="window.location.href='@Url.Action("Index", new { selectedType = OrderType.Delivery })'">
+                <label class="btn btn-outline-primary" for="deliveryBtn">Delivery</label>
+            </div>
+        </form>
     </div>
 
-    <!-- Cart Partial View -->
-    @* @Html.Partial("_Cart", Model.OrderMenuItems) *@
+    <div class="row">
+        <partial name="_MenuSidebar" model="dietaryTags" />
+        <div class="col-md-9">
+            <partial name="_MenuGroupedItems" model="Model" />
+        </div>
+    </div>
+
+    @if (viewCart && currentOrder != null)
+    {
+        @await Html.PartialAsync("_Cart", currentOrder)
+    }
 
 </div>

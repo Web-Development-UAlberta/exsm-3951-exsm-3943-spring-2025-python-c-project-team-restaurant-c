@@ -39,35 +39,20 @@
             <!-- Quantity Buttons -->
             @if (showCart)
             {
-                <div class="pt-3 d-flex justify-content-center align-items-center gap-3">
-                    <button type="button" class="counter-btn btn-outline-secondary rounded-circle"
-                        onclick="decreaseQuantity('@Model.Id')">-</button>
+                <form method="post"
+                    action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType })">
+                    <button type="submit" class="btn btn-outline-secondary">-</button>
+                </form>
 
-                    <span id="item-quantity-@Model.Id" class="fw-bold">0</span>
+                <span class="fw-bold m-auto">
+                    @((ViewBag.Cart as Order)?.OrderMenuItems?.FirstOrDefault(i => i.MenuItemId == Model.Id)?.Quantity ?? 0)
+                </span>
 
-                    <button type="button" class="counter-btn btn-outline-primary rounded-circle"
-                        onclick="increaseQuantity('@Model.Id')">+</button>
-                </div>
+                <form method="post"
+                    action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType })">
+                    <button type="submit" class="btn btn-outline-primary">+</button>
+                </form>
             }
         </div>
-
     </div>
 </div>
-
-
-<!-- Edit this not in JAVA  -->
-<script>
-    function increaseQuantity(itemId) {
-        const quantityElement = document.getElementById(`item-quantity-${itemId}`);
-        let current = parseInt(quantityElement.textContent);
-        quantityElement.textContent = current + 1;
-    }
-
-    function decreaseQuantity(itemId) {
-        const quantityElement = document.getElementById(`item-quantity-${itemId}`);
-        let current = parseInt(quantityElement.textContent);
-        if (current > 0) {
-            quantityElement.textContent = current - 1;
-        }
-    }
-</script>
