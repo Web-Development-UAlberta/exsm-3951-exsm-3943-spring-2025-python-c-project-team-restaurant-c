@@ -4,23 +4,10 @@
 <h3>Delivery Details</h3>
 
 <div>
-    <p>Delivery Fee: @Model.DeliveryFee</p>
-    <p>Instructions: @Model.DeliveryInstructions</p>
     <p>Scheduled Time: @Model.ScheduledTime</p>
-</div>
-
-
-<div class="mb-3">
-    <label asp-for="DeliveryFee" class="form-label">Delivery Fee ($)</label>
-    <input asp-for="DeliveryFee" class="form-control" />
 </div>
 
 <div class="mb-3">
     <label asp-for="DeliveryInstructions" class="form-label">Instructions</label>
     <textarea asp-for="DeliveryInstructions" class="form-control"></textarea>
-</div>
-
-<div class="mb-3">
-    <label asp-for="ScheduledTime" class="form-label">Scheduled Delivery Time</label>
-    <input asp-for="ScheduledTime" class="form-control" type="datetime-local" />
 </div>

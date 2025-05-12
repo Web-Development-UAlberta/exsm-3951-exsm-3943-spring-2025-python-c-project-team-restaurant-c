@@ -4,9 +4,7 @@
 @if (Model != null)
 {
     <div class="mb-3">
-        <label class="form-label">Apply Reward Points</label>
-        <input asp-for="RewardsPoints" class="form-control" type="number" min="0" max="@Model.RewardsPoints" />
-        <small class="text-muted">Available: @Model.RewardsPoints</small>
+        <label class="form-label">Apply Reward Points @Model.RewardsPoints</label>
     </div>
 }
 else

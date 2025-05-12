@@ -36,6 +36,7 @@
             {
                 <div class="mb-4">
                     @await Html.PartialAsync("_DeliveryFields", Model)
+                    @await Html.PartialAsync("_DeliveryInfo", Model.UserAddress)
                 </div>
             }
             else if (Model.Type == OrderType.TakeOut)
