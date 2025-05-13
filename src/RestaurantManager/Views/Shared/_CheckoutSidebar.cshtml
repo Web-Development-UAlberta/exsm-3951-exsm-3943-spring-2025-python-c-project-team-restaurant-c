@@ -57,7 +57,7 @@
 
             <input type="number" step="0.01" min="0" max="100000" name="CustomTipAmount" id="customTipInput"
                 class="form-control mt-2" placeholder="Enter custom tip amount"
-                value="@(isCustomTip? Model.TipAmount.ToString("C2") : "")" @(isCustomTip ? "" : "disabled") />
+                value="@(isCustomTip? Model.TipAmount.ToString("F2") : "")" @(isCustomTip ? "" : "disabled") />
         </div>
 
         @if (Model.Type == OrderType.Delivery)
@@ -67,6 +67,12 @@
                 <span>@deliveryFee.ToString("C2")</span>
             </div>
         }
+
+        <div class="d-flex justify-content-between mt-4 mb-2">
+            <span>Harvest Club Rewards</span>
+            <span>- ("C2")</span>
+        </div>
+
 
         <hr class="my-3" />
 
@@ -86,21 +92,6 @@
     </div>
 </aside>
 
-<style>
-    /* Custom selected tip button color */
-    .btn-check:checked+.btn-outline-primary {
-        background-color: var(--forest-green);
-        border-color: var(--forest-green);
-        color: white;
-    }
-
-    /* Optional: Hover effect to match */
-    .btn-outline-primary:hover {
-        background-color: var(--forest-green-hover);
-        border-color: var(--forest-green-hover);
-        color: white;
-    }
-</style>
 
 
 <script>

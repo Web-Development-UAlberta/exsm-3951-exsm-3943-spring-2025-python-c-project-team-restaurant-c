@@ -21,8 +21,7 @@ public class ReservationController : Controller
     {
         if (ModelState.IsValid)
         {
-            // Assign the UserId from the logged-in user
-            reservation.UserId = GetLoggedInUserId();  // Implement this method to retrieve the logged-in user's ID
+            reservation.UserId = GetLoggedInUserId();
 
             // Automatically set the CreatedAt field
             reservation.CreatedAt = DateTime.UtcNow;

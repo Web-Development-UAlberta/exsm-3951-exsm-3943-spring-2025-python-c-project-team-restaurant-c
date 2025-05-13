@@ -111,10 +111,13 @@ public class OrderController(ApplicationDbContext context) : Controller
     }
 
     [HttpPost]
-    public IActionResult SubmitCheckout(int selectedAddressId, Enums.OrderType selectedType, decimal? CustomTipAmount, string TipAmount, double deliveryDistanceKm = 0)
+    public IActionResult SubmitCheckout(int selectedAddressId, Enums.OrderType selectedType, decimal? CustomTipAmount, string TipAmount, double deliveryDistanceKm = 0, bool redeemPoints = false)
     {
         int? userId = GetUserId();
         if (userId == null) return RedirectToAction("Error");
+
+        var user = _context.Users.FirstOrDefault(u => u.Id == userId.Value);
+        if (user == null) return RedirectToAction("Error");
 
         Order? cartOrder = GetOrCreateCartOrder(userId.Value, selectedType);
         if (cartOrder == null || cartOrder.OrderMenuItems == null || cartOrder.OrderMenuItems.Count == 0)
@@ -149,6 +152,15 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         // Calculate total and save
         decimal total = CalculateOrderTotal(cartOrder, finalTipAmount, deliveryDistanceKm, selectedType);
+
+        // Apply rewards discount if requested and available
+        if (redeemPoints && user.RewardsPoints >= 250)
+        {
+            total = Math.Max(0, total - 20); // Apply $20 discount
+            user.RewardsPoints -= 250;       // Deduct points
+            _context.Users.Update(user);
+        }
+
         SaveOrderAndUserPoints(cartOrder, total, finalTipAmount, selectedType, userId.Value);
 
         return RedirectToAction("Receipt", new { orderId = cartOrder.Id });
@@ -321,6 +333,9 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         int pointsEarned = (int)Math.Floor(cartOrder.Subtotal);
         user.RewardsPoints += pointsEarned;
+
+
+        _context.Users.Update(user);
 
         _context.SaveChanges();
     }

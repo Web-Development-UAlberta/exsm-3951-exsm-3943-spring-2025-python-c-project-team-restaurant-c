@@ -19,12 +19,12 @@
 <div class="banner-image position-relative text-white text-center">
     <img src="~/images/patio.png" class="img-fluid w-100" alt="Restaurant Image" />
     <div class="banner-text position-absolute top-50 start-50 translate-middle">
-        <h2 class="fw-bold text-light display-4">Order for Pickup or Delivery</h2>
+        <h2 class="fw-bold text-light display-4">Order for Take Out or Delivery</h2>
     </div>
 </div>
 
 <div class="container py-5">
-    <div class="bg-light rounded-4 shadow-sm p-4 mb-5 border border-primary-subtle d-flex justify-content-center my-4">
+    <div class="rounded-4 shadow-sm p-4 mb-5 border border-primary-subtle d-flex justify-content-center my-4">
 
         <form id="orderTypeForm" asp-action="SaveOrder" method="post">
             <div class="btn-group toggle-btn-group" role="group" aria-label="Order Type Toggle">
@@ -39,6 +39,12 @@
                     autocomplete="off" @((selectedType == OrderType.Delivery) ? "checked" : "")
                     onchange="window.location.href='@Url.Action("Index", new { selectedType = OrderType.Delivery })'">
                 <label class="btn btn-outline-primary" for="deliveryBtn">Delivery</label>
+
+                <!-- Dine In Radio Button -->
+                <input type="radio" class="btn-check" name="selectedType" value="DineIn" id="dineInBtn"
+                    autocomplete="off" @((selectedType == OrderType.DineIn) ? "checked" : "")
+                    onchange="window.location.href='@Url.Action("Index", new { selectedType = OrderType.DineIn })'">
+                <label class="btn btn-outline-primary" for="dineInBtn">Dine In</label>
             </div>
         </form>
     </div>

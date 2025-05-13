@@ -1,50 +1,39 @@
 @model RestaurantManager.Models.User
 
-<h3 class="mb-4">Contact Information</h3>
+<div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+    <h4 class="mb-4 text-dark fw-bold">Contact Information</h4>
 
-<div class="contact-info-grid mb-4">
-    <div class="form-group">
-        <label asp-for="FirstName" class="form-label fw-semibold">First Name</label>
-        <input asp-for="FirstName" class="form-control contact-input" />
-    </div>
+    <form>
+        <div class="row">
+            <!-- First Name -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="FirstName" class="form-label text-muted fw-medium">First Name <span
+                        class="text-danger">*</span></label>
+                <input asp-for="FirstName" class="form-control rounded-3" placeholder="First Name" required />
+            </div>
 
-    <div class="form-group">
-        <label asp-for="LastName" class="form-label fw-semibold">Last Name</label>
-        <input asp-for="LastName" class="form-control contact-input" />
-    </div>
+            <!-- Last Name -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="LastName" class="form-label text-muted fw-medium">Last Name <span
+                        class="text-danger">*</span></label>
+                <input asp-for="LastName" class="form-control rounded-3" placeholder="Last Name" required />
+            </div>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Email" class="form-label fw-semibold">Email</label>
-        <input asp-for="Email" class="form-control contact-input" />
-    </div>
+        <div class="row">
+            <!-- Email -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Email" class="form-label text-muted fw-medium">Email <span
+                        class="text-danger">*</span></label>
+                <input asp-for="Email" class="form-control rounded-3" placeholder="example@email.com" required />
+            </div>
 
-    <div class="form-group">
-        <label asp-for="Phone" class="form-label fw-semibold">Phone</label>
-        <input asp-for="Phone" class="form-control contact-input" />
-    </div>
+            <!-- Phone -->
+            <div class="col-md-6 mb-4">
+                <label asp-for="Phone" class="form-label text-muted fw-medium">Phone <span
+                        class="text-danger">*</span></label>
+                <input asp-for="Phone" class="form-control rounded-3" placeholder="(XXX) XXX-XXXX" required />
+            </div>
+        </div>
+    </form>
 </div>
-
-<style>
-    .contact-info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-
-    .contact-input {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 0.5rem;
-        padding: 0.75rem;
-    }
-
-    .form-label {
-        margin-bottom: 0.5rem;
-        color: #495057;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-</style>
