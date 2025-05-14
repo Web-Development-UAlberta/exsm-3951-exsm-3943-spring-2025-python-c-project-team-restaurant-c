@@ -170,7 +170,7 @@ namespace RestaurantManager.Tests.FrontEnd.ControllerTests{
 
         //Tests that Error view returns Error View
         [Fact]
-        public async Task ErrorReturnsErrorViewModel_ShouldPass(){
+        public void ErrorReturnsErrorViewModel_ShouldPass(){
 
             //Set up db and controller with user
             var context = InMemoryDbContext();

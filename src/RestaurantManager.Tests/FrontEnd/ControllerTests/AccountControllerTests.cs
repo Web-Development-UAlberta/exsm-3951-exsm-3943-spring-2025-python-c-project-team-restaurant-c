@@ -57,13 +57,14 @@ namespace RestaurantManager.Tests.FrontEnd.ControllerTests{
             var salt = "ThisIsTestSalt12!&";
 
             //Hash the same data twice
-            var firstHash = (string)methodInfo!.Invoke(null, new object[] {pass, salt});
-            var secondHash = (string)methodInfo!.Invoke(null, new object[] {pass, salt});
+            var firstHash = (string)methodInfo!.Invoke(null, new object[] {pass, salt})!;
+            var secondHash = (string)methodInfo!.Invoke(null, new object[] {pass, salt})!;
 
             //Check if both hashes are the same
             Assert.Equal(firstHash, secondHash);           
         }
 
+        //Tests that a newly Hashed password is verified
         [Fact]
         public void CheckVerifyPasswordWithValidPassword_ShouldPass(){
 
@@ -82,10 +83,10 @@ namespace RestaurantManager.Tests.FrontEnd.ControllerTests{
             var salt = "ThisIsTestSalt12!&";
 
             //Hash the password
-            var firstHash = (string)methodInfoHash!.Invoke(null, new object[] {pass, salt});
+            var firstHash = (string)methodInfoHash!.Invoke(null, new object[] {pass, salt})!;
 
             //Attempt to verify the password
-            var result = (bool)methodInfoVerify!.Invoke(null, new object[] {pass, firstHash, salt});
+            var result = (bool)methodInfoVerify!.Invoke(null, new object[] {pass, firstHash, salt})!;
 
             //Check if verification passes
             Assert.True(result);
@@ -109,7 +110,7 @@ namespace RestaurantManager.Tests.FrontEnd.ControllerTests{
             Assert.NotNull(result);
             Assert.Equal("Login", result.ViewName);
             Assert.Equal(0, result.ViewData["UserType"]);
-            Assert.True((bool)result.ViewData["IsLogin"]);
+            Assert.True((bool)result.ViewData["IsLogin"]!);
         }
 
         //Tests that the Register page loads correctly
@@ -128,12 +129,12 @@ namespace RestaurantManager.Tests.FrontEnd.ControllerTests{
             //Confirm we're not on Login page
             Assert.NotNull(result);
             Assert.Equal("Register", result.ViewName);
-            Assert.False((bool)result.ViewData["IsLogin"]);
+            Assert.False((bool)result.ViewData["IsLogin"]!);
         }
 
         //Tests that Error view returns Error View
         [Fact]
-        public async Task ErrorReturnsErrorViewModel_ShouldPass(){
+        public void ErrorReturnsErrorViewModel_ShouldPass(){
 
             //Set up db and controller with user
             var context = InMemoryDbContext();
