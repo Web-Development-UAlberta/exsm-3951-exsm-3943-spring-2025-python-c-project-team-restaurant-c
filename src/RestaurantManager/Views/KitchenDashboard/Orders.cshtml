@@ -24,14 +24,19 @@
             Orders
         </div>
         <div class="card-body p-0">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0 align-middle">
                 <thead class="table-light">
                     <tr>
                         <th>#</th>
-                        <th>Status</th>
+                        <th>Customer</th>
                         <th>Type</th>
-                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Reservation</th>
                         <th>Items</th>
+                        <th>Notes</th>
+                        <th>Scheduled Time</th>
+                        <th>Order Date</th>
+                        <th>Additional Info</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,46 +44,127 @@
                     {
                         foreach (var order in orders)
                         {
-                            <tr>
+                            <tr class="@(order.Status == OrderStatus.Pending ? "table-warning" : order.Status == OrderStatus.InProgress ? "table-info" : "table-success")">
                                 <td>@order.Id</td>
+
+                                <td>@(order.User?.FirstName ?? "Guest")</td>
+
                                 <td>
-                                    <span class="badge bg-@(order.Status == OrderStatus.Completed ? "success" : order.Status == OrderStatus.InProgress ? "info" : "secondary")">
-                                        @order.Status
+                                    <span class="badge rounded-0 text-white w-auto px-2 py-1"
+                                        style="background-color: @(order.Type switch
+                                            {
+                                                OrderType.Delivery => "#6f42c1",   // Purple
+                                                OrderType.TakeOut => "#fd7e14",    // Orange
+                                                OrderType.DineIn => "#20c997",     // Teal
+                                                _ => "#6c757d"                     // Grey fallback
+                                            })">
+                                        @order.Type.ToString().Replace("DineIn", "Dine-In").Replace("TakeOut", "Take-Out")
                                     </span>
                                 </td>
-                                <td>@order.Type</td>
-                                <td>@order.OrderDate.ToShortDateString()</td>
+                                <!-- Editable Status Dropdown -->
+                                <td>
+                                    <form asp-action="UpdateOrderStatus" method="post" class="d-flex align-items-center gap-2">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                            @foreach (OrderStatus status in Enum.GetValues(typeof(OrderStatus)))
+                                            {
+                                                <option value="@status" selected="@(status == order.Status ? "selected" : null)">
+                                                    @status
+                                                </option>
+                                            }
+                                        </select>
+                                    </form>
+                                </td>
+
+                                <td>
+                                  @(order.Reservation != null ? $"#{order.Reservation.Id} for {order.Reservation.ReservationDateTime:g}" : "—")
+                                </td>
+
                                 <td>
                                     <ul class="list-unstyled mb-0">
                                         @foreach (var item in order.OrderMenuItems)
                                         {
-                                            <li>@item.MenuItem.Name (@item.Quantity)</li>
+                                            <li>@item.MenuItem.Name (x @item.Quantity)</li>
                                         }
                                     </ul>
+                                    <div class="text-muted small">Total: @order.OrderMenuItems.Sum(i => i.Quantity)</div>
                                 </td>
+
+                                <td>@(order.Notes ?? "—")</td>
+                            
+                                <td>@order.OrderDate.ToString("g")</td>
+
+                                <td>@(order.ScheduledTime?.ToString("g") ?? "—")</td>
+
+                                <td>
+                                    @if (order.Type == OrderType.Delivery)
+                                    {
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#deliveryModal-@order.Id">
+                                            Delivery Info
+                                        </button>
+                                    }
+                                    else if (order.Type == OrderType.DineIn && order.Reservation != null)
+                                    {
+                                        <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reservationModal-@order.Id">
+                                            Reservation Info
+                                        </button>
+                                    }
+                                </td>   
                             </tr>
                         }
                     }
                     else
                     {
-                        <tr><td colspan="5" class="text-center">No orders found.</td></tr>
+                        <tr><td colspan="11" class="text-center py-4">No orders found.</td></tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
-
-
-
 </div>
 
-<style>
-    .text-shadow {
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+@foreach (var order in orders)
+{
+    if (order.Type == OrderType.Delivery)
+    {
+        <div class="modal fade" id="deliveryModal-@order.Id" tabindex="-1" aria-labelledby="deliveryModalLabel-@order.Id" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deliveryModalLabel-@order.Id">Delivery Info - Order #@order.Id</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Delivery Instructions:</strong> @(order.DeliveryInstructions ?? "—")</p>
+                        <p><strong>Address:</strong> @(order.UserAddress?.AddressLine1 ?? "—")</p>
+                        <p><strong>Scheduled Time:</strong> @(order.ScheduledTime?.ToString("f") ?? "—")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 
-    .card-header {
-        font-family: 'Segoe UI', sans-serif;
-        letter-spacing: 0.5px;
+    if (order.Type == OrderType.DineIn && order.Reservation != null)
+    {
+        <div class="modal fade" id="reservationModal-@order.Id" tabindex="-1" aria-labelledby="reservationModalLabel-@order.Id" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reservationModalLabel-@order.Id">Reservation Info - Order #@order.Id</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Reservation ID:</strong> #@order.Reservation.Id</p>
+                        <p><strong>Date & Time:</strong> @order.Reservation.ReservationDateTime.ToString("f")</p>
+                        <p><strong>Guests:</strong> @order.Reservation.TableNumber</p>
+                        <p><strong>Guests:</strong> @order.Reservation.GuestCount</p>
+                        <p><strong>Guests:</strong> @order.Reservation.ReservationStatus</p>
+                        <p><strong>Notes:</strong> @(order.Reservation.Notes ?? "—")</p>
+                        <p><strong>Guests:</strong> @order.Reservation.CreatedAt</p>
+                        <p><strong>Guests:</strong> @order.Reservation.UpdatedAt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
-</style>
+}
