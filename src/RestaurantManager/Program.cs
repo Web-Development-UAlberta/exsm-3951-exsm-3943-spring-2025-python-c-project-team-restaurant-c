@@ -2,6 +2,9 @@ using RestaurantManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using DotNetEnv;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,18 +25,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
+  options.IdleTimeout = TimeSpan.FromMinutes(30);
+  options.Cookie.HttpOnly = true;
+  options.Cookie.IsEssential = true;
 });
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login"; // Redirect here if not authenticated
-        options.LogoutPath = "/Account/Logout";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(1); // Keeps user logged in for 1 hour
-        options.SlidingExpiration = true;
+      options.LoginPath = "/Account/Login"; // Redirect here if not authenticated
+      options.LogoutPath = "/Account/Logout";
+      options.ExpireTimeSpan = TimeSpan.FromMinutes(1); // Keeps user logged in for 1 hour
+      options.SlidingExpiration = true;
     });
 
 builder.Services.AddAuthorization();
@@ -45,9 +48,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+  app.UseExceptionHandler("/Home/Error");
+  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+  app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -67,9 +70,9 @@ app.MapControllerRoute(
 
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var userCount = context.Users.Count();
-    Console.WriteLine($"✅ There are {userCount} users in the database.");
-}    
+  var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+  var userCount = context.Users.Count();
+  Console.WriteLine($"✅ There are {userCount} users in the database.");
+}
 
 app.Run();
