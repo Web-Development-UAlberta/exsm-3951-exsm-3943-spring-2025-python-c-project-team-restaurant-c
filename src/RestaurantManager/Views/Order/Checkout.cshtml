@@ -60,7 +60,7 @@
 
             <!-- Payment -->
             <div class="mb-4">
-                @* Add payment method details here, if necessary *@
+                @await Html.PartialAsync("_CardPaymentForm", Model.User)
             </div>
 
             <!-- Order Summary -->
