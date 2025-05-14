@@ -1,0 +1,70 @@
+@using RestaurantManager.Models
+@using RestaurantManager.Enums
+
+@{
+    ViewData["Title"] = "Menu";
+
+    var menuItems = ViewBag.MenuItems as List<MenuItem>;
+}
+
+<div class="banner-image position-relative text-white text-center">
+    <img src="~/images/kitchen.png" class="img-fluid w-100" style="height: 300px; object-fit: cover;" alt="Kitchen Image" />
+    <div class="banner-text position-absolute top-50 start-50 translate-middle">
+        <h2 class="fw-bold text-light display-4 text-shadow">Menu Dashboard</h2>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+<!-- Menu Items -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white fw-bold fs-4">
+            Menu Items
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Available</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (menuItems != null && menuItems.Any())
+                    {
+                        foreach (var item in menuItems)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Category</td>
+                                <td>$@item.Price.ToString("F2")</td>
+                                <td>
+                                    <span class="badge bg-@(item.IsAvailable ? "success" : "secondary")">
+                                        @(item.IsAvailable ? "Yes" : "No")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="4" class="text-center">No menu items found.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .text-shadow {
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    }
+
+    .card-header {
+        letter-spacing: 0.5px;
+    }
+</style>
