@@ -57,6 +57,75 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         return View();
     }
 
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Create(MenuItem item)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.MenuItems.Add(item);
+            _context.SaveChanges();
+            return RedirectToAction("MenuItems");
+        }
+
+        return View(item);
+    }
+
+    public IActionResult Edit(int id)
+    {
+        var item = _context.MenuItems.Find(id);
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        return View(item);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(MenuItem item)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.MenuItems.Update(item);
+            _context.SaveChanges();
+            return RedirectToAction("MenuItems");
+        }
+
+        return View(item);
+    }
+
+    public IActionResult Delete(int id)
+    {
+        var item = _context.MenuItems.Find(id);
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        return View(item);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public IActionResult DeleteConfirmed(int id)
+    {
+        var item = _context.MenuItems.Find(id);
+        if (item != null)
+        {
+            _context.MenuItems.Remove(item);
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("MenuItems");
+    }
+
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

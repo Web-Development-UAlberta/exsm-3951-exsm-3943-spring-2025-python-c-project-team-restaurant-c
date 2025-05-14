@@ -3,11 +3,10 @@
 
 @{
     ViewData["Title"] = "Menu";
-
     var menuItems = ViewBag.MenuItems as List<MenuItem>;
 }
 
-<div class="banner-image position-relative text-white text-center">
+<div class="banner-image position-relative text-white text-center mb-4">
     <img src="~/images/kitchen.png" class="img-fluid w-100" style="height: 300px; object-fit: cover;" alt="Kitchen Image" />
     <div class="banner-text position-absolute top-50 start-50 translate-middle">
         <h2 class="fw-bold text-light display-4 text-shadow">Menu Dashboard</h2>
@@ -15,20 +14,27 @@
 </div>
 
 <div class="container pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold">Menu Items</h3>
+        <a href="@Url.Action("Create", "KitchenDashboard")" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> Add New Item
+        </a>
+    </div>
 
-<!-- Menu Items -->
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-success text-white fw-bold fs-4">
-            Menu Items
+        <div class="card-header bg-success text-white fw-bold fs-5">
+            Menu List
         </div>
         <div class="card-body p-0">
             <table class="table table-hover mb-0">
                 <thead class="table-light">
                     <tr>
                         <th>Name</th>
+                        <th>Description</th>
                         <th>Category</th>
                         <th>Price</th>
                         <th>Available</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,33 +44,33 @@
                         {
                             <tr>
                                 <td>@item.Name</td>
+                                <td>@item.Description</td>
                                 <td>@item.Category</td>
                                 <td>$@item.Price.ToString("F2")</td>
-                                <td>
-                                    <span class="badge bg-@(item.IsAvailable ? "success" : "secondary")">
-                                        @(item.IsAvailable ? "Yes" : "No")
-                                    </span>
+                                <td>@(item.IsAvailable ? "Yes" : "No")</td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("Edit", "KitchenDashboard", new { id = item.Id })" class="btn btn-sm btn-outline-primary me-2">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="@Url.Action("Delete", "KitchenDashboard", new { id = item.Id })" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this item?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                         }
                     }
                     else
                     {
-                        <tr><td colspan="4" class="text-center">No menu items found.</td></tr>
+                        <tr><td colspan="6" class="text-center text-muted py-4">No menu items found.</td></tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
-
 </div>
 
 <style>
     .text-shadow {
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-    }
-
-    .card-header {
-        letter-spacing: 0.5px;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
     }
 </style>
