@@ -361,7 +361,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             }
         }
 
-        _context.Users.Update(user);
+        // _context.Users.Update(user);
         _context.SaveChanges();
     }
 

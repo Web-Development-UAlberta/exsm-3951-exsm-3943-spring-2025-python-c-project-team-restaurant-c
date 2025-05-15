@@ -5,9 +5,9 @@
     decimal subtotal = Model.OrderMenuItems?.Sum(item => item.Quantity * item.MenuItem.Price) ?? 0m;
     decimal tax = subtotal * 0.05m;
     decimal deliveryFee = Model.Type == OrderType.Delivery ? 5.00m : 0.00m;
-    decimal tip = Model.TipAmount == 0 ? 0m : Model.TipAmount; // Ensure it's always 0 or a valid amount
+    decimal tip = Model.TipAmount == 0 ? 0m : Model.TipAmount;
 
-    // REWARDS POINTS
+    // Rewards
     int userPoints = Model.User?.RewardsPoints ?? 0;
     bool canRedeem = userPoints >= 250;
     decimal rewardsDiscount = canRedeem ? 20.00m : 0m;
@@ -20,7 +20,6 @@
     bool isCustomTip = Model.TipAmount != 0 && Model.TipAmount != tip10 && Model.TipAmount != tip15 && Model.TipAmount !=
     tip20;
 }
-
 <!-- Right: Summary -->
 <aside class="col-md-2 me-4 mb-4 sticky-sidebar d-flex flex-column"
     style="position: sticky; max-height: 40rem; width: 400px; background-color: white;">
@@ -61,9 +60,10 @@
                 <label class="btn btn-outline-primary" for="tipOther">Other</label>
             </div>
 
-            <input type="number" step="0.01" min="0" max="100000" name="CustomTipAmount" id="customTipInput"
-                class="form-control mt-2" placeholder="Enter custom tip amount"
-                value="@(isCustomTip? Model.TipAmount.ToString("F2") : "")" @(isCustomTip ? "" : "disabled") />
+            <input type="number" step="0.01" min="0" name="CustomTipAmount" id="customTipInput"
+                class="form-control mt-2" placeholder="Enter custom tip amount" style="display: none;"
+                oninput="validateCustomTip()" />
+            <span id="tipError" class="text-danger small" style="display: none;">Please enter a valid tip amount.</span>
         </div>
 
         @if (Model.Type == OrderType.Delivery)
@@ -74,95 +74,119 @@
             </div>
         }
 
-        @if (rewardsDiscount > 0)
+        <hr class="my-3" />
+
+        @if (canRedeem)
         {
-            <div class="d-flex justify-content-between mt-4 mb-2">
+            <div class="d-flex justify-content-between" id="rewardsDiscountRow" style="display: flex;">
                 <span>Harvest Club Rewards</span>
-                <span>@("-" + rewardsDiscount.ToString("C2"))</span>
+                <span id="rewardsDiscountDisplay">@("-" + rewardsDiscount.ToString("C2"))</span>
+            </div>
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" value="" id="redeemCheckbox" checked>
+                <label class="form-check-label" for="redeemCheckbox">
+                    Redeem 250 points for $20 off
+                </label>
             </div>
         }
-        else if (!canRedeem)
+
+        <hr class="my-3" />
+
+        <div class="d-flex justify-content-between fw-bold fs-5 mb-5">
+            <span>Total</span>
+            <span id="totalDisplay">@total.ToString("C2")</span>
+        </div>
+
+        @if (Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
         {
-            <div class="text-muted small mt-3">
-                You have @userPoints points. Earn 250 points to get a $20 discount on your next order.
-            </div>
+            <form asp-controller="Order" asp-action="SubmitCheckout" method="post" class="mt-auto">
+                <input type="hidden" name="selectedType" value="@Model.Type" />
+                <input type="hidden" name="TipAmount" id="tipAmountInput" />
+                <input type="hidden" name="CustomTipAmount" id="customTipAmountInput" />
+                <input type="hidden" name="selectedAddressId" value="1" />
+                <input type="hidden" name="deliveryDistanceKm" value="0" />
+                <input type="hidden" name="redeemPoints" id="redeemPointsInput" value="true" />
+                <button type="submit" class="btn btn-primary w-100">
+                    Place @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type) Order
+                </button>
+            </form>
         }
-
-
-    </div>
-
-
-    <hr class="my-3" />
-
-    <div class="d-flex justify-content-between fw-bold fs-5 mb-5">
-        <span>Total</span>
-        <span id="totalDisplay">@total.ToString("C2")</span>
-    </div>
-
-    @if (Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
-    {
-        <form asp-controller="Order" asp-action="SubmitCheckout" method="post" class="mt-auto">
-            <input type="hidden" name="selectedType" value="@Model.Type" />
-            <input type="hidden" name="TipAmount" id="tipAmountInput" />
-            <input type="hidden" name="CustomTipAmount" id="customTipAmountInput" />
-            <input type="hidden" name="selectedAddressId" value="1" /> @* Update this dynamically *@
-            <input type="hidden" name="deliveryDistanceKm" value="0" />
-            <input type="hidden" name="redeemPoints" id="redeemPointsInput" value="true" />
-            <button type="submit" class="btn btn-primary w-100">
-                Place @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type) Order
-            </button>
-        </form>
-
-    }
     </div>
 </aside>
-
-
 
 <script>
     const subtotal = parseFloat("@subtotal");
     const tax = parseFloat("@tax");
     const deliveryFee = parseFloat("@deliveryFee");
-    const tipRadios = document.querySelectorAll('.tip-option');
-    const customTipInput = document.getElementById('customTipInput');
-    const tipDisplay = document.getElementById('tipDisplay');
-    const totalDisplay = document.getElementById('totalDisplay');
     const rewardsDiscount = parseFloat("@rewardsDiscount");
 
+    const tipDisplay = document.getElementById('tipDisplay');
+    const totalDisplay = document.getElementById('totalDisplay');
+    const customTipInput = document.getElementById('customTipInput');
+    const tipRadios = document.querySelectorAll('.tip-option');
 
     function updateTipAndTotal() {
-        let tipAmount = 0;
         const selectedTip = document.querySelector('input[name="TipAmount"]:checked');
         const redeemCheckbox = document.getElementById('redeemCheckbox');
         const canRedeem = !redeemCheckbox.disabled;
+        const applyRewards = redeemCheckbox.checked && canRedeem;
 
-        if (selectedTip) {
-            tipAmount = selectedTip.value === "other" ? parseFloat(customTipInput.value) || 0 : parseFloat(selectedTip.value);
+        let tipAmount = 0;
+
+        if (selectedTip?.value === "other") {
+            tipAmount = parseFloat(customTipInput.value) || 0;
+            document.getElementById('customTipAmountInput').value = tipAmount.toFixed(2);
+            document.getElementById('tipAmountInput').value = tipAmount.toFixed(2);
+        } else {
+            tipAmount = parseFloat(selectedTip?.value) || 0;
+            document.getElementById('tipAmountInput').value = tipAmount.toFixed(2);
+            document.getElementById('customTipAmountInput').value = "";
         }
 
-        let rewardsDiscount = 0;
+        const discount = applyRewards ? 20.00 : 0;
+        const finalTotal = Math.max(0, subtotal + tax + deliveryFee + tipAmount - discount);
+
+        tipDisplay.textContent = tipAmount.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
+        totalDisplay.textContent = finalTotal.toLocaleString("en-CA", { style: "currency", currency: "CAD" });
+
+        document.getElementById('redeemPointsInput').value = applyRewards.toString();
+
+        const discountRow = document.getElementById('rewardsDiscountRow');
+        const rewardsDisplay = document.getElementById('rewardsDiscountDisplay');
+
         if (canRedeem && redeemCheckbox.checked) {
-            rewardsDiscount = 20.00;
+            if (discountRow) {
+                discountRow.style.display = 'flex';
+                rewardsDisplay.textContent = "-$20.00";
+            }
+        } else {
+            if (discountRow) {
+                discountRow.style.display = 'none';
+                rewardsDisplay.textContent = "";
+            }
         }
 
-        tipDisplay.textContent = tipAmount.toLocaleString("en-US", { style: "currency", currency: "CAD" });
+        localStorage.setItem("totalBeforeRewards", (subtotal + tax + deliveryFee + tipAmount).toFixed(2));
+    }
 
-        let newTotal = subtotal + tax + deliveryFee + tipAmount - rewardsDiscount;
-        if (newTotal < 0) newTotal = 0;
-
-        totalDisplay.textContent = newTotal.toLocaleString("en-US", { style: "currency", currency: "CAD" });
-
-        // Update hidden input for form submission
-        document.getElementById('redeemPointsInput').value = redeemCheckbox.checked && canRedeem ? "true" : "false";
+    function validateCustomTip() {
+        const val = parseFloat(customTipInput.value);
+        const error = document.getElementById('tipError');
+        if (isNaN(val) || val <= 0) {
+            error.style.display = 'block';
+        } else {
+            error.style.display = 'none';
+            updateTipAndTotal();
+        }
     }
 
     tipRadios.forEach(radio => {
         radio.addEventListener('change', () => {
             if (radio.value === "other") {
-                customTipInput.disabled = false;
+                customTipInput.style.display = 'block';
                 customTipInput.focus();
             } else {
-                customTipInput.disabled = true;
+                customTipInput.style.display = 'none';
             }
             updateTipAndTotal();
         });
@@ -173,43 +197,28 @@
         updateTipAndTotal();
     });
 
+    document.getElementById('redeemCheckbox')?.addEventListener('change', updateTipAndTotal);
+
     document.addEventListener("DOMContentLoaded", function () {
-        const tipOptions = document.querySelectorAll('input[name="TipAmount"]');
-        const customTipInput = document.getElementById("customTipInput");
-
-        function updateCustomTipVisibility() {
-            const selected = document.querySelector('input[name="TipAmount"]:checked');
-            if (selected && selected.id === "tipOther") {
-                customTipInput.disabled = false;
-                customTipInput.style.display = "block";
-            } else {
-                customTipInput.disabled = true;
-                customTipInput.style.display = "none";
-            }
+        const selected = document.querySelector('input[name="TipAmount"]:checked');
+        if (selected?.value === "other") {
+            customTipInput.style.display = 'block';
+        } else {
+            customTipInput.style.display = 'none';
         }
-
-        tipOptions.forEach(option => {
-            option.addEventListener("change", updateCustomTipVisibility);
-        });
-
-        // Initialize visibility on page load
-        updateCustomTipVisibility();
+        updateTipAndTotal();
     });
 
-    // Initial update
-    updateTipAndTotal();
-
-    document.querySelector('form').addEventListener('submit', function (e) {
+    document.querySelector('form')?.addEventListener('submit', function (e) {
         const selected = document.querySelector('input[name="TipAmount"]:checked');
-        let tipAmount = selected ? selected.value : "0";
+        const customTip = parseFloat(customTipInput.value);
 
-        if (tipAmount === "other") {
-            document.getElementById('customTipAmountInput').value = customTipInput.value;
-        } else {
+        if (selected && selected.value === "other" && !isNaN(customTip) && customTip > 0) {
+            document.getElementById('tipAmountInput').value = customTip.toFixed(2);
+            document.getElementById('customTipAmountInput').value = customTip.toFixed(2);
+        } else if (selected) {
+            document.getElementById('tipAmountInput').value = selected.value;
             document.getElementById('customTipAmountInput').value = "";
         }
-
-        document.getElementById('tipAmountInput').value = tipAmount;
     });
-
 </script>
