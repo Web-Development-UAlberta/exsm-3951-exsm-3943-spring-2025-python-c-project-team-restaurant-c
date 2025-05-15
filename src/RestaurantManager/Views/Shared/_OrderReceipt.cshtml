@@ -1,0 +1,120 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+@using RestaurantManager.Models
+
+<div class="container py-5">
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <img src="~/images/harvest_hearth_logo_hip_final.svg" alt="harvest & hearth" height="100" />
+            <h2 class="pt-3 pb-3">Order Receipt</h2>
+            <p>Thank you for your order, @Model.User.FirstName!</p>
+        </div>
+
+        <div class="receipt-section">
+            <p><strong>Order Type:</strong>
+                @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
+            </p>
+            <p><strong>Points Earned:</strong> @ViewBag.PointsEarned</p>
+        </div>
+
+        <div class="receipt-section">
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th style="text-align:right;">Qty</th>
+                        <th style="text-align:right;">Price</th>
+                        <th style="text-align:right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderMenuItems)
+                    {
+                        <tr>
+                            <td>@item.MenuItem.Name</td>
+                            <td style="text-align:right;">@item.Quantity</td>
+                            <td style="text-align:right;">@item.MenuItem.Price.ToString("C2")</td>
+                            <td style="text-align:right;">@((item.Quantity * item.MenuItem.Price).ToString("C2"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="receipt-section">
+            <table class="receipt-summary">
+                <tr>
+                    <td>Subtotal:</td>
+                    <td style="text-align:right;">@Model.Subtotal.ToString("C2")</td>
+                </tr>
+                <tr>
+                    <td>Tip:</td>
+                    <td style="text-align:right;">@Model.TipAmount.ToString("C2")</td>
+                </tr>
+                <tr>
+                    <td>Tax (5% GST):</td>
+                    <td style="text-align:right;">@Model.Tax.ToString("C2")</td>
+                </tr>
+                <tr>
+                    <td><strong>Total:</strong></td>
+                    <td style="text-align:right;"><strong>@Model.Total.ToString("C2")</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="receipt-footer pt-4">
+            <p>@ViewBag.SustainabilityMessage</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .receipt-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 2rem;
+        border: 1px solid #ccc;
+        font-family: monospace;
+    }
+
+    .receipt-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .receipt-header h2 {
+        margin-bottom: 0;
+    }
+
+    .receipt-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .receipt-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .receipt-table th,
+    .receipt-table td {
+        border-bottom: 1px solid #ddd;
+        padding: 0.5rem 0;
+        text-align: left;
+    }
+
+    .receipt-table tfoot td {
+        font-weight: bold;
+    }
+
+    .receipt-summary td {
+        padding: 0.3rem 0;
+    }
+
+    .receipt-footer {
+        margin-top: 2rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #555;
+    }
+</style>

@@ -17,25 +17,40 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
     {
         var email = User.Identity?.Name;
         if (string.IsNullOrEmpty(email))
-        {
-            return Unauthorized(); // Not logged in
-        }
+            return Unauthorized();
 
         var user = _context.Users
             .Include(u => u.UserAddresses)
             .Include(u => u.Reservations)
             .Include(u => u.UserDietaryTags)
-            .FirstOrDefault(u => u.Email == email); // Match by email
-
+            .Include(u => u.Orders!.OrderByDescending(o => o.OrderDate))
+            .FirstOrDefault(u => u.Email == email);
 
         if (user == null)
-        {
             return NotFound();
-        }
+
+        user.Orders = user.Orders!.OrderByDescending(o => o.OrderDate).Take(2).ToList();
 
         return View(user);
     }
 
+    public IActionResult OrderHistory()
+    {
+        var email = User.Identity?.Name;
+        if (string.IsNullOrEmpty(email)) return Unauthorized();
+
+        var orders = _context.Orders
+            .Include(o => o.User)
+            .Include(o => o.UserAddress)
+            .Include(o => o.Reservation)
+            .Where(o => o.User.Email == email)
+            .OrderByDescending(o => o.OrderDate)
+            .Include(o => o.OrderMenuItems)
+
+            .ToList();
+
+        return View(orders);
+    }
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

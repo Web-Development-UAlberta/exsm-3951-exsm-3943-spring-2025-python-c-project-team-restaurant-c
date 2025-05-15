@@ -6,7 +6,13 @@
     decimal tax = subtotal * 0.05m;
     decimal deliveryFee = Model.Type == OrderType.Delivery ? 5.00m : 0.00m;
     decimal tip = Model.TipAmount == 0 ? 0m : Model.TipAmount; // Ensure it's always 0 or a valid amount
-    decimal total = subtotal + tax + tip + deliveryFee;
+
+    // REWARDS POINTS
+    int userPoints = Model.User?.RewardsPoints ?? 0;
+    bool canRedeem = userPoints >= 250;
+    decimal rewardsDiscount = canRedeem ? 20.00m : 0m;
+
+    decimal total = subtotal + tax + tip + deliveryFee - rewardsDiscount;
 
     decimal tip10 = Math.Round(subtotal * 0.10m, 2);
     decimal tip15 = Math.Round(subtotal * 0.15m, 2);
@@ -68,27 +74,46 @@
             </div>
         }
 
-        <div class="d-flex justify-content-between mt-4 mb-2">
-            <span>Harvest Club Rewards</span>
-            <span>- ("C2")</span>
-        </div>
-
-
-        <hr class="my-3" />
-
-        <div class="d-flex justify-content-between fw-bold fs-5 mb-5">
-            <span>Total</span>
-            <span id="totalDisplay">@total.ToString("C2")</span>
-        </div>
-
-        @if (Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+        @if (rewardsDiscount > 0)
         {
-            <form asp-controller="Order" asp-action="Receipt" class="mt-auto">
-                <button type="submit" class="btn btn-primary w-100">
-                    Place @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type) Order
-                </button>
-            </form>
+            <div class="d-flex justify-content-between mt-4 mb-2">
+                <span>Harvest Club Rewards</span>
+                <span>@("-" + rewardsDiscount.ToString("C2"))</span>
+            </div>
         }
+        else if (!canRedeem)
+        {
+            <div class="text-muted small mt-3">
+                You have @userPoints points. Earn 250 points to get a $20 discount on your next order.
+            </div>
+        }
+
+
+    </div>
+
+
+    <hr class="my-3" />
+
+    <div class="d-flex justify-content-between fw-bold fs-5 mb-5">
+        <span>Total</span>
+        <span id="totalDisplay">@total.ToString("C2")</span>
+    </div>
+
+    @if (Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+    {
+        <form asp-controller="Order" asp-action="SubmitCheckout" method="post" class="mt-auto">
+            <input type="hidden" name="selectedType" value="@Model.Type" />
+            <input type="hidden" name="TipAmount" id="tipAmountInput" />
+            <input type="hidden" name="CustomTipAmount" id="customTipAmountInput" />
+            <input type="hidden" name="selectedAddressId" value="1" /> @* Update this dynamically *@
+            <input type="hidden" name="deliveryDistanceKm" value="0" />
+            <input type="hidden" name="redeemPoints" id="redeemPointsInput" value="true" />
+            <button type="submit" class="btn btn-primary w-100">
+                Place @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type) Order
+            </button>
+        </form>
+
+    }
     </div>
 </aside>
 
@@ -102,21 +127,33 @@
     const customTipInput = document.getElementById('customTipInput');
     const tipDisplay = document.getElementById('tipDisplay');
     const totalDisplay = document.getElementById('totalDisplay');
+    const rewardsDiscount = parseFloat("@rewardsDiscount");
+
 
     function updateTipAndTotal() {
         let tipAmount = 0;
-        const selected = document.querySelector('input[name="TipAmount"]:checked');
+        const selectedTip = document.querySelector('input[name="TipAmount"]:checked');
+        const redeemCheckbox = document.getElementById('redeemCheckbox');
+        const canRedeem = !redeemCheckbox.disabled;
 
-        if (selected) {
-            if (selected.value === "other") {
-                tipAmount = parseFloat(customTipInput.value) || 0;
-            } else {
-                tipAmount = parseFloat(selected.value);
-            }
+        if (selectedTip) {
+            tipAmount = selectedTip.value === "other" ? parseFloat(customTipInput.value) || 0 : parseFloat(selectedTip.value);
         }
 
-        tipDisplay.textContent = tipAmount.toFixed(2);
-        totalDisplay.textContent = (subtotal + tax + deliveryFee + tipAmount).toFixed(2);
+        let rewardsDiscount = 0;
+        if (canRedeem && redeemCheckbox.checked) {
+            rewardsDiscount = 20.00;
+        }
+
+        tipDisplay.textContent = tipAmount.toLocaleString("en-US", { style: "currency", currency: "CAD" });
+
+        let newTotal = subtotal + tax + deliveryFee + tipAmount - rewardsDiscount;
+        if (newTotal < 0) newTotal = 0;
+
+        totalDisplay.textContent = newTotal.toLocaleString("en-US", { style: "currency", currency: "CAD" });
+
+        // Update hidden input for form submission
+        document.getElementById('redeemPointsInput').value = redeemCheckbox.checked && canRedeem ? "true" : "false";
     }
 
     tipRadios.forEach(radio => {
@@ -161,4 +198,18 @@
 
     // Initial update
     updateTipAndTotal();
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const selected = document.querySelector('input[name="TipAmount"]:checked');
+        let tipAmount = selected ? selected.value : "0";
+
+        if (tipAmount === "other") {
+            document.getElementById('customTipAmountInput').value = customTipInput.value;
+        } else {
+            document.getElementById('customTipAmountInput').value = "";
+        }
+
+        document.getElementById('tipAmountInput').value = tipAmount;
+    });
+
 </script>

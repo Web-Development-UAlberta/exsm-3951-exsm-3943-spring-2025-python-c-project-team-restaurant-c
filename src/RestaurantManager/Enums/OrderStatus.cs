@@ -18,6 +18,9 @@ namespace RestaurantManager.Enums
 
     [Display(Name = "No Order")]
     NoOrder = 4,
+
+    [Display(Name = "Confirmed")]
+    Confirmed = 5,
   }
 
 }
