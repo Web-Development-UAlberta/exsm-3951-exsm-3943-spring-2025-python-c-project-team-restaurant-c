@@ -1,0 +1,23 @@
+@using RestaurantManager.Enums
+@using RestaurantManager.Utilities
+@model IEnumerable<RestaurantManager.Models.MenuItem>
+
+@{
+    var groupedItems = Model.GroupBy(item => item.Category).OrderBy(g => g.Key);
+}
+
+@foreach (var group in groupedItems)
+{
+    <section class="mb-5" id="@group.Key">
+        <h3 class="mb-4">@PropertyDisplayHelper.GetDisplayName(group.Key)</h3>
+        <div class="row gy-5 gx-4">
+            @foreach (var item in group)
+            {
+                <div class="col-md-6 col-lg-4 menu-item"
+                    data-tags="@string.Join(",", item.MenuItemDietaryTags?.Where(tag => tag.DietaryTag != null).Select(tag => tag.DietaryTag.Name) ?? new List<string>())">
+                    <partial name="_MenuItemCard" model="item" />
+                </div>
+            }
+        </div>
+    </section>
+}
