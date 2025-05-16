@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
       options.LoginPath = "/Account/Login"; // Redirect here if not authenticated
       options.LogoutPath = "/Account/Logout";
-      options.ExpireTimeSpan = TimeSpan.FromMinutes(1); // Keeps user logged in for 1 hour
+      options.ExpireTimeSpan = TimeSpan.FromHours(1); // Keeps user logged in for 1 hour
       options.SlidingExpiration = true;
     });
 

@@ -6,6 +6,7 @@ using RestaurantManager.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RestaurantManager.Utilities;
+using System.Threading.Tasks;
 
 namespace RestaurantManager.Controllers;
 
@@ -111,8 +112,15 @@ public class OrderController(ApplicationDbContext context) : Controller
     }
 
     [HttpPost]
-    public IActionResult SubmitCheckout(int selectedAddressId, Enums.OrderType selectedType, decimal? CustomTipAmount, string TipAmount, double deliveryDistanceKm = 0, bool redeemPoints = false)
+    public async Task<IActionResult> SubmitCheckout(
+        int selectedAddressId,
+        Enums.OrderType selectedType,
+        decimal? customTipAmount,
+        string tipAmount,
+        double deliveryDistanceKm = 0,
+        bool redeemPoints = false)
     {
+        // Get User 
         int? userId = GetUserId();
         if (userId == null) return RedirectToAction("Error");
 
@@ -130,85 +138,71 @@ public class OrderController(ApplicationDbContext context) : Controller
         // Set order type
         cartOrder.Type = selectedType;
 
-        // Determine the final tip amount
-        decimal finalTipAmount;
-        if (TipAmount == "other" && CustomTipAmount.HasValue)
-        {
-            finalTipAmount = CustomTipAmount.Value;
-        }
-        else if (decimal.TryParse(TipAmount, out var parsedTip))
-        {
-            finalTipAmount = parsedTip;
-        }
-        else
-        {
-            finalTipAmount = 0;
-        }
-
-        cartOrder.TipAmount = finalTipAmount;
+        // Order Date
         cartOrder.OrderDate = DateTime.UtcNow;
 
+        // Calculate Subtotal 
+        cartOrder.Subtotal = CalculateSubtotal([.. cartOrder.OrderMenuItems!.Select(i => (i.Quantity, i.MenuItem.Price))]);
+
+        // Calculate Delivery FeeaqW@S
+        cartOrder.DeliveryFee = CalculateDeliveryFee(cartOrder.Subtotal, deliveryDistanceKm, selectedType);
+
+        // Calculate Tax 
+        cartOrder.Tax = CalculateTax(cartOrder.Subtotal, cartOrder.DeliveryFee);
+
+        // Calculate Tip 
+        decimal tip = CalculateTip(tipAmount, customTipAmount);
+        cartOrder.TipAmount = tip;
+
+        // Calculate Rewards 
+        decimal rewardsDiscount = CalculateRewardDiscount(redeemPoints, user.RewardsPoints, out int pointsUsed);
+
+        // Calculate Total
+        List<decimal> totalTally = [
+            cartOrder.Subtotal,
+            cartOrder.TipAmount,
+            cartOrder.Tax,
+            cartOrder.DeliveryFee ?? 0,
+            rewardsDiscount
+        ];
+
+        decimal total = totalTally.Sum();
+        cartOrder.Total = total > 0 ? total : 0;
+
+        // Delivery Address (Optional)
         if (selectedType == Enums.OrderType.Delivery)
         {
             cartOrder.AddressId = selectedAddressId;
         }
 
-        // Handle address logic (optional)
-        var selectedAddress = _context.UserAddresses.FirstOrDefault(a => a.Id == selectedAddressId);
+        var selectedAddress = _context.UserAddresses.FirstOrDefault(a => a.Id == selectedAddressId && a.UserId == userId);
         if (selectedAddress != null)
         {
             // Optionally process or validate the address
         }
 
-        // Calculate total
-        decimal total = CalculateOrderTotal(cartOrder, finalTipAmount, deliveryDistanceKm, selectedType);
-
-        // Rewards logic
-        if (redeemPoints && user.RewardsPoints >= 250)
-        {
-            total = Math.Max(0, total - 20);
-            user.RewardsPoints -= 250;
-        }
-
         // Save the order and update user points
-        SaveOrderAndUserPoints(cartOrder, total, finalTipAmount, selectedType, user);
+        await SaveOrderAndUserPoints(cartOrder, user.Id, pointsUsed);
 
         // Remove cart from session
         HttpContext.Session.Remove($"cart_order_{userId}");
 
+        TempData["RewardsDiscount"] = rewardsDiscount.ToString();
+
         return RedirectToAction("Receipt", new { orderId = cartOrder.Id });
     }
-
-    public IActionResult Receipt(int orderId)
-    {
-        int? userId = GetUserId();
-        if (userId == null) return RedirectToAction("Error");
-
-        Order? cartOrder = _context.Orders
-     .Include(o => o.OrderMenuItems)!
-         .ThenInclude(omi => omi.MenuItem)
-     .FirstOrDefault(o => o.Id == orderId && o.UserId == userId);
-
-        if (cartOrder == null) return RedirectToAction("Error");
-
-        ViewBag.PointsEarned = (int)Math.Floor(cartOrder.Subtotal);
-        ViewBag.SustainabilityMessage = "Thank you for choosing eco-friendly packaging. Together, we reduce waste.";
-
-        return View(cartOrder);
-    }
-
 
     // Method to get or create a cart order for the user
     private Order? GetOrCreateCartOrder(int userId, Enums.OrderType selectedType)
     {
-        Order cartOrder = HttpContext.Session.GetObject<Order>($"cart_order_{userId}")!;
+        Order? cartOrder = HttpContext.Session.GetObject<Order>($"cart_order_{userId}");
 
         if (cartOrder == null)
         {
             User? user = _context.Users.Find(userId);
             if (user == null) return null;
 
-            cartOrder = new()
+            cartOrder = new Order
             {
                 Status = Enums.OrderStatus.InProgress,
                 UserId = userId,
@@ -224,9 +218,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         }
 
         cartOrder.Type = selectedType;
-
         HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
-
         return cartOrder;
     }
 
@@ -317,16 +309,28 @@ public class OrderController(ApplicationDbContext context) : Controller
         return RedirectToAction("Index", "Order", new { cartOrder.Type, viewCart = true });
     }
 
-    // Calculate total for the checkout
-    private static decimal CalculateOrderTotal(Order cartOrder, decimal tipAmount, double deliveryDistanceKm, Enums.OrderType selectedType)
+    // Calculate Subtotal
+    private static decimal CalculateSubtotal(List<(int Quantity, decimal Price)> itemPrices)
+        => itemPrices.Sum(item => item.Quantity * item.Price);
+
+    // Calculate Tip
+    private static decimal CalculateTip(string tipAmount, decimal? customTipAmount)
     {
-        decimal subtotal = cartOrder.OrderMenuItems!.Sum(item => item.Quantity * item.MenuItem.Price);
-        decimal deliveryFee = CalculateDeliveryFee(subtotal, deliveryDistanceKm, selectedType);
-        decimal tax = Math.Round((subtotal + deliveryFee + tipAmount) * 0.05m, 2);
-        return subtotal + deliveryFee + tipAmount + tax;
+        if (customTipAmount.HasValue)
+
+            return Math.Round(customTipAmount.Value, 2);
+
+        else if (decimal.TryParse(tipAmount, out decimal tip))
+            return Math.Round(tip, 2);
+
+        return 0;
     }
 
-    // Calculate delivery fee
+    // Calculate Tax 
+    private static decimal CalculateTax(decimal subtotal, decimal? deliveryFee)
+        => Math.Round((subtotal + deliveryFee ?? 0) * 0.05m, 2);
+
+    // Calculate Delivery fee
     private static decimal CalculateDeliveryFee(decimal subtotal, double deliveryDistanceKm, Enums.OrderType selectedType)
     {
         if (selectedType != Enums.OrderType.Delivery) return 0;
@@ -334,37 +338,85 @@ public class OrderController(ApplicationDbContext context) : Controller
         if (subtotal >= 75) return 0;
         if (deliveryDistanceKm <= 5) return 5.99m;
         if (deliveryDistanceKm <= 8) return 7.99m;
-        return 0; // Or handle outside delivery range
+
+        throw new InvalidOperationException("Delivery is not available for distances over 8km.");
+    }
+
+    // Calculate Rewards 
+    private static decimal CalculateRewardDiscount(bool redeemPoints, int availablePoints, out int pointsUsed)
+    {
+        decimal rewardsDiscount = 0.00m;
+        pointsUsed = 0;
+
+
+        if (redeemPoints && availablePoints >= 250)
+        {
+            rewardsDiscount = -20.00m;
+            pointsUsed = 250;
+        }
+
+        return rewardsDiscount;
     }
 
     // Save order and user loyalty points
-    private void SaveOrderAndUserPoints(Order cartOrder, decimal total, decimal tipAmount, Enums.OrderType selectedType, User user)
+    private async Task SaveOrderAndUserPoints(Order order, int userId, int pointsUsed)
     {
-        cartOrder.Subtotal = total - tipAmount;
-        cartOrder.TipAmount = tipAmount;
-        cartOrder.Total = total;
-        cartOrder.Status = Enums.OrderStatus.Confirmed; // Final confirmed status
-        cartOrder.OrderDate = DateTime.UtcNow;
-        cartOrder.UserId = user.Id;
+        if (order.OrderMenuItems == null || order.OrderMenuItems.Count == 0)
+            return;
 
-        int pointsEarned = (int)Math.Floor(cartOrder.Subtotal);
-        user.RewardsPoints += pointsEarned;
+        // Earn 1 point per $1 spent on subtotal
+        int pointsEarned = (int)Math.Floor(order.Subtotal);
 
-        _context.Orders.Add(cartOrder);
+        User userInDb = await _context.Users.FindAsync(userId) ?? throw new Exception("User not found.");
 
-        if (cartOrder.OrderMenuItems != null)
+        userInDb.RewardsPoints += pointsEarned - pointsUsed;
+
+        if (order.User != null && order.User.Id == userInDb.Id && order.User != userInDb)
+            order.User = userInDb;
+
+        // Save order changes
+        if (order.Id == 0)
         {
-            foreach (var item in cartOrder.OrderMenuItems)
-            {
-                item.OrderId = cartOrder.Id; // Link to order
-                _context.OrderMenuItems.Add(item);
-            }
-        }
+            foreach (OrderMenuItem orderMenuItem in order.OrderMenuItems)
+                _context.Attach(orderMenuItem.MenuItem);
 
-        // _context.Users.Update(user);
-        _context.SaveChanges();
+            _context.Orders.Add(order);
+        }
+        else
+            _context.Orders.Update(order);
+
+        await _context.SaveChangesAsync();
     }
 
+    public IActionResult Receipt(int orderId)
+    {
+        int? userId = GetUserId();
+
+        if (userId == null)
+            return RedirectToAction("Error");
+
+        Order? cartOrder = _context.Orders
+            .Include(o => o.User)
+            .Include(o => o.OrderMenuItems)!
+                .ThenInclude(omi => omi.MenuItem)
+            .FirstOrDefault(o => o.Id == orderId && o.UserId == userId);
+
+        if (cartOrder == null)
+            return RedirectToAction("Error");
+
+        ViewBag.PointsEarned = (int)Math.Floor(cartOrder.Subtotal);
+        ViewBag.SustainabilityMessage = "Thank you for choosing eco-friendly packaging. Together, we reduce waste.";
+
+        string? discountStr = (string?)TempData["RewardsDiscount"];
+        decimal rewardsDiscount = 0;
+
+        if (!string.IsNullOrEmpty(discountStr))
+            _ = decimal.TryParse(discountStr, out rewardsDiscount);
+
+        ViewBag.RewardsDiscount = rewardsDiscount;
+
+        return View(cartOrder);
+    }
 
     // Error handling page
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

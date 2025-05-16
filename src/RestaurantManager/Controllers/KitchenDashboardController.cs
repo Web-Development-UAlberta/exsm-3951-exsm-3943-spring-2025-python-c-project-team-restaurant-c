@@ -45,7 +45,7 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
     public IActionResult Orders()
     {
         ViewBag.Orders = _context.Orders
-                                  .Include(o => o.OrderMenuItems)
+                                  .Include(o => o.OrderMenuItems!)
                                   .ThenInclude(omi => omi.MenuItem)
                                   .ToList();
         return View();
