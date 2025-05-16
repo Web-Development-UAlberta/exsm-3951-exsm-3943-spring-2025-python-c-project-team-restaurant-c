@@ -6,7 +6,6 @@ using RestaurantManager.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RestaurantManager.Utilities;
-using System.Threading.Tasks;
 
 namespace RestaurantManager.Controllers;
 

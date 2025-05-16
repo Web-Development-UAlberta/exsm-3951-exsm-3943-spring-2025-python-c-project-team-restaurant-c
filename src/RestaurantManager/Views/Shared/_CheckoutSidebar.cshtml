@@ -145,8 +145,12 @@
     function updateTipAndTotal() {
         const selectedTip = document.querySelector('input[name="TipAmount"]:checked');
         const redeemCheckbox = document.getElementById('redeemCheckbox');
-        const canRedeem = !redeemCheckbox.disabled;
-        const applyRewards = redeemCheckbox.checked && canRedeem;
+
+        let applyRewards = false;
+        if (redeemCheckbox) {
+            const canRedeem = !redeemCheckbox.disabled;
+            applyRewards = redeemCheckbox.checked && canRedeem;
+        }
 
         let tipAmount = 0;
 
@@ -173,7 +177,7 @@
         const discountRow = document.getElementById('rewardsDiscountRow');
         const rewardsDisplay = document.getElementById('rewardsDiscountDisplay');
 
-        if (canRedeem && redeemCheckbox.checked) {
+        if (redeemCheckbox && redeemCheckbox.checked) {
             if (discountRow) {
                 discountRow.style.display = 'flex';
                 rewardsDisplay.textContent = "-$20.00";
