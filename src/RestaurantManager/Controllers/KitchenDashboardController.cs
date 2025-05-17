@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Models;
 using RestaurantManager.Data;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using RestaurantManager.Utilities;
 
 namespace RestaurantManager.Controllers;
 
@@ -45,7 +43,7 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
     public IActionResult Orders()
     {
         ViewBag.Orders = _context.Orders
-                                  .Include(o => o.OrderMenuItems)
+                                  .Include(o => o.OrderMenuItems!)
                                   .ThenInclude(omi => omi.MenuItem)
                                   .ToList();
         return View();
@@ -111,7 +109,7 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         return View(item);
     }
 
-    [HttpPost, ActionName("Delete")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed(int id)
     {
@@ -125,6 +123,20 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         return RedirectToAction("MenuItems");
     }
 
+
+    [HttpPost]
+    public IActionResult UpdateOrderStatus(int orderId, Enums.OrderStatus status)
+    {
+        Order? order = _context.Orders.Find(orderId);
+
+        if (order != null)
+        {
+            order.Status = status;
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("Orders");
+    }
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -23,8 +23,9 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
             .Include(u => u.UserAddresses)
             .Include(u => u.Reservations)
             .Include(u => u.UserDietaryTags)
-            .Include(u => u.Orders!.OrderByDescending(o => o.OrderDate))
+            .Include(u => u.Orders)
             .FirstOrDefault(u => u.Email == email);
+        user.Orders = user.Orders?.OrderByDescending(o => o.OrderDate).Take(2).ToList();
 
         if (user == null)
             return NotFound();
@@ -40,23 +41,31 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
         return View(user);
     }
 
-    public IActionResult OrderHistory()
+    private int? GetUserId()
     {
-        var email = User.Identity?.Name;
-        if (string.IsNullOrEmpty(email)) return Unauthorized();
+        if (User.Identity == null || !User.Identity.IsAuthenticated) return null;
 
-        var orders = _context.Orders
-            .Include(o => o.User)
-            .Include(o => o.UserAddress)
-            .Include(o => o.Reservation)
-            .Where(o => o.User.Email == email)
-            .OrderByDescending(o => o.OrderDate)
+        Claim? userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        return userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId) ? userId : null;
+    }
+
+    public async Task<IActionResult> OrderHistory()
+    {
+        var userId = GetUserId();
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        var orders = await _context.Orders
+            .Where(o => o.UserId == userId)
             .Include(o => o.OrderMenuItems)
-
-            .ToList();
+                .ThenInclude(omi => omi.MenuItem)
+            .Include(o => o.Reservation)
+            .ToListAsync();
 
         return View(orders);
     }
+
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -2,6 +2,10 @@
 @using RestaurantManager.Enums
 @using RestaurantManager.Models
 
+@{
+    ViewData["Title"] = "Receipt";
+}
+
 <div class="container py-5">
     <div class="receipt-container">
         <div class="receipt-header">
@@ -14,7 +18,7 @@
             <p><strong>Order Type:</strong>
                 @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
             </p>
-            <p><strong>Points Earned:</strong> @ViewBag.PointsEarned</p>
+            <p><strong>Harvest Club Rewards Earned:</strong> @ViewBag.PointsEarned</p>
         </div>
 
         <div class="receipt-section">
@@ -54,6 +58,10 @@
                 <tr>
                     <td>Tax (5% GST):</td>
                     <td style="text-align:right;">@Model.Tax.ToString("C2")</td>
+                </tr>
+                <tr>
+                    <td>Rewards Redeemed:</td>
+                    <td style="text-align:right;">@(ViewBag.RewardsDiscount.ToString("C2"))</td>
                 </tr>
                 <tr>
                     <td><strong>Total:</strong></td>
