@@ -1,0 +1,21 @@
+@using RestaurantManager.Models
+@model Order
+
+<div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+    <h4 class="mb-4 text-dark fw-bold">Delivery Details</h4>
+
+    <!-- Scheduled Time Display -->
+    <div class="mb-3">
+        <label class="form-label text-muted fw-medium">Scheduled Time</label>
+        <div class="form-control bg-light rounded-3">
+            @Model.ScheduledTime?.ToString("f") <!-- Full datetime format, nullable-safe -->
+        </div>
+    </div>
+
+    <!-- Delivery Instructions -->
+    <div class="mb-3">
+        <label asp-for="DeliveryInstructions" class="form-label text-muted fw-medium">Delivery Instructions</label>
+        <textarea asp-for="DeliveryInstructions" class="form-control rounded-3" rows="4"
+            placeholder="e.g., Leave at front door, call on arrival..."></textarea>
+    </div>
+</div>

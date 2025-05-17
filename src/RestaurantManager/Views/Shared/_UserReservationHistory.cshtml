@@ -1,0 +1,22 @@
+@model IEnumerable<RestaurantManager.Models.Reservation>
+
+<div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+    <h4 class="mb-4 text-dark fw-bold">Reservations</h4>
+
+    <form>
+        @if (Model != null && Model.Any())
+        {
+            var res = Model.First();
+            <p class="card-text mb-3">Reservation #: <strong>@res.Id</strong></p>
+            <div class="d-grid gap-2">
+                <button class="btn btn-outline-primary rounded-pill">Review Order</button>
+                <button class="btn btn-outline-secondary rounded-pill">Edit Reservation</button>
+                <button class="btn btn-outline-danger rounded-pill">Cancel Reservation</button>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No current reservations.</p>
+        }
+    </form>
+</div>

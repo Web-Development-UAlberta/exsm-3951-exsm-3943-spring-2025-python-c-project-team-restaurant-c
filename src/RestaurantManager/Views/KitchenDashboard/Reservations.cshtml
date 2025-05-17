@@ -1,0 +1,70 @@
+@using RestaurantManager.Models
+@using RestaurantManager.Enums
+
+@{
+    ViewData["Title"] = "Kitchen Dashboard";
+
+    var reservations = ViewBag.Reservations as List<Reservation>;
+    var orders = ViewBag.Orders as List<Order>;
+    var menuItems = ViewBag.MenuItems as List<MenuItem>;
+}
+
+<div class="banner-image position-relative text-white text-center">
+    <img src="~/images/kitchen.png" class="img-fluid w-100" style="height: 300px; object-fit: cover;" alt="Kitchen Image" />
+    <div class="banner-text position-absolute top-50 start-50 translate-middle">
+        <h2 class="fw-bold text-light display-4 text-shadow">Dine In Reservations</h2>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    <!-- Reservations -->
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-warning text-dark fw-bold fs-4">
+            Reservations
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Guests</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (reservations != null && reservations.Any())
+                    {
+                        foreach (var r in reservations)
+                        {
+                            <tr>
+                                <td>@r.User?.FirstName</td>
+                                <td>@r.ReservationDateTime.ToShortDateString()</td>
+                                <td>@r.ReservationDateTime.ToShortTimeString()</td>
+                                <td>@r.GuestCount</td>
+                                <td>@r.Notes</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="5" class="text-center">No reservations found.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-shadow {
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    }
+
+    .card-header {
+        font-family: 'Segoe UI', sans-serif;
+        letter-spacing: 0.5px;
+    }
+</style>

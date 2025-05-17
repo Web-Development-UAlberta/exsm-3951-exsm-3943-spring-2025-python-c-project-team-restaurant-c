@@ -1,0 +1,132 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+
+@{
+    decimal subtotal = Model.OrderMenuItems?.Sum(item => item.Quantity * item.MenuItem.Price) ?? 0m;
+    decimal tax = subtotal * 0.05m;
+    decimal deliveryFee = Model.Type == OrderType.Delivery ? 5.00m : 0.00m;
+    decimal tip = Model.TipAmount == 0 ? 0m : Model.TipAmount;
+    decimal total = subtotal + tax + tip + deliveryFee;
+
+    decimal tip10 = Math.Round(subtotal * 0.10m, 2);
+    decimal tip15 = Math.Round(subtotal * 0.15m, 2);
+    decimal tip20 = Math.Round(subtotal * 0.20m, 2);
+    bool isCustomTip = Model.TipAmount != 0 && Model.TipAmount != tip10 && Model.TipAmount != tip15 && Model.TipAmount !=
+    tip20;
+
+    int itemCount = Model.OrderMenuItems?.Sum(i => i.Quantity) ?? 0;
+}
+
+<div class="container py-5">
+    <a asp-controller="Order" asp-action="Index" class="btn btn-link text-decoration-none mb-4">
+        &larr; Back to Order
+    </a>
+
+    <h2 class="mb-4">Checkout @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)</h2>
+    <div class="row">
+        <!-- Left: Form Fields -->
+        <div class="col-8 py-3">
+
+            <!-- Rewards -->
+            <div class="mb-2">
+                @await Html.PartialAsync("_RewardPoints", Model.User)
+            </div>
+
+            <!-- Take Out Information -->
+            <div>
+                @if (Model.Type == OrderType.TakeOut)
+                {
+                    <div class="mb-2">
+                        @await Html.PartialAsync("_TakeOutFields", Model)
+                    </div>
+                }
+            </div>
+
+            <!-- Contact and Payment -->
+            <div class="mb-2">
+                @await Html.PartialAsync("_UserInfo", Model.User)
+            </div>
+
+            <!-- Delivery Information -->
+            <div>
+                @if (Model.Type == OrderType.Delivery)
+                {
+                    <div class="mb-2">
+                        @await Html.PartialAsync("_DeliveryInfo", Model.UserAddress)
+                        @await Html.PartialAsync("_DeliveryFields", Model)
+                    </div>
+                }
+            </div>
+
+            <!-- Payment -->
+            <div class="mb-4">
+                @await Html.PartialAsync("_CardPaymentForm", Model.User)
+            </div>
+
+            <!-- Order Summary -->
+            <div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+                <h4 class="mb-4 text-dark fw-bold">Order Summary (@itemCount item@(itemCount == 1 ? "" : "s"))</h4>
+                @if (Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+                {
+                    <ul class="list-group mb-4">
+                        @foreach (var item in Model.OrderMenuItems)
+                        {
+                            var itemSubtotal = item.Quantity * item.MenuItem.Price;
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@item.MenuItem.Name</strong><br />
+                                    <small class="text-muted">@item.MenuItem.Price.ToString("C2") each</small><br />
+                                </div>
+                                <div class="text-end">
+                                    <span class="quantity-circle">@item.Quantity</span>
+                                    <small class="fw-bold d-block mt-2">@itemSubtotal.ToString("C2")</small>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+
+        <partial name="_CheckoutSidebar" model="Model" />
+    </div>
+</div>
+
+<style>
+    .btn-link {
+        color: var(--forest-green);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .btn-link:hover,
+    .btn-link:focus {
+        color: darken(var(--forest-green-hover), 10%);
+    }
+
+    .quantity-circle {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .list-group-item {
+        padding: 1.25rem 1.5rem;
+        border: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    .text-end {
+        text-align: right;
+    }
+</style>
