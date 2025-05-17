@@ -1,0 +1,12 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+@using RestaurantManager.Models
+
+@{
+    ViewData["Title"] = "Receipt";
+}
+
+<div class="container py-5">
+    <h2>Order Receipt - Order #@Model.Id</h2>
+    @Html.Partial("_OrderReceipt", Model)
+</div>

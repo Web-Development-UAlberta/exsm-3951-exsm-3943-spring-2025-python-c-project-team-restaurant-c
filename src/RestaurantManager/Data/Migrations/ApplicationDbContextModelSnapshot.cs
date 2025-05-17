@@ -528,6 +528,10 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("notes");
 
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("order_date");
+
                     b.Property<int?>("ReservationId")
                         .HasColumnType("INTEGER")
                         .HasColumnName("reservation_id");
@@ -626,9 +630,9 @@ namespace RestaurantManager.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("reservation_datetime");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("ReservationStatus")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("status");
+                        .HasColumnName("reservation_status");
 
                     b.Property<int>("TableNumber")
                         .HasColumnType("INT")

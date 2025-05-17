@@ -17,23 +17,47 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
     {
         var email = User.Identity?.Name;
         if (string.IsNullOrEmpty(email))
-        {
-            return Unauthorized(); // Not logged in
-        }
+            return Unauthorized();
 
         var user = _context.Users
             .Include(u => u.UserAddresses)
             .Include(u => u.Reservations)
             .Include(u => u.UserDietaryTags)
-            .FirstOrDefault(u => u.Email == email); // Match by email
-
+            .Include(u => u.Orders)
+            .FirstOrDefault(u => u.Email == email);
+        user.Orders = user.Orders?.OrderByDescending(o => o.OrderDate).Take(2).ToList();
 
         if (user == null)
-        {
             return NotFound();
-        }
+
+        user.Orders = user.Orders!.OrderByDescending(o => o.OrderDate).Take(2).ToList();
 
         return View(user);
+    }
+
+    private int? GetUserId()
+    {
+        if (User.Identity == null || !User.Identity.IsAuthenticated) return null;
+
+        Claim? userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        return userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId) ? userId : null;
+    }
+
+    public async Task<IActionResult> OrderHistory()
+    {
+        var userId = GetUserId();
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+        var orders = await _context.Orders
+            .Where(o => o.UserId == userId)
+            .Include(o => o.OrderMenuItems)
+                .ThenInclude(omi => omi.MenuItem)
+            .Include(o => o.Reservation)
+            .ToListAsync();
+
+        return View(orders);
     }
 
 
