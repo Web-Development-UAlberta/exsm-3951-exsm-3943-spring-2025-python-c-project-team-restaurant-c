@@ -30,20 +30,17 @@
             <div class="btn-group toggle-btn-group" role="group" aria-label="Order Type Toggle">
                 <!-- Take Out Radio Button -->
                 <input type="radio" class="btn-check" name="selectedType" value="TakeOut" id="takeOutBtn"
-                    autocomplete="off" @((selectedType == OrderType.TakeOut) ? "checked" : "")
-                    onchange="window.location.href='@Url.Action("Index", new { selectedType = OrderType.TakeOut })'">
+                    autocomplete="off" @((selectedType == OrderType.TakeOut) ? "checked" : "")>
                 <label class="btn btn-outline-primary" for="takeOutBtn">Take Out</label>
 
                 <!-- Delivery Radio Button -->
                 <input type="radio" class="btn-check" name="selectedType" value="Delivery" id="deliveryBtn"
-                    autocomplete="off" @((selectedType == OrderType.Delivery) ? "checked" : "")
-                    onchange="window.location.href='@Url.Action("Index", new { selectedType = OrderType.Delivery })'">
+                    autocomplete="off" @((selectedType == OrderType.Delivery) ? "checked" : "")>
                 <label class="btn btn-outline-primary" for="deliveryBtn">Delivery</label>
 
                 <!-- Dine In Radio Button -->
                 <input type="radio" class="btn-check" name="selectedType" value="DineIn" id="dineInBtn"
-                    autocomplete="off" @((selectedType == OrderType.DineIn) ? "checked" : "")
-                    onchange="window.location.href='@Url.Action("Index", new { selectedType = OrderType.DineIn })'">
+                    autocomplete="off" @((selectedType == OrderType.DineIn) ? "checked" : "")>
                 <label class="btn btn-outline-primary" for="dineInBtn">Dine In</label>
             </div>
         </form>
@@ -62,3 +59,32 @@
     }
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        //Get all the radio buttons (Take Out, Delivery & Dine In)
+        var radioButtons = document.querySelectorAll('.btn-check');
+
+        //Add even handlers to each button
+        radioButtons.forEach(function(button) {
+            button.addEventListener('change', function() {
+
+                //Create URL with type of button selected
+                var url = '@Url.Action("Index")?selectedType=' + this.value;
+
+                //Get the updated page content
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        //Instead of reloading page
+                        //Create temp div and only replace part with menu
+                        var temp = document.createElement('div');
+                        temp.innerHTML = html;
+                        var newContainer = temp.querySelector('.container');
+                        document.querySelector('.container').innerHTML = newContainer.innerHTML;
+                        history.pushState({}, '', url);
+                    })
+            });
+        });
+    });
+</script>

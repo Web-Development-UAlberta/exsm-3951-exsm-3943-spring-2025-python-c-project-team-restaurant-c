@@ -29,6 +29,12 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
         if (user == null)
             return NotFound();
 
+        //Only show reservations that are Booked or Seated
+        user.Reservations = _context.Reservations
+            .Where(o => o.UserId == user.Id && (o.ReservationStatus == Enums.ReservationStatus.Booked || o.ReservationStatus == Enums.ReservationStatus.Seated))
+            .OrderByDescending(o => o.ReservationDateTime)
+            .ToList();
+
         user.Orders = user.Orders!.OrderByDescending(o => o.OrderDate).Take(2).ToList();
 
         return View(user);

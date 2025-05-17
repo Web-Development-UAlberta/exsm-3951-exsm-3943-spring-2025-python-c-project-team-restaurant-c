@@ -9,51 +9,69 @@
         <div class="reservation-form-card container py-5">
             <h2 class="text-center mb-4">Book Table</h2>
 
-            @using (Html.BeginForm("SubmitReservation", "Reservation", FormMethod.Post))
-            {
+            <form id="reservationForm" method="post" action="@Url.Action("BookAndConfirm", "Reservation")">
                 @Html.AntiForgeryToken()
 
                 <div class="form-group mb-3">
-                    @Html.LabelFor(m => m.ReservationDateTime, "Reservation Date & Time")
-                    @Html.TextBoxFor(m => m.ReservationDateTime, new { @class = "form-control", type = "datetime-local" })
-                    @Html.ValidationMessageFor(m => m.ReservationDateTime, "", new { @class = "text-danger" })
+                    <label for="ReservationDateTime">Reservation Date & Time</label>
+                    <input type="datetime-local" id="ReservationDateTime" name="ReservationDateTime" class="form-control" value="@DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm")" required />
                 </div>
 
                 <div class="form-group mb-3">
-                    @Html.LabelFor(m => m.GuestCount, "Number of Guests")
-                    @Html.TextBoxFor(m => m.GuestCount, new { @class = "form-control", type = "number", min = "1", max =
-                    "50" })
-                @Html.ValidationMessageFor(m => m.GuestCount, "", new { @class = "text-danger" })
+                    <label for="GuestCount">Number of Guests</label>
+                    <input type="number" id="GuestCount" name="GuestCount" class="form-control" min="1" max="50" value="2" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="Notes">Additional Reservation Requests</label>
+                    <textarea id="Notes" name="Notes" class="form-control" rows="3" placeholder="Special occasions, accessibility needs, dietary restrictions, etc."></textarea>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="FirstName">First Name</label>
+                                    <input type="text" id="FirstName" name="FirstName" class="form-control" value="@ViewBag.FirstName" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="LastName">Last Name</label>
+                                    <input type="text" id="LastName" name="LastName" class="form-control" value="@ViewBag.LastName" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="Email">Email</label>
+                                    <input type="email" id="Email" name="Email" class="form-control" value="@ViewBag.Email" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="Phone">Phone Number</label>
+                                    <input type="tel" id="Phone" name="Phone" class="form-control" value="@ViewBag.Phone" required />
+                                </div>
+                            </div>
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i>
+                            Contact information is taken from your profile. You can edit these details <a href="/CustomerDashboard" class="text-primary">here</a> if needed.
+                        </small>
+                    </div>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <button type="submit" form="reservationForm" class="btn btn-primary btn-lg w-100 py-3">
+                    <i class="fas fa-calendar-check"></i> Book Now
+                </button>
             </div>
-
-            <div class="form-group mb-3">
-                @Html.LabelFor(m => m.Notes, "Additional Reservation Requests")
-                @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", rows = 3 })
-                @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="mb-4">
-                @await Html.PartialAsync("_UserInfo", Model.User)
-            </div>
-
-            <div class="mb-4">
-                <p>Pre Order Menu</p>
-            </div>
-
-
-
-
-
-            <div class="border-top p-4">
-                <form asp-controller="Reservation" asp-action="Confirmation" method="get">
-                    <input type="hidden" name="selectedType" value="@Model" />
-                    <button type="submit" class="btn btn-primary w-100">
-                        Book Now
-                    </button>
-                </form>
-            </div>
-
-                        }
         </div>
     </div>
 </div>
@@ -84,5 +102,31 @@
 
     .form-control {
         border-radius: 0.5rem;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-radius: 8px;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        border-radius: 8px 8px 0 0 !important;
+    }
+
+    .card-header h5 {
+        color: #495057;
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 </style>
