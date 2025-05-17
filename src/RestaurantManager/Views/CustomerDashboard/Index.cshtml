@@ -16,22 +16,22 @@
         </div>
 
         <!-- Reservation History -->
-        <div class="col-md-6 mb-4">
+        <div class="col-md-6">
             @await Html.PartialAsync("_UserReservationHistory", Model.Reservations)
         </div>
 
         <!-- Personal Info with Edit Toggle -->
-        <div class="col-md-6 mb-4">
+        <div class="col-md-6">
             @await Html.PartialAsync("_UserInfo", Model)
         </div>
 
         <!-- Delivery Addresses -->
-        <div class="col-md-6 mb-4">
+        <div class="col-md-6">
             @await Html.PartialAsync("_DeliveryInfo", Model.UserAddresses?.FirstOrDefault())
         </div>
 
         <!-- Order History -->
-        <div class="col-md-6 mb-4">
+        <div class="col-md-6">
             <div class="card shadow-sm rounded-4 p-4 border-0 h-100">
                 <h4 class="mb-4 text-dark fw-bold">Recent Orders</h4>
 
@@ -55,7 +55,8 @@
                     }
 
                     <div class="text-end">
-                        <a href="@Url.Action("OrderHistory", "CustomerDashboard")" class="btn btn-outline-primary btn-sm">
+                        <a asp-controller="CustomerDashboard" asp-action="OrderHistory"
+                            class="btn btn-outline-primary btn-sm">
                             View Full Order History
                         </a>
                     </div>
