@@ -14,12 +14,12 @@
 
                 <div class="form-group mb-3">
                     <label for="ReservationDateTime">Reservation Date & Time</label>
-                    <input type="datetime-local" id="ReservationDateTime" name="ReservationDateTime" class="form-control" value="@DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm")" required />
+                    <input type="datetime-local" id="ReservationDateTime" name="ReservationDateTime" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" value="@DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm")" required />
                 </div>
 
                 <div class="form-group mb-3">
                     <label for="GuestCount">Number of Guests</label>
-                    <input type="number" id="GuestCount" name="GuestCount" class="form-control" min="1" max="50" value="2" required />
+                    <input type="number" id="GuestCount" name="GuestCount" class="form-control" min="1" max="50" value="1" required />
                 </div>
 
                 <div class="form-group mb-3">

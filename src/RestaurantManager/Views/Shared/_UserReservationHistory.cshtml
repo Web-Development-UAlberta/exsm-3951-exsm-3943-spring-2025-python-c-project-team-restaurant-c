@@ -1,7 +1,7 @@
 @model IEnumerable<RestaurantManager.Models.Reservation>
 
 <div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
-    <h4 class="mb-4 text-dark fw-bold">Reservations</h4>
+    <h4 class="mb-4 text-dark fw-bold">Upcoming Reservations</h4>
 
     @if (Model != null && Model.Any())
     {
@@ -103,7 +103,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label for="editDateTime">Date & Time</label>
-                                <input type="datetime-local" id="editDateTime" name="ReservationDateTime" class="form-control" required />
+                                <input type="datetime-local" id="editDateTime" name="ReservationDateTime" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
                             </div>
                         </div>
                         <div class="col-md-6">

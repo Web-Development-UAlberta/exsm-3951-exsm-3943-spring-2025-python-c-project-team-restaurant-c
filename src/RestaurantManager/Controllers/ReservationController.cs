@@ -105,7 +105,6 @@ public class ReservationController : Controller
         return View("Index", reservation);
     }
 
-
     private int GetLoggedInUserId()
     {
         var email = User.Identity?.Name;
@@ -216,7 +215,6 @@ public class ReservationController : Controller
         return !isTableReserved;
     }
 
-
     public IActionResult Confirmation()
     {
         //Check if we have a reservation ID in TempData
@@ -240,62 +238,34 @@ public class ReservationController : Controller
         return View(latestReservation);
     }
 
-    [HttpGet]
-    public IActionResult CheckUserClaims()
-    {
-        var nameIdentifier = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "null";
-        var name = User.Identity?.Name ?? "null";
-        var email = User.FindFirstValue(ClaimTypes.Email) ?? "null";
-        
-        return Content($"NameIdentifier: {nameIdentifier}, Name: {name}, Email: {email}");
-    }
-
-
-    [HttpGet]
-    public IActionResult DebugReservations()
-    {
-        //Get all reservations in the system
-        var allReservations = _context.Reservations.ToList();
-        
-        //Get current user's email
-        var email = User.Identity?.Name;
-        
-        //Try to find the user by email
-        var user = _context.Users.FirstOrDefault(u => u.Email == email);
-        
-        //Get reservations specifically for this user ID
-        var userReservations = user != null 
-            ? _context.Reservations.Where(r => r.UserId == user.Id).ToList() 
-            : new List<Reservation>();
-        
-        return Content($"Total reservations in system: {allReservations.Count}\n" +
-                    $"User email: {email}\n" +
-                    $"User ID (if found): {(user != null ? user.Id.ToString() : "User not found")}\n" +
-                    $"Reservations for this user: {userReservations.Count}\n" +
-                    $"Details: {string.Join(", ", userReservations.Select(r => $"ID={r.Id}, Date={r.ReservationDateTime}"))}");
-    }
-
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult BookAndConfirm(Reservation reservation)
     {
         Console.WriteLine("BookAndConfirm method called directly");
         
-        try {
-            //Set system-generated fields
+        if (reservation.ReservationDateTime <= DateTime.Now)
+{
+            ModelState.AddModelError("ReservationDateTime", "Please select a date/time in the future.");
+            return View("Index", reservation); 
+        }
+        
+        try
+        {
+            //Fill in the automatic details
             reservation.UserId = GetLoggedInUserId();
             reservation.CreatedAt = DateTime.UtcNow;
             reservation.TableNumber = GetAvailableTable(reservation.ReservationDateTime, reservation.GuestCount);
             reservation.ReservationStatus = ReservationStatus.Booked;
-            
+
             //Save to database
             _context.Reservations.Add(reservation);
             _context.SaveChanges();
-            
+
             Console.WriteLine($"Reservation saved with ID: {reservation.Id}");
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             Console.WriteLine($"Error: {ex.Message}");
         }
         
@@ -307,14 +277,17 @@ public class ReservationController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeleteReservation(int id)
     {
+        //Get current user's email and find the reservation that belongs to them
         var email = User.Identity?.Name;
         var reservation = _context.Reservations
             .Include(r => r.User)
             .FirstOrDefault(r => r.Id == id && r.User!.Email == email);
 
+        //Mark the reservation as cancelled and update the UpdatedAt
         reservation!.ReservationStatus = Enums.ReservationStatus.Cancelled;
         reservation.UpdatedAt = DateTime.UtcNow;
 
+        //Save changes and go back to Dashboard
         _context.SaveChanges();
 
         return RedirectToAction("Index", "CustomerDashboard");
@@ -322,23 +295,25 @@ public class ReservationController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult EditReservation(Reservation editedReservation)
-    {
+    public IActionResult EditReservation(Reservation editedReservation){
+
+        //Get current user's email and find the reservation that belongs to them
         var email = User.Identity?.Name;
         var existingReservation = _context.Reservations
             .Include(r => r.User)
             .FirstOrDefault(r => r.Id == editedReservation.Id && r.User!.Email == email);
 
+        //Make sure the reservation exists
         if (existingReservation != null)
         {
-
+            //Update the DateTime, # Guests, Special Notes, UpdatedAt and check if they need a new Table
             existingReservation.ReservationDateTime = editedReservation.ReservationDateTime;
             existingReservation.GuestCount = editedReservation.GuestCount;
             existingReservation.Notes = editedReservation.Notes;
             existingReservation.UpdatedAt = DateTime.UtcNow;
-            
+
             existingReservation.TableNumber = GetAvailableTable(editedReservation.ReservationDateTime, editedReservation.GuestCount);
-            
+
             _context.SaveChanges();
         }
 
