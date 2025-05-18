@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using RestaurantManager.Models;
 using System.Security.Claims;
+using RestaurantManager.Data;
 
-namespace RestaurantManager.Data;
+namespace RestaurantManager.Controllers;
 
 [Authorize]
 public class CustomerDashboardController(ILogger<CustomerDashboardController> logger, ApplicationDbContext context) : Controller
@@ -25,12 +26,15 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
             .Include(u => u.UserDietaryTags)
             .Include(u => u.Orders)
             .FirstOrDefault(u => u.Email == email);
-        user.Orders = user.Orders?.OrderByDescending(o => o.OrderDate).Take(2).ToList();
 
         if (user == null)
             return NotFound();
 
+        user.Orders = user.Orders?.OrderByDescending(o => o.OrderDate).Take(2).ToList();
+
         user.Orders = user.Orders!.OrderByDescending(o => o.OrderDate).Take(2).ToList();
+
+        ViewData["CurrentRoute"] = "CustomerDashboard";
 
         return View(user);
     }
@@ -52,7 +56,7 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
         }
         var orders = await _context.Orders
             .Where(o => o.UserId == userId)
-            .Include(o => o.OrderMenuItems)
+            .Include(o => o.OrderMenuItems!)
                 .ThenInclude(omi => omi.MenuItem)
             .Include(o => o.Reservation)
             .ToListAsync();
@@ -60,7 +64,73 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
         return View(orders);
     }
 
+    [HttpPost]
+    public IActionResult UpdateAddress(UserAddress address)
+    {
+        ModelState.Remove("User");
 
+        if (!ModelState.IsValid)
+            return RedirectToAction("Index", "CustomerDashboard");
+
+        int? userId = GetUserId();
+
+        if (userId == null)
+            return RedirectToAction("Login");
+
+        if (address.Id == 0)
+        {
+            address.UserId = (int)userId;
+            _context.UserAddresses.Add(address);
+        }
+        else
+        {
+            // Update existing
+            var existing = _context.UserAddresses.FirstOrDefault(a => a.Id == address.Id && a.UserId == (int)userId);
+            if (existing == null) return NotFound();
+
+            existing.AddressLine1 = address.AddressLine1;
+            existing.AddressLine2 = address.AddressLine2;
+            existing.City = address.City;
+            existing.Province = address.Province;
+            existing.PostalCode = address.PostalCode;
+            existing.Country = address.Country;
+        }
+
+        _context.SaveChanges();
+        return RedirectToAction("Index", "CustomerDashboard");
+    }
+
+    [HttpPost]
+    public IActionResult UpdateUserInfo(User updatedUser)
+    {
+        ModelState.Remove("PasswordHash");
+
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("Index", "CustomerDashboard");
+        }
+
+        int? userId = GetUserId();
+
+        if (userId == null)
+            return RedirectToAction("Login");
+
+        var userInDb = _context.Users.FirstOrDefault(u => u.Id == (int)userId);
+        if (userInDb == null)
+        {
+            return NotFound();
+        }
+
+        userInDb.FirstName = updatedUser.FirstName;
+        userInDb.LastName = updatedUser.LastName;
+        userInDb.Email = updatedUser.Email;
+        userInDb.Phone = updatedUser.Phone;
+
+        _context.SaveChanges();
+
+        TempData["SuccessMessage"] = "Profile updated successfully.";
+        return RedirectToAction("Index", "CustomerDashboard");
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

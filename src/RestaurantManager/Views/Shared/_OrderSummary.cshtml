@@ -18,8 +18,8 @@
                 <tr>
                     <td>@item.MenuItem.Name</td>
                     <td>@item.Quantity</td>
-                    <td>@item.MenuItem.Price.ToString("C")</td>
-                    <td>@(item.Quantity* item.MenuItem.Price).ToString("C")</td>
+                    <td>@item.MenuItem.Price.ToString("C2")</td>
+                    <td>@((item.Quantity * item.MenuItem.Price).ToString("C"))</td>
                 </tr>
             }
         }

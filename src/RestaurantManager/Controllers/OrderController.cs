@@ -6,6 +6,7 @@ using RestaurantManager.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RestaurantManager.Utilities;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace RestaurantManager.Controllers;
 
@@ -112,10 +113,12 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     [HttpPost]
     public async Task<IActionResult> SubmitCheckout(
-        int selectedAddressId,
         Enums.OrderType selectedType,
         decimal? customTipAmount,
         string tipAmount,
+        DateTime? scheduledTime,
+        int? selectedAddressId,
+        string? deliveryInstructions,
         double deliveryDistanceKm = 0,
         bool redeemPoints = false)
     {
@@ -137,8 +140,13 @@ public class OrderController(ApplicationDbContext context) : Controller
         // Set order type
         cartOrder.Type = selectedType;
 
+        cartOrder.DeliveryInstructions = deliveryInstructions;
+
         // Order Date
-        cartOrder.OrderDate = DateTime.UtcNow;
+        cartOrder.OrderDate = DateTime.Now;
+
+        if (selectedType != Enums.OrderType.DineIn)
+            cartOrder.ScheduledTime = scheduledTime ?? DateTime.Now.AddMinutes(30);
 
         // Calculate Subtotal 
         cartOrder.Subtotal = CalculateSubtotal([.. cartOrder.OrderMenuItems!.Select(i => (i.Quantity, i.MenuItem.Price))]);
@@ -168,11 +176,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         decimal total = totalTally.Sum();
         cartOrder.Total = total > 0 ? total : 0;
 
-        // Delivery Address (Optional)
-        if (selectedType == Enums.OrderType.Delivery)
-        {
-            cartOrder.AddressId = selectedAddressId;
-        }
+        cartOrder.AddressId = selectedAddressId;
 
         var selectedAddress = _context.UserAddresses.FirstOrDefault(a => a.Id == selectedAddressId && a.UserId == userId);
         if (selectedAddress != null)
@@ -198,7 +202,11 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         if (cartOrder == null)
         {
-            User? user = _context.Users.Find(userId);
+            User? user = _context.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.UserAddresses)
+                .FirstOrDefault();
+
             if (user == null) return null;
 
             cartOrder = new Order
@@ -212,7 +220,7 @@ public class OrderController(ApplicationDbContext context) : Controller
                 TipAmount = 0,
                 Total = 0,
                 OrderDate = DateTime.Now,
-                OrderMenuItems = []
+                OrderMenuItems = [],
             };
         }
 
@@ -327,12 +335,12 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     // Calculate Tax 
     private static decimal CalculateTax(decimal subtotal, decimal? deliveryFee)
-        => Math.Round((subtotal + deliveryFee ?? 0) * 0.05m, 2);
+        => Math.Round((subtotal + (deliveryFee ?? 0)) * 0.05m, 2);
 
     // Calculate Delivery fee
-    private static decimal CalculateDeliveryFee(decimal subtotal, double deliveryDistanceKm, Enums.OrderType selectedType)
+    private static decimal? CalculateDeliveryFee(decimal subtotal, double deliveryDistanceKm, Enums.OrderType selectedType)
     {
-        if (selectedType != Enums.OrderType.Delivery) return 0;
+        if (selectedType != Enums.OrderType.Delivery) return null;
 
         if (subtotal >= 75) return 0;
         if (deliveryDistanceKm <= 5) return 5.99m;

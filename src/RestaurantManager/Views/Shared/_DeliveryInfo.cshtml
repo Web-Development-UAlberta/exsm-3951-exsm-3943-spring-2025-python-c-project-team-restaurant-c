@@ -1,54 +1,145 @@
-@using RestaurantManager.Models
-@model UserAddress
+@using Newtonsoft.Json
+@model RestaurantManager.Models.User
+
+@{
+    bool isCustomerDashboard = ViewData["CurrentRoute"]?.ToString().Contains("CustomerDashboard") ?? false;
+}
 
 <div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
     <h4 class="mb-4 text-dark fw-bold">Delivery Address</h4>
 
-    <form>
-        <!-- Address Line 1 -->
-        <div class="mb-3">
-            <label asp-for="AddressLine1" class="form-label text-muted fw-medium">Address Line 1 <span
-                    class="text-danger">*</span></label>
-            <input asp-for="AddressLine1" class="form-control rounded-3" placeholder="123 Main St" required />
+    <form asp-action="UpdateAddress" asp-controller="CustomerDashboard" method="post" id="addressForm">
+        <!-- Dropdown -->
+        <div class="mb-4">
+            <label class="form-label text-muted fw-medium">Select Address</label>
+            <select id="addressSelector" class="form-select rounded-3">
+                @foreach (UserAddress a in Model.UserAddresses)
+                {
+                    var uAddress = new
+                    {
+                        a.Id,
+                        a.AddressLine1,
+                        a.AddressLine2,
+                        a.City,
+                        a.Province,
+                        a.PostalCode,
+                        a.Country
+                    };
+
+                    <option value="@a.Id" data-address='@Html.Raw(JsonConvert.SerializeObject(uAddress))'>
+                        @a.AddressLine1, @a.City
+                    </option>
+                }
+                @if (isCustomerDashboard)
+                {
+                    <option value="new">New Address</option>
+                }
+            </select>
         </div>
 
-        <!-- Address Line 2 -->
+        <!-- Hidden ID -->
+        <input type="hidden" name="Id" value="0" />
+
+        <!-- Manual Address Fields -->
         <div class="mb-3">
-            <label asp-for="AddressLine2" class="form-label text-muted fw-medium">Address Line 2</label>
-            <input asp-for="AddressLine2" class="form-control rounded-3" placeholder="Apt, Suite, etc." />
+            <label class="form-label text-muted fw-medium">Address Line 1</label>
+            <input name="AddressLine1" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
         </div>
 
-        <!-- City -->
         <div class="mb-3">
-            <label asp-for="City" class="form-label text-muted fw-medium">City <span
-                    class="text-danger">*</span></label>
-            <input asp-for="City" class="form-control rounded-3" placeholder="City" required />
+            <label class="form-label text-muted fw-medium">Address Line 2</label>
+            <input name="AddressLine2" class="form-control rounded-3" readonly="@(!isCustomerDashboard)" />
         </div>
 
-        <!-- Province & Postal Code -->
+        <div class="mb-3">
+            <label class="form-label text-muted fw-medium">City</label>
+            <input name="City" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
+        </div>
+
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label asp-for="Province" class="form-label text-muted fw-medium">Province <span
-                        class="text-danger">*</span></label>
-                <input asp-for="Province" class="form-control rounded-3" placeholder="Province" required />
+                <label class="form-label text-muted fw-medium">Province</label>
+                <input name="Province" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
             </div>
 
             <div class="col-md-6 mb-3">
-                <label asp-for="PostalCode" class="form-label text-muted fw-medium">Postal Code <span
-                        class="text-danger">*</span></label>
-                <input asp-for="PostalCode" class="form-control rounded-3" placeholder="Postal Code" required />
+                <label class="form-label text-muted fw-medium">Postal Code</label>
+                <input name="PostalCode" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
             </div>
         </div>
 
-        <!-- Country -->
         <div class="mb-4">
-            <label asp-for="Country" class="form-label text-muted fw-medium">Country <span
-                    class="text-danger">*</span></label>
-            <input asp-for="Country" class="form-control rounded-3" placeholder="Canada" required />
+            <label class="form-label text-muted fw-medium">Country</label>
+            <input name="Country" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
         </div>
 
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary rounded-3">Update</button>
-        </div>
+        @if (isCustomerDashboard)
+        {
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary rounded-3" id="submitButton">Update</button>
+            </div>
+        }
     </form>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addressSelector = document.getElementById("addressSelector");
+        const form = document.getElementById("addressForm");
+        const submitButton = form.querySelector('#submitButton'); // Use ID since it's unique
+
+        function populateFormFromSelection() {
+            const selected = addressSelector.value;
+
+            const externalHiddenInput = document.getElementById("externalSelectedAddressId");
+            if (externalHiddenInput) {
+                externalHiddenInput.value = selected === "new" ? null : selected;
+            }
+
+            if (selected === "new") {
+                form.querySelector('input[name="Id"]').value = 0;
+                form.querySelector('input[name="AddressLine1"]').value = '';
+                form.querySelector('input[name="AddressLine2"]').value = '';
+                form.querySelector('input[name="City"]').value = '';
+                form.querySelector('input[name="Province"]').value = '';
+                form.querySelector('input[name="PostalCode"]').value = '';
+                form.querySelector('input[name="Country"]').value = '';
+
+                if (submitButton)
+                    submitButton.textContent = "Add";
+
+                return;
+            }
+
+            const selectedOption = addressSelector.options[addressSelector.selectedIndex];
+            const dataAttr = selectedOption.getAttribute("data-address");
+
+            if (!dataAttr) return;
+
+            let address;
+            try {
+                address = JSON.parse(dataAttr);
+            } catch (err) {
+                console.error("Invalid JSON in data-address", err);
+                return;
+            }
+
+            form.querySelector('input[name="Id"]').value = address.Id || 0;
+            form.querySelector('input[name="AddressLine1"]').value = address.AddressLine1 || '';
+            form.querySelector('input[name="AddressLine2"]').value = address.AddressLine2 || '';
+            form.querySelector('input[name="City"]').value = address.City || '';
+            form.querySelector('input[name="Province"]').value = address.Province || '';
+            form.querySelector('input[name="PostalCode"]').value = address.PostalCode || '';
+            form.querySelector('input[name="Country"]').value = address.Country || '';
+
+            if (submitButton)
+                submitButton.textContent = "Update";
+        }
+
+        // Run initially to populate the form on page load
+        populateFormFromSelection();
+
+        // Re-run on dropdown change
+        addressSelector.addEventListener("change", populateFormFromSelection);
+    });
+</script>

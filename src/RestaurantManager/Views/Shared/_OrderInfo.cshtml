@@ -1,0 +1,101 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+
+@{
+    var minTime = DateTime.Now.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm");
+    Model.ScheduledTime = DateTime.Now.AddMinutes(30);
+}
+
+<div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+    <h4 class="mb-4 text-dark fw-bold">Order Information</h4>
+
+    <!-- Take Out Time Toggle -->
+    <div class="btn-group toggle-btn-group w-100 mb-3 align-items-center justify-content-center" role="group">
+        <!-- Standard -->
+        <input type="radio" class="btn-check" name="takeOutOption" id="standardOption" value="standard" checked
+            onclick="togglePickupTime(false)">
+        <label class="btn btn-outline-primary" for="standardOption">Standard - Ready in 30 Minutes</label>
+
+        <!-- Book Pickup Option -->
+        <input type="radio" class="btn-check" name="takeOutOption" id="scheduleOption" value="schedule"
+            onclick="togglePickupTime(true)">
+        <label class="btn btn-outline-primary" for="scheduleOption">Book a Pickup Time</label>
+    </div>
+
+    <!-- Scheduled Time Input -->
+    <div id="pickupTimeContainer" class="mb-3" style="display: none;">
+        <label asp-for="@Model.ScheduledTime" class="form-label text-muted fw-medium">Scheduled Time</label>
+        <input asp-for="@Model.ScheduledTime" type="datetime-local" min="@minTime" value="@minTime"
+            class="form-control bg-light rounded-3" />
+        <span asp-validation-for="@Model.ScheduledTime" class="text-danger"></span>
+    </div>
+
+    @if (Model.Type == OrderType.Delivery)
+    {
+        <!-- Delivery Instructions -->
+        <div class="mb-3">
+            <label asp-for="DeliveryInstructions" class="form-label text-muted fw-medium">Delivery Instructions</label>
+            <textarea asp-for="DeliveryInstructions" class="form-control rounded-3" rows="4"
+                placeholder="e.g., Leave at front door, call on arrival..." id="deliveryInstructionsTextarea"></textarea>
+        </div>
+    }
+</div>
+
+<script>
+    function togglePickupTime(show) {
+        const container = document.getElementById("pickupTimeContainer");
+        container.style.display = show ? "block" : "none";
+
+        // If schedule option selected, update the hidden input
+        if (show) {
+            updateScheduledTimeHiddenInput();
+        } else {
+            // Clear hidden value if not scheduled
+            document.getElementById("hiddenScheduledTime").value = "";
+        }
+    }
+
+    function updateScheduledTimeHiddenInput() {
+        const scheduledInput = document.querySelector('input[name="ScheduledTime"]');
+        const hiddenInput = document.getElementById("hiddenScheduledTime");
+
+        if (scheduledInput && hiddenInput) {
+            hiddenInput.value = scheduledInput.value;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const deliveryTextarea = document.getElementById("deliveryInstructionsTextarea");
+        const deliveryHidden = document.getElementById("deliveryInstructionsHidden");
+
+        if (deliveryTextarea && deliveryHidden) {
+            // Sync on input
+            deliveryTextarea.addEventListener("input", function () {
+                deliveryHidden.value = deliveryTextarea.value;
+            });
+
+            // Also sync on page load
+            deliveryHidden.value = deliveryTextarea.value;
+        }
+
+        const scheduledInput = document.querySelector('input[name="ScheduledTime"]');
+
+        if (scheduledInput) {
+            scheduledInput.addEventListener("change", updateScheduledTimeHiddenInput);
+        }
+
+        // Ensure hidden input is updated before submitting the form
+        const form = document.querySelector("form"); // update this if your form has a specific ID or class
+        if (form) {
+            form.addEventListener("submit", function () {
+                if (document.getElementById("scheduleOption").checked) {
+                    updateScheduledTimeHiddenInput();
+                }
+            });
+        }
+
+        // Restore UI state on page load
+        const isScheduleChecked = document.getElementById("scheduleOption").checked;
+        togglePickupTime(isScheduleChecked);
+    });
+</script>

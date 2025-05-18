@@ -11,23 +11,23 @@ public partial class User
   [Column("id", TypeName = "INTEGER"), Required, Key]
   public required int Id { get; set; }
 
-  [Column("first_name", TypeName = "VARCHAR(255)"), Required]
+  [Column("first_name", TypeName = "VARCHAR(255)"), Required(ErrorMessage = "First Name required.")]
   [StringLength(100, MinimumLength = 2, ErrorMessage = "First name must be between 2 and 100 characters.")]
   public required string FirstName { get; set; }
 
-  [Column("last_name", TypeName = "VARCHAR(255)"), Required]
+  [Column("last_name", TypeName = "VARCHAR(255)"), Required(ErrorMessage = "Last Name required.")]
   [StringLength(100, MinimumLength = 2, ErrorMessage = "Last name must be between 2 and 100 characters.")]
   public required string LastName { get; set; }
 
-  [Column("email", TypeName = "VARCHAR(255)"), Required, EmailAddress(ErrorMessage = "Invalid Email format.")]
+  [Column("email", TypeName = "VARCHAR(255)"), Required(ErrorMessage = "Email required."), RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email format.")]
   [StringLength(100, ErrorMessage = "Email cannot be greater than 100 characters.")]
   public required string Email { get; set; }
 
-  [Column("phone", TypeName = "VARCHAR(50)"), Required, Phone(ErrorMessage = "Invalid Phone number format.")]
+  [Column("phone", TypeName = "VARCHAR(50)"), Required(ErrorMessage = "Phone number required."), Phone(ErrorMessage = "Invalid phone number format.")]
   [StringLength(20, ErrorMessage = "Phone number must be under 20 characters.")]
   public required string Phone { get; set; }
 
-  [Column("password_hash", TypeName = "VARCHAR(255)"), Required]
+  [Column("password_hash", TypeName = "VARCHAR(255)"), Required(ErrorMessage = "Password is required.")]
   public required string PasswordHash { get; set; }
 
   [Column("password_salt", TypeName = "VARCHAR(255)")]
