@@ -72,7 +72,8 @@ using (var scope = app.Services.CreateScope())
 {
   var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
   var userCount = context.Users.Count();
-  Console.WriteLine($"✅ There are {userCount} users in the database.");
+  var reservationCount = context.Reservations.Count();
+  Console.WriteLine($"There are {userCount} users in the database.\n There are {reservationCount} reservations in the databse.");
 }
 
 app.Run();

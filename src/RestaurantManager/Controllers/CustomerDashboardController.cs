@@ -30,7 +30,13 @@ public class CustomerDashboardController(ILogger<CustomerDashboardController> lo
         if (user == null)
             return NotFound();
 
-        user.Orders = user.Orders?.OrderByDescending(o => o.OrderDate).Take(2).ToList();
+        //Only show reservations that are Booked or Seated
+        user.Reservations = _context.Reservations
+            .Where(o => o.UserId == user.Id
+                    && (o.ReservationStatus == Enums.ReservationStatus.Booked || o.ReservationStatus == Enums.ReservationStatus.Seated)
+                    && o.ReservationDateTime >= DateTime.Now)  // Add this line to filter future reservations
+            .OrderBy(o => o.ReservationDateTime)  // Change to OrderBy (soonest first) instead of OrderByDescending
+            .ToList();
 
         user.Orders = user.Orders!.OrderByDescending(o => o.OrderDate).Take(2).ToList();
 

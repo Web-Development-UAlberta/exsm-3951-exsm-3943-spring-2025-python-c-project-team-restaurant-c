@@ -16,7 +16,8 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
     public IActionResult Index(Enums.OrderType? selectedType)
     {
         var reservations = _context.Reservations
-            .Where(r => r.ReservationDateTime >= DateTime.Now)
+            .Where(r => r.ReservationStatus != Enums.ReservationStatus.Cancelled
+                && r.ReservationDateTime >= DateTime.Now)
             .ToList();
 
         var orders = _context.Orders
@@ -36,7 +37,24 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
 
     public IActionResult Reservations()
     {
-        ViewBag.Reservations = _context.Reservations.Include(r => r.User).ToList();
+        //Only show reservations that are in the future and not cancelled
+        //Sort by the soonest first
+        ViewBag.Reservations = _context.Reservations
+            .Include(r => r.User)
+            .Where(r => r.ReservationStatus != Enums.ReservationStatus.Cancelled
+                    && r.ReservationDateTime >= DateTime.Now)  // Add this line!
+            .OrderBy(r => r.ReservationDateTime)
+            .ToList();
+
+
+        //Only show reservations that have passed or been cancelled.
+        ViewBag.PastReservations = _context.Reservations
+            .Include(r => r.User)
+            .Where(r => r.ReservationStatus == Enums.ReservationStatus.Cancelled 
+                    || r.ReservationDateTime < DateTime.Now.AddHours(-1))
+            .OrderByDescending(r => r.ReservationDateTime)
+            .ToList();
+
         return View();
     }
 
@@ -136,6 +154,44 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         }
 
         return RedirectToAction("Orders");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult UpdateReservationStatus(int reservationId, string newStatus){
+
+        //Get the reservation that we're updating
+        var reservation = _context.Reservations.Find(reservationId);
+        
+        //Check if the reservation exists and it has a valid status
+        if (reservation != null && Enum.TryParse<Enums.ReservationStatus>(newStatus, out var status))
+        {
+            //Change status to the new one
+            //Mark when it happened then save to the db
+            reservation.ReservationStatus = status;
+            reservation.UpdatedAt = DateTime.UtcNow;
+            _context.SaveChanges();
+        }
+        
+        return RedirectToAction("Reservations");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult DeleteReservation(int reservationId){
+
+        //Get the reservation that we're deleting
+        var reservation = _context.Reservations.Find(reservationId);
+        
+        //If the reservation exists
+        if (reservation != null)
+        {
+            //Delete it then save the change to db
+            _context.Reservations.Remove(reservation);
+            _context.SaveChanges();
+        }
+        
+        return RedirectToAction("Reservations");
     }
 
 

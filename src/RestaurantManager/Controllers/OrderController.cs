@@ -259,7 +259,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             });
         }
 
-        HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
+        HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);  
 
         return RedirectToAction("Index", new { selectedType, viewCart = true });
     }
