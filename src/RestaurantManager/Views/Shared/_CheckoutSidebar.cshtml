@@ -49,19 +49,19 @@
 
             <div class="btn-group w-100 mb-2" role="group" aria-label="Tip Options">
                 <input type="radio" class="btn-check tip-option" name="TipAmount" id="tip10" value="@tip10"
-                    @(Model.TipAmount == tip10 ? "checked" : "") autocomplete="off">
+                    checked="@(Model.TipAmount == tip10)" autocomplete="off">
                 <label class="btn btn-outline-primary" for="tip10">10%</label>
 
                 <input type="radio" class="btn-check tip-option" name="TipAmount" id="tip15" value="@tip15"
-                    @(Model.TipAmount == tip15 ? "checked" : "") autocomplete="off">
+                    checked="@(Model.TipAmount == tip15)" autocomplete="off">
                 <label class="btn btn-outline-primary" for="tip15">15%</label>
 
                 <input type="radio" class="btn-check tip-option" name="TipAmount" id="tip20" value="@tip20"
-                    @(Model.TipAmount == tip20 ? "checked" : "") autocomplete="off">
+                    checked="@(Model.TipAmount == tip20)" autocomplete="off">
                 <label class="btn btn-outline-primary" for="tip20">20%</label>
 
                 <input type="radio" class="btn-check tip-option" name="TipAmount" id="tipOther" value="other"
-                    @(isCustomTip ? "checked" : "") autocomplete="off">
+                    checked="@(isCustomTip)" autocomplete="off">
                 <label class="btn btn-outline-primary" for="tipOther">Other</label>
             </div>
 
@@ -116,11 +116,11 @@
                 <input type="hidden" name="CustomTipAmount" id="customTipAmountInput" />
 
                 <input type="hidden" name="DeliveryFee" value="@deliveryFee" />
-                <input type="hidden" name="DeliveryInstructions" />
+                <input type="hidden" name="deliveryInstructions" id="deliveryInstructionsHidden" />
 
-                <input type="hidden" name="ScheduledTime" />
+                <input type="hidden" id="hiddenScheduledTime" name="ScheduledTime" />
 
-                <input type="hidden" name="AddressId" />
+                <input type="hidden" id="externalSelectedAddressId" name="selectedAddressId" />
                 <input type="hidden" name="deliveryDistanceKm" value="0" />
                 <input type="hidden" name="redeemPoints" id="redeemPointsInput" value="@canRedeem" />
                 <button type="submit" class="btn btn-primary w-100">

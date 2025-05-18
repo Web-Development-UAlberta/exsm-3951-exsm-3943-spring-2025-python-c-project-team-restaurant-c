@@ -1,5 +1,7 @@
+@using RestaurantManager.Enums;
+@using RestaurantManager.Models;
+
 @model RestaurantManager.Models.User
-@using RestaurantManager.Enums
 
 @{
     ViewBag.Title = "Customer Dashboard";
@@ -25,9 +27,13 @@
             @await Html.PartialAsync("_UserInfo", Model)
         </div>
 
+        <div class="col-md-6">
+            @await Html.PartialAsync("_PasswordChange", (new ChangePasswordViewModel()))
+        </div>
+
         <!-- Delivery Addresses -->
         <div class="col-md-6">
-            @await Html.PartialAsync("_DeliveryInfo", Model.UserAddresses?.FirstOrDefault())
+            @await Html.PartialAsync("_DeliveryInfo", Model)
         </div>
 
         <!-- Order History -->

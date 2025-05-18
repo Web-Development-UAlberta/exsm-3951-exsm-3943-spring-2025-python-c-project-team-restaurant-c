@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace RestaurantManager.Controllers;
 
-public class AccountController(ILogger<AccountController> logger, ApplicationDbContext context) : Controller
+public class AccountController(ILogger<AccountController> logger, ApplicationDbContext _context) : Controller
 {
     private readonly ILogger<AccountController> _logger = logger;
-    private readonly ApplicationDbContext _context = context;
+    private readonly ApplicationDbContext _context = _context;
 
     // GET: Account/Login
     public IActionResult Login(int userType)
@@ -26,46 +26,56 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
 
     // POST: Account/Login
     [HttpPost]
-    public async Task<IActionResult> Login(User userInput)
+    public async Task<IActionResult> Login(User userInput, bool isInternalUserLogin = false)
     {
         ModelState.Remove("PasswordSalt");
         ModelState.Remove("FirstName");
         ModelState.Remove("LastName");
         ModelState.Remove("Phone");
+        ModelState.Remove("isInternalUserLogin");
 
         if (ModelState.IsValid)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Email == userInput.Email);
+            User? user = _context.Users.FirstOrDefault(u => u.Email == userInput.Email);
+
             if (user != null && VerifyPassword(userInput.PasswordHash, user.PasswordHash!, user.PasswordSalt!))
             {
-                // Create the identity with claims
-                var claims = new List<Claim>
+                if (user.Role == Enums.UserRole.Customer && isInternalUserLogin || user.Role != Enums.UserRole.Customer && !isInternalUserLogin)
                 {
-                    new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new(ClaimTypes.Name, user.Email),
-                    new(ClaimTypes.Role, user.Role.ToString()),
-                };
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                var authProperties = new AuthenticationProperties
+                    ModelState.AddModelError(string.Empty, "Invalid login credentials.");
+                    return View("Login", userInput);
+                }
+                else
                 {
-                    IsPersistent = true, // keeps the user logged in
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
-                };
+                    // Create the identity with claims
+                    List<Claim> claims =
+                    [
+                        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new(ClaimTypes.Name, user.Email),
+                        new(ClaimTypes.Role, user.Role.ToString()),
+                    ];
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var principal = new ClaimsPrincipal(identity);
 
-                // if ((userInput.Role == Enums.UserRole.Customer && ViewBag.UserType == 0) ||
-                //     ((userInput.Role == Enums.UserRole.Admin || userInput.Role == Enums.UserRole.Manager || userInput.Role == Enums.UserRole.Staff) && ViewBag.UserType == 1))
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = true, // keeps the user logged in
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddHours(1)
+                    };
 
-                // Redirect based on role
-                return user.Role switch
-                {
-                    Enums.UserRole.Admin or Enums.UserRole.Staff or Enums.UserRole.Manager => RedirectToAction("Index", "KitchenDashboard"),
-                    _ => RedirectToAction("Index", "Home"),
-                };
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
+
+                    // if ((userInput.Role == Enums.UserRole.Customer && ViewBag.UserType == 0) ||
+                    //     ((userInput.Role == Enums.UserRole.Admin || userInput.Role == Enums.UserRole.Manager || userInput.Role == Enums.UserRole.Staff) && ViewBag.UserType == 1))
+
+                    // Redirect based on role
+                    return user.Role switch
+                    {
+                        Enums.UserRole.Admin or Enums.UserRole.Staff or Enums.UserRole.Manager => RedirectToAction("Index", "KitchenDashboard"),
+                        _ => RedirectToAction("Index", "Home"),
+                    };
+                }
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login credentials.");
@@ -98,11 +108,13 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
     [HttpPost]
     public IActionResult Register(User user, string confirmPassword)
     {
-        if (ModelState.IsValid && user.PasswordHash == confirmPassword)
+        ModelState.Remove("isInternalUserLogin");
+
+        if (ModelState.IsValid)
         {
             if (user.PasswordHash != confirmPassword)
             {
-                ModelState.AddModelError("ConfirmPassword", "Passwords do not match.");
+                ModelState.AddModelError("PasswordHash", "Passwords do not match.");
             }
             else if (_context.Users.Any(u => u.Email == user.Email))
             {
@@ -133,8 +145,13 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
                 return RedirectToAction("Login");
             }
         }
+        else
+        {
+            ModelState.AddModelError("Email", "Email is already registered.");
+        }
 
         ViewBag.IsLogin = false;
+
         return View("Register", user);
     }
 
@@ -160,6 +177,52 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
     {
         var enteredHash = HashPassword(enteredPassword, storedSalt);
         return storedHash == enteredHash;
+    }
+
+    [HttpPost]
+    public IActionResult ChangePassword(ChangePasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        // Get the logged-in user's ID (you may be using claims or session for this)
+        int? userId = GetUserId();
+
+        if (userId == null)
+            return NotFound();
+
+        User user = _context.Users.FirstOrDefault(u => u.Id == userId)!;
+
+        if (user == null)
+            return NotFound();
+
+        // Verify current password
+        if (!VerifyPassword(model.CurrentPassword, user.PasswordHash, user.PasswordSalt!))
+        {
+            ModelState.AddModelError("CurrentPassword", "The current password is incorrect.");
+            return View(model);
+        }
+
+        // Generate new salt and hash
+        string newSalt = GenerateSalt();
+        string newHash = HashPassword(model.NewPassword, newSalt);
+
+        user.PasswordSalt = newSalt;
+        user.PasswordHash = newHash;
+        _context.SaveChanges();
+
+        TempData["SuccessMessage"] = "Password updated successfully.";
+        return RedirectToAction("Index", "CustomerDashboard");
+    }
+
+    private int? GetUserId()
+    {
+        if (User.Identity == null || !User.Identity.IsAuthenticated) return null;
+
+        Claim? userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        return userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId) ? userId : null;
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
