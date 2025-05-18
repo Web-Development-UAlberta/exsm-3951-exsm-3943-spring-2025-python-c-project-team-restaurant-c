@@ -58,11 +58,6 @@
                 }
             </div>
 
-            <!-- Payment -->
-            <div class="mb-4">
-                @await Html.PartialAsync("_CardPaymentForm", Model.User)
-            </div>
-
             <!-- Order Summary -->
             <div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
                 <h4 class="mb-4 text-dark fw-bold">Order Summary (@itemCount item@(itemCount == 1 ? "" : "s"))</h4>

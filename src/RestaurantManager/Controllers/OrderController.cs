@@ -6,7 +6,9 @@ using RestaurantManager.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RestaurantManager.Utilities;
-using Stripe;
+using Stripe.Checkout;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace RestaurantManager.Controllers;
 
@@ -181,26 +183,78 @@ public class OrderController(ApplicationDbContext context) : Controller
       // Optionally process or validate the address
     }
 
-    // Process payment with stripe
-    var paymentResult = ProcessPayment(total, "pm_card_visa123");
-    if (!paymentResult.Success)
-    {
-      // Handle payment failure - store error in TempData for modal display
-      TempData["PaymentError"] = paymentResult.ErrorMessage ?? "Payment processing failed";
-      TempData["ShowPaymentError"] = true;
-
-      return View("Checkout", cartOrder);
-    }
-
-    // Save the order and update user points
-    await SaveOrderAndUserPoints(cartOrder, user.Id, pointsUsed);
-
-    // Remove cart from session
+    // // Remove cart from session
     HttpContext.Session.Remove($"cart_order_{userId}");
+
+    // // Add cart data to session
+    HttpContext.Session.SetObject($"full_cart_order", cartOrder);
+    HttpContext.Session.SetInt32($"user_id", user.Id);
+    HttpContext.Session.SetInt32($"points_used", pointsUsed);
 
     TempData["RewardsDiscount"] = rewardsDiscount.ToString();
 
-    return RedirectToAction("Receipt", new { orderId = cartOrder.Id });
+    // Process payment with stripe checkout
+    string domain = HttpContext.Request.GetEncodedUrl();
+    string rootdomain = domain.Remove(domain.Length - 21);
+    var options = new SessionCreateOptions
+    {
+      // SuccessUrl = rootdomain + $"/Order/Receipt?orderId={cartOrder.Id}",
+      SuccessUrl = rootdomain + $"/Order/Confirm",
+      CancelUrl = rootdomain + $"/Order",
+      LineItems = new List<SessionLineItemOptions>
+      {
+        new SessionLineItemOptions
+        {
+          PriceData = new SessionLineItemPriceDataOptions
+          {
+            UnitAmount = (long)(total * 100), // Convert to cents
+            Currency = "cad",
+            ProductData = new SessionLineItemPriceDataProductDataOptions
+            {
+              Name = "Order Total",
+              Description = "Thank you for your business!"
+            }
+          },
+          Quantity = 1
+        }
+      },
+      Mode = "payment",
+      CustomerEmail = User.Identity?.Name,
+    };
+
+    var service = new SessionService();
+    Session session = service.Create(options);
+    Response.Headers.Append("Location", session.Url);
+    TempData["Session"] = session.Id;
+    return new StatusCodeResult(303);
+  }
+
+  public async Task<IActionResult> Confirm()
+  {
+    var service = new SessionService();
+    Session session = service.Get(TempData["Session"].ToString());
+
+    // Retrieve cart from session
+    var cartOrder = HttpContext.Session.GetObject<Order>($"full_cart_order");
+    int userId = HttpContext.Session.GetInt32($"user_id") ?? 0;
+    int pointsUsed = HttpContext.Session.GetInt32($"points_used") ?? 0;
+
+    // // Remove cart from session
+    HttpContext.Session.Remove($"full_cart_order");
+    HttpContext.Session.Remove($"user_id");
+    HttpContext.Session.Remove($"points_used");
+
+    if (session.PaymentStatus == "paid")
+    {
+      // Save the order and update user points
+      await SaveOrderAndUserPoints(cartOrder, userId, pointsUsed);
+
+      return RedirectToAction("Receipt", new { orderId = cartOrder.Id });
+    }
+    else
+    {
+      return RedirectToAction("Index", "Order");
+    }
   }
 
   // Method to get or create a cart order for the user
@@ -435,68 +489,4 @@ public class OrderController(ApplicationDbContext context) : Controller
   {
     return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
   }
-
-  // Process payment - now as a private method to be called from SubmitCheckout
-  private PaymentResult ProcessPayment(decimal amount, string paymentMethodId)
-  {
-    try
-    {
-      StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("TEST_API_KEY");
-
-      long amountInCents = (long)(amount * 100);
-
-      var options = new PaymentIntentCreateOptions
-      {
-        Amount = amountInCents,
-        Currency = "cad",
-        PaymentMethod = paymentMethodId,
-        PaymentMethodTypes = new List<string> { "card" },
-        ConfirmationMethod = "automatic",
-        Confirm = true
-      };
-
-      var service = new PaymentIntentService();
-      PaymentIntent paymentIntent = service.Create(options);
-
-      if (paymentIntent.Status == "succeeded")
-      {
-        return new PaymentResult
-        {
-          Success = true,
-          PaymentIntentId = paymentIntent.Id
-        };
-      }
-      else
-      {
-        return new PaymentResult
-        {
-          Success = false,
-          ErrorMessage = $"Payment failed with status: {paymentIntent.Status}"
-        };
-      }
-    }
-    catch (StripeException ex)
-    {
-      return new PaymentResult
-      {
-        Success = false,
-        ErrorMessage = ex.Message
-      };
-    }
-    catch (Exception ex)
-    {
-      return new PaymentResult
-      {
-        Success = false,
-        ErrorMessage = "An unexpected error occurred while processing payment."
-      };
-    }
-  }
-}
-
-public class PaymentResult
-{
-  public bool Success { get; set; }
-  public string? PaymentIntentId { get; set; }
-  public string? ErrorMessage { get; set; }
 }
