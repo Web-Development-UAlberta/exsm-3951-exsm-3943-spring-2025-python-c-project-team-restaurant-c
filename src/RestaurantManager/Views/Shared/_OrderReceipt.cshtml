@@ -19,7 +19,18 @@
                 @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
             </p>
             <p><strong>Harvest Club Rewards Earned:</strong> @ViewBag.PointsEarned</p>
+
+            @if (Model.Type == OrderType.Delivery)
+            {
+                <div>
+                    <p><strong>Delivery Address:</strong>
+                        @Model.UserAddress.AddressLine1 @Model.UserAddress.City, @Model.UserAddress.Province
+                        @Model.UserAddress.PostalCode</p>
+                </div>
+            }
+
         </div>
+
 
         <div class="receipt-section">
             <table class="receipt-table">

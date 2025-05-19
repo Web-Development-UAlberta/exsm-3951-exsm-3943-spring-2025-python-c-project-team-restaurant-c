@@ -151,7 +151,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         // Calculate Subtotal 
         cartOrder.Subtotal = CalculateSubtotal([.. cartOrder.OrderMenuItems!.Select(i => (i.Quantity, i.MenuItem.Price))]);
 
-        // Calculate Delivery FeeaqW@S
+        // Calculate Delivery Fee
         cartOrder.DeliveryFee = CalculateDeliveryFee(cartOrder.Subtotal, deliveryDistanceKm, selectedType);
 
         // Calculate Tax 
@@ -259,7 +259,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             });
         }
 
-        HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);  
+        HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
 
         return RedirectToAction("Index", new { selectedType, viewCart = true });
     }
@@ -406,6 +406,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             .Include(o => o.User)
             .Include(o => o.OrderMenuItems)!
                 .ThenInclude(omi => omi.MenuItem)
+            .Include(o => o.UserAddress)
             .FirstOrDefault(o => o.Id == orderId && o.UserId == userId);
 
         if (cartOrder == null)
