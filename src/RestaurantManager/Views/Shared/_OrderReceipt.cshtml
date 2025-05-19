@@ -32,14 +32,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.OrderMenuItems)
+                    @if (Model != null)
                     {
-                        <tr>
-                            <td>@item.MenuItem.Name</td>
-                            <td style="text-align:right;">@item.Quantity</td>
-                            <td style="text-align:right;">@item.MenuItem.Price.ToString("C2")</td>
-                            <td style="text-align:right;">@((item.Quantity * item.MenuItem.Price).ToString("C2"))</td>
-                        </tr>
+                        @foreach (var item in Model.OrderMenuItems)
+                        {
+                            <tr>
+                                <td>@item.MenuItem.Name</td>
+                                <td style="text-align:right;">@item.Quantity</td>
+                                <td style="text-align:right;">@item.MenuItem.Price.ToString("C2")</td>
+                                <td style="text-align:right;">@((item.Quantity * item.MenuItem.Price).ToString("C2"))</td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>

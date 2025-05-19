@@ -82,9 +82,12 @@
 
                                 <td>
                                     <ul class="list-unstyled mb-0">
-                                        @foreach (var item in order.OrderMenuItems)
+                                        @if (order != null)
                                         {
-                                            <li>@item.MenuItem.Name (x @item.Quantity)</li>
+                                            @foreach (var item in order.OrderMenuItems)
+                                            {
+                                                <li>@item.MenuItem.Name (x @item.Quantity)</li>
+                                            }
                                         }
                                     </ul>
                                     <div class="text-muted small">Total: @order.OrderMenuItems.Sum(i => i.Quantity)</div>
@@ -123,48 +126,50 @@
     </div>
 </div>
 
-@foreach (var order in orders)
-{
-    if (order.Type == OrderType.Delivery)
+@if (orders != null){
+    @foreach (var order in orders)
     {
-        <div class="modal fade" id="deliveryModal-@order.Id" tabindex="-1" aria-labelledby="deliveryModalLabel-@order.Id" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deliveryModalLabel-@order.Id">Delivery Info - Order #@order.Id</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p><strong>Delivery Instructions:</strong> @(order.DeliveryInstructions ?? "—")</p>
-                        <p><strong>Address:</strong> @(order.UserAddress?.AddressLine1 ?? "—")</p>
-                        <p><strong>Scheduled Time:</strong> @(order.ScheduledTime?.ToString("f") ?? "—")</p>
+        if (order.Type == OrderType.Delivery)
+        {
+            <div class="modal fade" id="deliveryModal-@order.Id" tabindex="-1" aria-labelledby="deliveryModalLabel-@order.Id" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deliveryModalLabel-@order.Id">Delivery Info - Order #@order.Id</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Delivery Instructions:</strong> @(order.DeliveryInstructions ?? "—")</p>
+                            <p><strong>Address:</strong> @(order.UserAddress?.AddressLine1 ?? "—")</p>
+                            <p><strong>Scheduled Time:</strong> @(order.ScheduledTime?.ToString("f") ?? "—")</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
+        }
 
-    if (order.Type == OrderType.DineIn && order.Reservation != null)
-    {
-        <div class="modal fade" id="reservationModal-@order.Id" tabindex="-1" aria-labelledby="reservationModalLabel-@order.Id" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="reservationModalLabel-@order.Id">Reservation Info - Order #@order.Id</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p><strong>Reservation ID:</strong> #@order.Reservation.Id</p>
-                        <p><strong>Date & Time:</strong> @order.Reservation.ReservationDateTime.ToString("f")</p>
-                        <p><strong>Guests:</strong> @order.Reservation.TableNumber</p>
-                        <p><strong>Guests:</strong> @order.Reservation.GuestCount</p>
-                        <p><strong>Guests:</strong> @order.Reservation.ReservationStatus</p>
-                        <p><strong>Notes:</strong> @(order.Reservation.Notes ?? "—")</p>
-                        <p><strong>Guests:</strong> @order.Reservation.CreatedAt</p>
-                        <p><strong>Guests:</strong> @order.Reservation.UpdatedAt</p>
+        if (order.Type == OrderType.DineIn && order.Reservation != null)
+        {
+            <div class="modal fade" id="reservationModal-@order.Id" tabindex="-1" aria-labelledby="reservationModalLabel-@order.Id" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reservationModalLabel-@order.Id">Reservation Info - Order #@order.Id</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Reservation ID:</strong> #@order.Reservation.Id</p>
+                            <p><strong>Date & Time:</strong> @order.Reservation.ReservationDateTime.ToString("f")</p>
+                            <p><strong>Guests:</strong> @order.Reservation.TableNumber</p>
+                            <p><strong>Guests:</strong> @order.Reservation.GuestCount</p>
+                            <p><strong>Guests:</strong> @order.Reservation.ReservationStatus</p>
+                            <p><strong>Notes:</strong> @(order.Reservation.Notes ?? "—")</p>
+                            <p><strong>Guests:</strong> @order.Reservation.CreatedAt</p>
+                            <p><strong>Guests:</strong> @order.Reservation.UpdatedAt</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     }
 }

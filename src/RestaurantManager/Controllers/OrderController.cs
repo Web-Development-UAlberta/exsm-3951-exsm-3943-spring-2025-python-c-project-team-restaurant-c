@@ -9,6 +9,7 @@ using RestaurantManager.Utilities;
 using Stripe.Checkout;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace RestaurantManager.Controllers;
 
@@ -115,12 +116,14 @@ public class OrderController(ApplicationDbContext context) : Controller
 
   [HttpPost]
   public async Task<IActionResult> SubmitCheckout(
-      int selectedAddressId,
       Enums.OrderType selectedType,
-      decimal? customTipAmount,
-      string tipAmount,
-      double deliveryDistanceKm = 0,
-      bool redeemPoints = false)
+        decimal? customTipAmount,
+        string tipAmount,
+        DateTime? scheduledTime,
+        int? selectedAddressId,
+        string? deliveryInstructions,
+        double deliveryDistanceKm = 0,
+        bool redeemPoints = false)
   {
     // Get User 
     int? userId = GetUserId();
@@ -140,8 +143,13 @@ public class OrderController(ApplicationDbContext context) : Controller
     // Set order type
     cartOrder.Type = selectedType;
 
+    cartOrder.DeliveryInstructions = deliveryInstructions;
+
     // Order Date
-    cartOrder.OrderDate = DateTime.UtcNow;
+    cartOrder.OrderDate = DateTime.Now;
+
+    if (selectedType != Enums.OrderType.DineIn)
+      cartOrder.ScheduledTime = scheduledTime ?? DateTime.Now.AddMinutes(30);
 
     // Calculate Subtotal 
     cartOrder.Subtotal = CalculateSubtotal([.. cartOrder.OrderMenuItems!.Select(i => (i.Quantity, i.MenuItem.Price))]);
@@ -171,11 +179,7 @@ public class OrderController(ApplicationDbContext context) : Controller
     decimal total = totalTally.Sum();
     cartOrder.Total = total > 0 ? total : 0;
 
-    // Delivery Address (Optional)
-    if (selectedType == Enums.OrderType.Delivery)
-    {
-      cartOrder.AddressId = selectedAddressId;
-    }
+    cartOrder.AddressId = selectedAddressId;
 
     var selectedAddress = _context.UserAddresses.FirstOrDefault(a => a.Id == selectedAddressId && a.UserId == userId);
     if (selectedAddress != null)
@@ -205,6 +209,7 @@ public class OrderController(ApplicationDbContext context) : Controller
       {
         new SessionLineItemOptions
         {
+
           PriceData = new SessionLineItemPriceDataOptions
           {
             UnitAmount = (long)(total * 100), // Convert to cents
@@ -264,7 +269,11 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     if (cartOrder == null)
     {
-      User? user = _context.Users.Find(userId);
+      User? user = _context.Users
+          .Where(u => u.Id == userId)
+          .Include(u => u.UserAddresses)
+          .FirstOrDefault();
+
       if (user == null) return null;
 
       cartOrder = new Order
@@ -278,7 +287,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         TipAmount = 0,
         Total = 0,
         OrderDate = DateTime.Now,
-        OrderMenuItems = []
+        OrderMenuItems = [],
       };
     }
 
@@ -321,6 +330,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     return RedirectToAction("Index", new { selectedType, viewCart = true });
   }
+
 
   // Remove menu item from the cart
   public IActionResult RemoveFromCart(Enums.OrderType selectedType, int menuItemId)

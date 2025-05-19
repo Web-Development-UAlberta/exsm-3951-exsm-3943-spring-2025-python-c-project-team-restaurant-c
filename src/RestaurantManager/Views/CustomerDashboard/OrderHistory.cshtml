@@ -40,9 +40,12 @@
                                 </td>
                                 <td>
                                     <ul class="list-unstyled mb-0">
-                                        @foreach (var item in order.OrderMenuItems)
+                                        @if (order != null)
                                         {
-                                            <li>@item.MenuItem.Name (x @item.Quantity)</li>
+                                            @foreach (var item in order.OrderMenuItems)
+                                            {
+                                                <li>@item.MenuItem.Name (x @item.Quantity)</li>
+                                            }
                                         }
                                     </ul>
                                     <div class="text-muted small">Total: @order.OrderMenuItems.Sum(i => i.Quantity)</div>

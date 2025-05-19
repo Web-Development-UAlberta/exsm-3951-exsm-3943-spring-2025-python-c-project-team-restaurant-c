@@ -33,9 +33,7 @@
 
                 <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
                     <ul class="navbar-nav align-items-center">
-                        @if (User.IsInRole("Admin"))
-                        { }
-                        else
+                        @if (!User.IsInRole("Admin"))
                         {
                             <li class="nav-item me-4">
                                 <a asp-controller="Menu" asp-action="Index" class="nav-link menu-link d-block">Menu</a>
@@ -121,7 +119,7 @@
     </div>
 
     <footer class="border-top py-5 pt-5 pb-10">
-        @if (User.IsInRole("Admin"))
+        @if (User != null && User.IsInRole("Admin"))
         {
             <div class="container d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                 <small class="mb-0">&copy; harvest & hearth, Inc. 2025.</small>
@@ -174,7 +172,7 @@
                 </div>
 
                 <div class="mb-3 d-flex flex-column">
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User != null && User.Identity.IsAuthenticated)
                     {
                         <a asp-controller="Reservation" asp-action="Book" class="btn btn-sm btn-primary mb-2">Book Table</a>
                         <a asp-controller="Order" asp-action="Index" class="btn btn-sm btn-outline-primary">Order</a>

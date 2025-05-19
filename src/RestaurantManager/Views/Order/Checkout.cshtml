@@ -33,13 +33,8 @@
             </div>
 
             <!-- Take Out Information -->
-            <div>
-                @if (Model.Type == OrderType.TakeOut)
-                {
-                    <div class="mb-2">
-                        @await Html.PartialAsync("_TakeOutFields", Model)
-                    </div>
-                }
+            <div class="mb-2">
+                @await Html.PartialAsync("_OrderInfo", Model)
             </div>
 
             <!-- Contact and Payment -->
