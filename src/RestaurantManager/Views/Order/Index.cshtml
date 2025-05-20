@@ -78,4 +78,17 @@
         const selectedType = radio.value;
         window.location.href = `@Url.Action("Index", "Order")?selectedType=${selectedType}`;
     }
+
+    // Save scroll position before unload
+    window.addEventListener("beforeunload", function () {
+        localStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    // Restore scroll position on load
+    window.addEventListener("load", function () {
+        const scrollPosition = localStorage.getItem("scrollPosition");
+        if (scrollPosition !== null) {
+            window.scrollTo({ top: parseInt(scrollPosition), left: 0, behavior: "instant" });
+        }
+    });
 </script>

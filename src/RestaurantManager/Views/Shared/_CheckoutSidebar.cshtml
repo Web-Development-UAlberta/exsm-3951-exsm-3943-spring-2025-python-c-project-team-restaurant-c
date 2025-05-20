@@ -71,9 +71,10 @@
             <span id="tipError" class="text-danger small" style="display: none;">Please enter a valid tip amount.</span>
         </div>
 
-        @if (Model.Type == OrderType.Delivery)
+        @if (Model.Type == OrderType.Delivery && Model.DeliveryFee.HasValue)
         {
             <div class="d-flex justify-content-between mt-4 mb-2">
+                <p>Delivery Distance: @deliveryDistanceKm km</p>
                 <span>Delivery Fee</span>
                 <span>@deliveryFee.ToString("C2")</span>
             </div>

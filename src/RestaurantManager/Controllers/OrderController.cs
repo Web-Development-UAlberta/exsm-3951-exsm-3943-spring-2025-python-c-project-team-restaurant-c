@@ -6,7 +6,9 @@ using RestaurantManager.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RestaurantManager.Utilities;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using RestaurantManager.Enums;
+using RestaurantManager.Services;
+using System.Threading.Tasks;
 
 namespace RestaurantManager.Controllers;
 
@@ -16,13 +18,13 @@ public class OrderController(ApplicationDbContext context) : Controller
     private readonly ApplicationDbContext _context = context;
 
     // Index Action to load menu items and optionally view the cart
-    public async Task<IActionResult> Index(Enums.OrderType? selectedType, bool viewCart = false, string tag = "all")
+    public async Task<IActionResult> Index(OrderType? selectedType, bool viewCart = false, string tag = "all")
     {
         int? userId = GetUserId();
         if (userId == null)
             return RedirectToAction("Login");  // Redirect to login if no user is found 
 
-        selectedType ??= Enums.OrderType.TakeOut;
+        selectedType ??= OrderType.TakeOut;
 
         List<MenuItem> menuItems = await GetMenuItemsWithTags(tag);
         List<DietaryTag> dietaryTags = [.. _context.DietaryTags];
@@ -44,6 +46,19 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         Claim? userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
         return userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId) ? userId : null;
+    }
+
+
+    private static async Task<double?> CalculateDistance(string deliveryLocation)
+    {
+        HttpClient httpClient = new();
+
+        DistanceService distanceService = new(httpClient);
+
+        // We are using the Remedy Cafe as the location of Havest & Hearth.
+        double? distanceInKM = await distanceService.GetDrivingDistanceAsync("8631 109 St NW, Edmonton, AB T6G 1E8", deliveryLocation);
+
+        return distanceInKM;
     }
 
     // Get menu items with dietary tags
@@ -68,7 +83,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     // Save the selected order type
     [HttpPost]
-    public IActionResult SetOrderType(Enums.OrderType selectedType)
+    public IActionResult SetOrderType(OrderType selectedType)
     {
         int? userId = GetUserId();
         if (userId == null) return RedirectToAction("Error");
@@ -80,7 +95,7 @@ public class OrderController(ApplicationDbContext context) : Controller
     }
 
     // Action to view cart in a partial
-    public IActionResult Cart(Enums.OrderType selectedType)
+    public IActionResult Cart(OrderType selectedType)
     {
         int? userId = GetUserId();
         if (userId == null) return RedirectToAction("Error");
@@ -97,7 +112,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     // Checkout process to save order
     [HttpGet]
-    public IActionResult Checkout(Enums.OrderType selectedType)
+    public async Task<IActionResult> Checkout(OrderType selectedType)
     {
         int? userId = GetUserId();
         if (userId == null) return RedirectToAction("Error");
@@ -108,12 +123,19 @@ public class OrderController(ApplicationDbContext context) : Controller
             return RedirectToAction("Index", "Order"); // Show error or redirect if cart is empty
         }
 
+        // get distance, calculate subtotal, calcualte delievry fee 
+        if (cartOrder != null && cartOrder.UserAddress != null)
+        {
+            double? distance = await CalculateDistance(cartOrder.UserAddress.AddressLine1);
+            HttpContext.Session.SetString("delivery_distance", distance?.ToString() ?? "0");
+        }
+
         return View(cartOrder); // Redirect to confirmation page
     }
 
     [HttpPost]
     public async Task<IActionResult> SubmitCheckout(
-        Enums.OrderType selectedType,
+        OrderType selectedType,
         decimal? customTipAmount,
         string tipAmount,
         DateTime? scheduledTime,
@@ -293,7 +315,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     // Update quantity of an item in the cart
     [HttpPost]
-    public IActionResult UpdateQuantity(int menuItemId, string action)
+    public IActionResult UpdateQuantity(int menuItemId, string action, OrderType type)
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -313,7 +335,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
         }
 
-        return RedirectToAction("Index", "Order", new { cartOrder.Type, viewCart = true });
+        return RedirectToAction("Index", "Order", new { selectedType = type, viewCart = true });
     }
 
     // Calculate Subtotal
@@ -338,9 +360,9 @@ public class OrderController(ApplicationDbContext context) : Controller
         => Math.Round((subtotal + (deliveryFee ?? 0)) * 0.05m, 2);
 
     // Calculate Delivery fee
-    private static decimal? CalculateDeliveryFee(decimal subtotal, double deliveryDistanceKm, Enums.OrderType selectedType)
+    private static decimal? CalculateDeliveryFee(decimal subtotal, double deliveryDistanceKm, OrderType selectedType)
     {
-        if (selectedType != Enums.OrderType.Delivery) return null;
+        if (selectedType != OrderType.Delivery) return null;
 
         if (subtotal >= 75) return 0;
         if (deliveryDistanceKm <= 5) return 5.99m;
