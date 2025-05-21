@@ -8,6 +8,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text.RegularExpressions;
+
 
 namespace RestaurantManager.Controllers;
 
@@ -110,50 +112,103 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
     {
         ModelState.Remove("isInternalUserLogin");
 
+        // --- PASSWORD VALIDATION ---
+        if (string.IsNullOrWhiteSpace(user.PasswordHash))
+        {
+            ModelState.AddModelError("PasswordHash", "Password is required.");
+        }
+        else
+        {
+            if (user.PasswordHash.Length < 8)
+            {
+                ModelState.AddModelError("PasswordHash", "Password must be at least 8 characters long.");
+            }
+
+            var passwordRegex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$");
+            if (!passwordRegex.IsMatch(user.PasswordHash))
+            {
+                ModelState.AddModelError("PasswordHash", "Password must include at least one uppercase letter, one lowercase letter, and one number.");
+            }
+        }
+
+        // --- CONFIRM PASSWORD VALIDATION ---
+        if (string.IsNullOrWhiteSpace(confirmPassword))
+        {
+            ModelState.AddModelError("confirmPassword", "Confirmation password is required.");
+        }
+        else if (user.PasswordHash != confirmPassword)
+        {
+            ModelState.AddModelError("confirmPassword", "Passwords do not match.");
+        }
+
+        // --- HANDLE IF VALID ---
         if (ModelState.IsValid)
         {
-            if (user.PasswordHash != confirmPassword)
+            try
             {
-                ModelState.AddModelError("PasswordHash", "Passwords do not match.");
-            }
-            else if (_context.Users.Any(u => u.Email == user.Email))
-            {
-                ModelState.AddModelError("Email", "Email is already registered.");
-            }
-            else
-            {
-                // Generate salt + hash
-                var salt = GenerateSalt();
-                user.PasswordSalt = salt;
-                user.PasswordHash = HashPassword(user.PasswordHash!, salt);
-
-                // Set default role
-                user.Role = Enums.UserRole.Customer;
-                try
+                // --- EMAIL VALIDATION ---
+                if (string.IsNullOrWhiteSpace(user.Email))
                 {
-                    _context.Users.Add(user);
-                    _context.SaveChanges();
+                    ModelState.AddModelError("Email", "Email is required.");
                 }
-                catch (Exception ex)
+                else if (!Regex.IsMatch(user.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                 {
-                    _logger.LogError(ex, "Failed to save user");
-                    ModelState.AddModelError("", "An error occurred saving the user.");
+                    ModelState.AddModelError("Email", "Invalid email format.");
                 }
+                else if (_context.Users.Any(u => u.Email == user.Email))
+                {
+                    ModelState.AddModelError("Email", "Email is already registered.");
+                }
+                else
+                {
+                    try
+                    {
+                        // Generate salt + hash
+                        var salt = GenerateSalt();
+                        user.PasswordSalt = salt;
+                        user.PasswordHash = HashPassword(user.PasswordHash!, salt);
 
-                Console.WriteLine("User saved: " + user.Email);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error generating password hash.");
+                        ModelState.AddModelError("", "An error occurred while securing your password.");
+                        return View(user);
+                    }
 
-                return RedirectToAction("Login");
+                    // Set default role
+                    user.Role = Enums.UserRole.Customer;
+                    try
+                    {
+                        _context.Users.Add(user);
+                        _context.SaveChanges();
+                        Console.WriteLine("User saved: " + user.Email);
+                        return RedirectToAction("Login");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to save user");
+                        ModelState.AddModelError("", "An error occurred saving the user.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during registration.");
+                ModelState.AddModelError("", "An unexpected error occurred during registration.");
+
             }
         }
         else
         {
-            ModelState.AddModelError("Email", "Email is already registered.");
+            ModelState.AddModelError("", "Please insure all fields are filled out.");
         }
 
         ViewBag.IsLogin = false;
 
         return View("Register", user);
     }
+
 
     // Password hashing with salt (SHA256)
     private static string HashPassword(string password, string salt)

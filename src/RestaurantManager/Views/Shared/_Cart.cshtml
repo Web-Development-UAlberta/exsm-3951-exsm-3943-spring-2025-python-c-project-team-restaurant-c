@@ -5,7 +5,7 @@
     decimal total = 0;
 }
 
-<div class="cart-sidebar d-flex flex-column" style="width: 500px; z-index: 1050;">
+<div class="cart-sidebar d-flex flex-column" id="cartContainer" style="width: 500px; z-index: 1050;">
 
     <!-- Close button -->
     <a href="@Url.Action("Index", "Order", new { selectedType = Model.Type })"
@@ -24,7 +24,9 @@
                 {
                     <div class="text-muted small mb-2">
                         <strong>Order Type:</strong>
-                        @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
+                        <span id="selectedOrderType">
+                            @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
+                        </span>
                     </div>
                 }
             </div>
@@ -50,6 +52,7 @@
                             <form asp-action="UpdateQuantity" method="post" class="d-flex align-items-center gap-2">
                                 <input type="hidden" name="orderId" value="@Model.Id" />
                                 <input type="hidden" name="menuItemId" value="@item.MenuItem.Id" />
+                                <input type="hidden" name="type" value="@Model.Type" />
 
                                 <button name="action" value="decrease" type="submit"
                                     class="btn btn-sm btn-outline-primary">-</button>

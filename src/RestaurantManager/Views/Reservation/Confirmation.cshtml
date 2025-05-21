@@ -2,50 +2,64 @@
     ViewBag.Title = "Reservation Confirmed";
 }
 
-<div class="container mt-5 d-flex flex-column align-items-center">
-    <div class="confirmation-content" style="max-width: 600px; width: 100%;">
-        
-        <div class="text-center mb-4">
-            <h2 class="text-success">Reservation Confirmed</h2>
-            <p>Thank you! Your table has been booked.</p>
-        </div>
+<div class="container py-5">
+    <div class="reservation-container">
 
-        <div class="reservation-summary p-4 bg-light rounded mb-4">
-            <h5 class="mb-3">Reservation Summary</h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong><i class="fas fa-calendar"></i> Date & Time:</strong><br>
-                    @Model.ReservationDateTime.ToString("dddd, MMMM dd, yyyy")<br>
-                    <span class="h5 text-primary">@Model.ReservationDateTime.ToString("h:mm tt")</span></p>
-                    
-                    <p><strong><i class="fas fa-users"></i> Party Size:</strong><br>
-                    @Model.GuestCount @(Model.GuestCount == 1 ? "guest" : "guests")</p>
-                    
-                    <p><strong><i class="fas fa-table"></i> Table Number:</strong><br>
-                    Table @Model.TableNumber</p>
-                </div>
-                
-                <div class="col-md-6">
-                    <p><strong><i class="fas fa-user"></i> Contact:</strong><br>
-                    @Model.User?.FirstName @Model.User?.LastName<br>
-                    @Model.User?.Email<br>
-                    @Model.User?.Phone</p>
-                    
-                    @if (!string.IsNullOrEmpty(Model.Notes))
-                    {
-                        <p><strong><i class="fas fa-sticky-note"></i> Special Requests:</strong><br>
-                        @Model.Notes</p>
-                    }
+        <div class="confirmation-content" style="max-width: 600px; width: 100%;">
+
+            <div class="text-center mb-4">
+                <h2 class="text-success">Reservation Confirmed</h2>
+                <p>Thank you! Your table has been booked.</p>
+            </div>
+
+            <div class="reservation-summary p-4 bg-light rounded mb-4">
+                <h5 class="mb-3">Reservation Summary</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-calendar"></i> Date & Time:</strong><br>
+                            @Model.ReservationDateTime.ToString("dddd, MMMM dd, yyyy")<br>
+                            <span class="h5 text-primary">@Model.ReservationDateTime.ToString("h:mm tt")</span>
+                        </p>
+
+                        <p><strong><i class="fas fa-users"></i> Party Size:</strong><br>
+                            @Model.GuestCount @(Model.GuestCount == 1 ? "guest" : "guests")</p>
+
+                        <p><strong><i class="fas fa-table"></i> Table Number:</strong><br>
+                            Table @Model.TableNumber</p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-user"></i> Contact:</strong><br>
+                            @Model.User?.FirstName @Model.User?.LastName<br>
+                            @Model.User?.Email<br>
+                            @Model.User?.Phone</p>
+
+                        @if (!string.IsNullOrEmpty(Model.Notes))
+                        {
+                            <p><strong><i class="fas fa-sticky-note"></i> Special Requests:</strong><br>
+                                @Model.Notes</p>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="text-center d-flex justify-content-center gap-3">
-            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
-                <i class="fas fa-home"></i> Return to Home
-            </a>
-            <a href="@Url.Action("Index", "CustomerDashboard")" class="btn btn-outline-primary">
-                <i class="fas fa-plus"></i> View Account
-            </a>
+            <div class="text-center d-flex justify-content-center gap-3">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Return to Home
+                </a>
+                <a href="@Url.Action("Index", "CustomerDashboard")" class="btn btn-outline-primary">
+                    <i class="fas fa-plus"></i> View Account
+                </a>
+            </div>
         </div>
     </div>
 </div>
+</div>
+<style>
+    .reservation-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 2rem;
+        border: 1px solid #ccc;
+    }
+</style>
