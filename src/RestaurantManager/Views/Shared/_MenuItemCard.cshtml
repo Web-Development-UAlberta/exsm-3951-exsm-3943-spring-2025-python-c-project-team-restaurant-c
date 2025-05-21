@@ -40,7 +40,7 @@
             @if (showCart)
             {
                 <form method="post"
-                    action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType })">
+                    action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId })">
                     <button type="submit" class="btn btn-outline-primary">-</button>
                 </form>
 
@@ -49,7 +49,7 @@
                 </span>
 
                 <form method="post"
-                    action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType })">
+                    action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId })">
                     <button type="submit" class="btn btn-outline-primary">+</button>
                 </form>
             }

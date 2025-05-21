@@ -31,6 +31,7 @@
 
     decimal total = totalTally.Sum();
     total = total > 0 ? total : 0m;
+
 }
 
 <!-- Right: Summary -->
@@ -129,6 +130,8 @@
                 <input type="hidden" name="DeliveryFee" value="@deliveryFee" />
                 <input type="hidden" name="deliveryInstructions" id="deliveryInstructionsHidden" />
                 <input type="hidden" name="deliveryDistanceKm" value="@deliveryDistanceKm" />
+
+                <input type="hidden" name="reservationId" value="@Model.ReservationId" />
 
                 <input type="hidden" name="redeemPoints" id="redeemPointsInput" value="@canRedeem" />
                 <button type="submit" class="btn btn-primary w-100">

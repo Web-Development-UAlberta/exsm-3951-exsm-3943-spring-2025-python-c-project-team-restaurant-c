@@ -47,7 +47,7 @@
                             <tr class="@(order.Status == OrderStatus.Pending ? "table-warning" : order.Status == OrderStatus.InProgress ? "table-info" : "table-success")">
                                 <td>@order.Id</td>
 
-                                <td>@(order.User?.FirstName ?? "Guest")</td>
+                                <td>@order.User?.FirstName @order.User?.LastName</td>
 
                                 <td>
                                     <span class="badge rounded-0 text-white w-auto px-2 py-1"
@@ -140,7 +140,13 @@
                         </div>
                         <div class="modal-body">
                             <p><strong>Delivery Instructions:</strong> @(order.DeliveryInstructions ?? "—")</p>
-                            <p><strong>Address:</strong> @(order.UserAddress?.AddressLine1 ?? "—")</p>
+                            <p><strong>Address:</strong> 
+                                @(
+                                    order.UserAddress != null 
+                                    ? $"{order.UserAddress.AddressLine1}, {order.UserAddress.AddressLine2}, {order.UserAddress.City}, {order.UserAddress.Province} {order.UserAddress.PostalCode}" 
+                                    : "—"
+                                )
+                            </p>
                             <p><strong>Scheduled Time:</strong> @(order.ScheduledTime?.ToString("f") ?? "—")</p>
                         </div>
                     </div>
@@ -159,13 +165,14 @@
                         </div>
                         <div class="modal-body">
                             <p><strong>Reservation ID:</strong> #@order.Reservation.Id</p>
+                            <p><strong>Order ID:</strong> #@order.Id</p>
                             <p><strong>Date & Time:</strong> @order.Reservation.ReservationDateTime.ToString("f")</p>
-                            <p><strong>Guests:</strong> @order.Reservation.TableNumber</p>
+                            <p><strong>Table #:</strong> @order.Reservation.TableNumber</p>
                             <p><strong>Guests:</strong> @order.Reservation.GuestCount</p>
-                            <p><strong>Guests:</strong> @order.Reservation.ReservationStatus</p>
+                            <p><strong>Reservation Status:</strong> @order.Reservation.ReservationStatus</p>
                             <p><strong>Notes:</strong> @(order.Reservation.Notes ?? "—")</p>
-                            <p><strong>Guests:</strong> @order.Reservation.CreatedAt</p>
-                            <p><strong>Guests:</strong> @order.Reservation.UpdatedAt</p>
+                            <p><strong>Created at:</strong> @order.Reservation.CreatedAt</p>
+                            <p><strong>Updated at:</strong> @order.Reservation.UpdatedAt</p>
                         </div>
                     </div>
                 </div>

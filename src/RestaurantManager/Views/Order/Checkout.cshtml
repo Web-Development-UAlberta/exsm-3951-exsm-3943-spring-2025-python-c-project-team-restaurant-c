@@ -21,9 +21,12 @@
             </div>
 
             <!-- Take Out Information -->
-            <div class="mb-2">
-                @await Html.PartialAsync("_OrderInfo", Model)
-            </div>
+            @if (Model.Type == OrderType.TakeOut || Model.Type == OrderType.Delivery)
+            {
+                <div class="mb-2">
+                    @await Html.PartialAsync("_OrderInfo", Model)
+                </div>
+            }
 
             <!-- Contact -->
             <div class="mb-2">

@@ -53,6 +53,7 @@
                                 <input type="hidden" name="orderId" value="@Model.Id" />
                                 <input type="hidden" name="menuItemId" value="@item.MenuItem.Id" />
                                 <input type="hidden" name="type" value="@Model.Type" />
+                                <input type="hidden" name="reservationId" value="@ViewBag.reservationId" />
 
                                 <button name="action" value="decrease" type="submit"
                                     class="btn btn-sm btn-outline-primary">-</button>
@@ -77,6 +78,7 @@
         <div class="border-top p-4">
             <form asp-controller="Order" asp-action="Checkout" method="get">
                 <input type="hidden" name="selectedType" value="@Model.Type" />
+                <input type="hidden" name="reservationId" value="@ViewBag.reservationId" />
                 <button type="submit" class="btn btn-primary w-100">
                     Checkout @total.ToString("C2")
                 </button>
