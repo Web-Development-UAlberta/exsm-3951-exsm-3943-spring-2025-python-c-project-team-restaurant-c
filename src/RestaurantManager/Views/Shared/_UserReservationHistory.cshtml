@@ -104,6 +104,10 @@
                             <div class="form-group mb-3">
                                 <label for="editDateTime">Date & Time</label>
                                 <input type="datetime-local" id="editDateTime" name="ReservationDateTime" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
+                                <div id="editDatetimeError" class="text-danger mt-2" style="display: none;">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span id="errorMessage"></span>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -147,41 +151,136 @@
 </div>
 
 <script>
-    function confirmDelete(reservationId, reservationDetails) {
-        // Set the reservation details in the modal
-        document.getElementById('reservationDetails').textContent = reservationDetails;
-        
-        // Set the hidden input value instead of changing the URL
-        document.getElementById('reservationIdInput').value = reservationId;
-        
-        // Show the modal
-        var modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-        modal.show();
+function confirmDelete(reservationId, reservationDetails) {
+    //Set the reservation details in the modal
+    document.getElementById('reservationDetails').textContent = reservationDetails;
+    
+    //Set the hidden input value instead of changing the URL
+    document.getElementById('reservationIdInput').value = reservationId;
+    
+    //Show the modal
+    var modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    modal.show();
+}
+
+function editReservation(button) {
+    //Get data from the buttons attributes
+    const reservationId = button.getAttribute('data-reservation-id');
+    const dateTime = button.getAttribute('data-reservation-datetime');
+    const guestCount = button.getAttribute('data-guest-count');
+    const notes = button.getAttribute('data-notes');
+    const userName = button.getAttribute('data-user-name');
+    const userEmail = button.getAttribute('data-user-email');
+    const userPhone = button.getAttribute('data-user-phone');
+    
+    //Set the form values
+    document.getElementById('editReservationId').value = reservationId;
+    document.getElementById('editDateTime').value = dateTime;
+    document.getElementById('editGuestCount').value = guestCount;
+    document.getElementById('editNotes').value = notes;
+    
+    //Set user display info
+    document.getElementById('editUserName').textContent = userName;
+    document.getElementById('editUserEmail').textContent = userEmail;
+    document.getElementById('editUserPhone').textContent = userPhone;
+    
+    //Show the modal
+    var modal = new bootstrap.Modal(document.getElementById('editReservationModal'));
+    modal.show();
+
+    setTimeout(initializeEditValidation, 100);
+}
+
+function initializeEditValidation() {
+    const editDatetimeInput = document.getElementById('editDateTime');
+    const editForm = document.getElementById('editForm');
+    const editErrorDiv = document.getElementById('editDatetimeError');
+    const errorMessage = document.getElementById('errorMessage');
+
+    
+    //Show error message when invalid time/date selected
+    function showEditError(message) {
+        errorMessage.textContent = message;
+        editErrorDiv.style.display = 'block';
+        editDatetimeInput.style.borderColor = '#dc3545'; 
     }
 
-    function editReservation(button) {
-        // Get data from the button's data attributes
-        const reservationId = button.getAttribute('data-reservation-id');
-        const dateTime = button.getAttribute('data-reservation-datetime');
-        const guestCount = button.getAttribute('data-guest-count');
-        const notes = button.getAttribute('data-notes');
-        const userName = button.getAttribute('data-user-name');
-        const userEmail = button.getAttribute('data-user-email');
-        const userPhone = button.getAttribute('data-user-phone');
-        
-        // Set the form values
-        document.getElementById('editReservationId').value = reservationId;
-        document.getElementById('editDateTime').value = dateTime;
-        document.getElementById('editGuestCount').value = guestCount;
-        document.getElementById('editNotes').value = notes;
-        
-        // Set user display info
-        document.getElementById('editUserName').textContent = userName;
-        document.getElementById('editUserEmail').textContent = userEmail;
-        document.getElementById('editUserPhone').textContent = userPhone;
-        
-        // Show the modal
-        var modal = new bootstrap.Modal(document.getElementById('editReservationModal'));
-        modal.show();
+    //Hide error message on load and when correct date is selected
+    function hideEditError() {
+        editErrorDiv.style.display = 'none';
+        editDatetimeInput.style.borderColor = ''; 
     }
+
+    function validateEditDateTime() {
+        if (!editDatetimeInput.value) return true;
+        
+        const dt = new Date(editDatetimeInput.value);
+        const day = dt.getDay();
+        const hour = dt.getHours();
+        
+        console.log('Validating edit:', dt, 'Day:', day, 'Hour:', hour);
+        
+        //24 hour clock
+        //Start with Sunday 10am to 9pm
+        //Monday Closed
+        //Tuesday/Wednesday/Thursday 11am to 10pm
+        //Friday/Saturday 11am to 11pm
+        const hours = [
+            [10, 21], 
+            null,      
+            [11, 22],  
+            [11, 22],  
+            [11, 22], 
+            [11, 23],  
+            [11, 23]   
+        ];
+        
+        //Check if we're open that day and if the hour is during open hours
+        const isValid = hours[day] && hour >= hours[day][0] && hour < hours[day][1];
+        console.log('Edit validation result:', isValid);
+        
+        if (!isValid) {
+            //Show error if time is outside open hours and not Monday
+            if (hours[day]) {
+                showEditError('Please select a time during restaurant hours');
+            } 
+            //Show error if Monday is selected
+            else {
+                showEditError('We are closed on Mondays. Please choose a different day.');
+            }
+            //Reset input
+            editDatetimeInput.value = ''; 
+            return false;
+        }
+        //Hide error text
+        else {
+            hideEditError(); 
+            return true;
+        }
+    }
+
+    //Event listener to check when DateTime is changed
+    editDatetimeInput.addEventListener('change', function() {
+        console.log('Edit DateTime changed');
+        validateEditDateTime();
+    });
+
+    //Check when they try to submit the form
+    editForm.addEventListener('submit', function(e) {
+        console.log('Edit form submit attempted');
+        if (!validateEditDateTime()) {
+            console.log('Edit validation failed, preventing submit');
+            e.preventDefault();
+            return false;
+        }
+        console.log('Edit validation passed, allowing submit');
+    });
+
+    //Hide error when changes are being made
+    editDatetimeInput.addEventListener('input', function() {
+        if (editErrorDiv.style.display === 'block') {
+            hideEditError();
+        }
+    });
+}
 </script>
