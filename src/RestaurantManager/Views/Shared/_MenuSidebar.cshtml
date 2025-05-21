@@ -26,16 +26,18 @@
         <div id="dietary-filters">
             @foreach (var tag in Model)
             {
-                <a href="@Url.Action("Index", showCart ? "Order" : "Menu", new { tag = tag.Name })"
-                    class="filter-link text-decoration-none d-flex flex-row gap-2 mb-3">
+                <a href="javascript:void(0);" 
+                onclick="applyFilter('@tag.Name')"
+                class="filter-link text-decoration-none d-flex flex-row gap-2 mb-3">
                     <span class="badge m-0">@tag.Name?[0]</span>
                     @tag.Name
                 </a>
             }
 
             <div class="list-group-item bg-transparent text-dark border-0">
-                <a href="@Url.Action("Index", showCart ? "Order" : "Menu", new { tag = "all" })"
-                    class="filter-link text-decoration-none">
+                <a href="javascript:void(0);" 
+                onclick="applyFilter('all')"
+                class="filter-link text-decoration-none">
                     Show All
                 </a>
             </div>
@@ -51,3 +53,23 @@
         }
     </div>
 </aside>
+
+<script>
+
+function applyFilter(tagName) {
+
+    //Get all Params that are currently selected
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    //Check which filter is selected
+    urlParams.set('tag', tagName);
+    
+    //Get the current controller
+    const controller = '@ViewContext.RouteData.Values["controller"]';
+    
+    //Add all the params that were previously selected
+    const baseUrl = `@Url.Action("Index")?${urlParams.toString()}`;
+
+    window.location.href = baseUrl;
+}
+</script>

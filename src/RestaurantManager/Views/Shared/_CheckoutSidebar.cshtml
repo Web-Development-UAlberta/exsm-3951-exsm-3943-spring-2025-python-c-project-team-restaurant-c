@@ -11,6 +11,9 @@
     // Delivery Fee
     decimal deliveryFee = Model.Type == OrderType.Delivery ? 5.00m : 0.00m;
 
+    //Delivery Distance *JUST SO IT RUNS*
+    decimal deliveryDistanceKm = 0;
+
     // Rewards
     int userPoints = Model.User?.RewardsPoints ?? 0;
     bool canRedeem = userPoints >= 250 && subtotal > 20m;
