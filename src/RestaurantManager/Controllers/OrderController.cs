@@ -8,7 +8,6 @@ using System.Security.Claims;
 using RestaurantManager.Utilities;
 using Stripe.Checkout;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Http;
 using RestaurantManager.Enums;
 using RestaurantManager.Services;
 
@@ -124,7 +123,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             return RedirectToAction("Index", "Order"); // Show error or redirect if cart is empty
         }
 
-        UserAddress? userAddress = cartOrder.User.UserAddresses?.FirstOrDefault(ua => ua.Id == addressId) ?? cartOrder.User.UserAddresses?.FirstOrDefault();
+        UserAddress? userAddress = addressId == 0 ? cartOrder.User.UserAddresses?.FirstOrDefault() : cartOrder.User.UserAddresses?.FirstOrDefault(ua => ua.Id == addressId);
 
         cartOrder.Subtotal = CalculateSubtotal([.. cartOrder.OrderMenuItems!.Select(i => (i.Quantity, i.MenuItem.Price))]);
 

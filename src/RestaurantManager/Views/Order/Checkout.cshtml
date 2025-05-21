@@ -31,15 +31,12 @@
             </div>
 
             <!-- Delivery Addresses -->
-            <div>
-                @if (Model.Type == OrderType.Delivery)
-                {
-                    <div class="mb-2">
-                        @await Html.PartialAsync("_DeliveryInfo", Model.UserAddress)
-                        @await Html.PartialAsync("_DeliveryFields", Model)
-                    </div>
-                }
-            </div>
+            @if (Model.Type == OrderType.Delivery)
+            {
+                <div class="mb-2">
+                    @await Html.PartialAsync("_DeliveryInfo", Model.User)
+                </div>
+            }
 
             <!-- Order Summary -->
             <div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
