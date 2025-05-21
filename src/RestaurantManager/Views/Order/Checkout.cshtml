@@ -42,9 +42,15 @@
                 @await Html.PartialAsync("_UserInfo", Model.User)
             </div>
 
-            <!-- Payment -->
-            <div class="mb-4">
-                @await Html.PartialAsync("_CardPaymentForm", Model.User)
+            <!-- Delivery Information -->
+            <div>
+                @if (Model.Type == OrderType.Delivery)
+                {
+                    <div class="mb-2">
+                        @await Html.PartialAsync("_DeliveryInfo", Model.UserAddress)
+                        @await Html.PartialAsync("_DeliveryFields", Model)
+                    </div>
+                }
             </div>
 
             <!-- Order Summary -->
