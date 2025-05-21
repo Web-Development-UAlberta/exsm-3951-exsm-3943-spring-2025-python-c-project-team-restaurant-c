@@ -41,7 +41,7 @@
             {
                 <form method="post"
                     action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType })">
-                    <button type="submit" class="btn btn-outline-primary">-</button>
+                    <button type="button" onclick="updateCart('remove', @Model.Id, @((int)ViewBag.SelectedType));" class="btn btn-outline-primary">-</button>
                 </form>
 
                 <span class="fw-bold m-auto">
@@ -50,9 +50,33 @@
 
                 <form method="post"
                     action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType })">
-                    <button type="submit" class="btn btn-outline-primary">+</button>
+                    <button type="button" onclick="updateCart('add', @Model.Id, @((int)ViewBag.SelectedType));" class="btn btn-outline-primary">+</button>
                 </form>
             }
         </div>
     </div>
 </div>
+
+<script>
+
+function updateCart(action, menuItemId, selectedType) {
+
+    //Get all Params that are currently selected
+    const urlParams = new URLSearchParams(window.location.search);
+
+    //Set parameters for when cart updates
+    urlParams.set('selectedType', selectedType);
+    urlParams.set('menuItemId', menuItemId);
+
+    //Build the URL for when add or remove it selected
+    const baseUrl = action === 'add' 
+        ? '@Url.Action("AddToCart", "Order")' 
+        : '@Url.Action("RemoveFromCart", "Order")';
+
+    //Add all the params that were previously selected
+    const newUrl = baseUrl + '?' + urlParams.toString();
+
+    window.location.href = newUrl;
+}
+
+</script>

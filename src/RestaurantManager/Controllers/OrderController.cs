@@ -333,7 +333,7 @@ public class OrderController(ApplicationDbContext context) : Controller
     }
 
     // Add menu item to the cart
-    public IActionResult AddToCart(OrderType selectedType, int menuItemId)
+    public IActionResult AddToCart(Enums.OrderType selectedType, int menuItemId, string tag = null)
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -364,12 +364,12 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
 
-        return RedirectToAction("Index", new { selectedType, viewCart = true });
+        return RedirectToAction("Index", new { selectedType, viewCart = true, tag });
     }
 
 
     // Remove menu item from the cart
-    public IActionResult RemoveFromCart(Enums.OrderType selectedType, int menuItemId)
+    public IActionResult RemoveFromCart(Enums.OrderType selectedType, int menuItemId, string tag = null)
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -392,7 +392,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
         }
 
-        return RedirectToAction("Index", new { selectedType, viewCart = true });
+        return RedirectToAction("Index", new { selectedType, viewCart = true, tag });
     }
 
     // Update quantity of an item in the cart
