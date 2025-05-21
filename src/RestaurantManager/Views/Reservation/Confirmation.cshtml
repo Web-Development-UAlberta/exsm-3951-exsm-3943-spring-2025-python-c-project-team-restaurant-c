@@ -49,6 +49,9 @@
                 <a href="@Url.Action("Index", "CustomerDashboard")" class="btn btn-outline-primary">
                     <i class="fas fa-plus"></i> View Account
                 </a>
+                <a href="@Url.Action("Index", "Order", new { reservationId = Model.Id })" class="btn btn-outline-primary">
+                    <i class="fas fa-plus"></i> Pre-Order Menu
+                </a>
             </div>
         </div>
     </div>

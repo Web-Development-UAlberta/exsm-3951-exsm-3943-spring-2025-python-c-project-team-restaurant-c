@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using DotNetEnv;
 using Stripe;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 Env.Load();
 
@@ -65,6 +67,18 @@ StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_K
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+var supportedCultures = new[] { new CultureInfo("en-CA") };
+
+var localizationOptions = new RequestLocalizationOptions
+{
+  DefaultRequestCulture = new RequestCulture("en-CA"),
+  SupportedCultures = supportedCultures,
+  SupportedUICultures = supportedCultures
+};
+
+app.UseRequestLocalization(localizationOptions);
+
 
 app.MapControllerRoute(
     name: "default",

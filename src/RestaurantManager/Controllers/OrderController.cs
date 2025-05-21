@@ -19,13 +19,15 @@ public class OrderController(ApplicationDbContext context) : Controller
     private readonly ApplicationDbContext _context = context;
 
     // Index Action to load menu items and optionally view the cart
-    public async Task<IActionResult> Index(OrderType? selectedType, bool viewCart = false, string tag = "all")
+    public async Task<IActionResult> Index(OrderType? selectedType, bool viewCart = false, string tag = "all", int? reservationId = null)
     {
         int? userId = GetUserId();
         if (userId == null)
             return RedirectToAction("Login");  // Redirect to login if no user is found 
 
         selectedType ??= OrderType.TakeOut;
+
+        selectedType = reservationId == null ? selectedType : OrderType.DineIn;
 
         List<MenuItem> menuItems = await GetMenuItemsWithTags(tag);
         List<DietaryTag> dietaryTags = [.. _context.DietaryTags];
@@ -36,6 +38,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         ViewBag.Cart = cart;
         ViewBag.ViewCart = viewCart;
         ViewBag.SelectedType = selectedType;
+        ViewBag.ReservationId = reservationId;
 
         return View(menuItems);
     }
@@ -112,7 +115,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     // Checkout process to save order
     [HttpGet]
-    public async Task<IActionResult> Checkout(OrderType selectedType, int addressId)
+    public async Task<IActionResult> Checkout(OrderType selectedType, int addressId, int? reservationId)
     {
         int? userId = GetUserId();
         if (userId == null) return RedirectToAction("Error");
@@ -122,6 +125,9 @@ public class OrderController(ApplicationDbContext context) : Controller
         {
             return RedirectToAction("Index", "Order"); // Show error or redirect if cart is empty
         }
+
+        if (reservationId.HasValue)
+        { cartOrder.ReservationId = reservationId.Value; }
 
         UserAddress? userAddress = addressId == 0 ? cartOrder.User.UserAddresses?.FirstOrDefault() : cartOrder.User.UserAddresses?.FirstOrDefault(ua => ua.Id == addressId);
 
@@ -164,6 +170,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         int? selectedAddressId,
         string? deliveryInstructions,
         double deliveryDistanceKm,
+        int? reservationId,
         bool redeemPoints = false)
     {
         // Get User 
@@ -179,6 +186,12 @@ public class OrderController(ApplicationDbContext context) : Controller
         if (cartOrder == null || cartOrder.OrderMenuItems == null || cartOrder.OrderMenuItems.Count == 0)
         {
             return RedirectToAction("Index", "Order");
+        }
+
+        // Set reservation ID
+        if (reservationId.HasValue)
+        {
+            cartOrder.ReservationId = reservationId.Value;
         }
 
         // Set order type
@@ -290,7 +303,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             // Save the order and update user points
             await SaveOrderAndUserPoints(cartOrder, userId, pointsUsed);
 
-            return RedirectToAction("Receipt", new { orderId = cartOrder.Id });
+            return RedirectToAction("Receipt", new { orderId = cartOrder.Id, reservationId = cartOrder.ReservationId });
         }
         else
         {
@@ -333,7 +346,7 @@ public class OrderController(ApplicationDbContext context) : Controller
     }
 
     // Add menu item to the cart
-    public IActionResult AddToCart(OrderType selectedType, int menuItemId)
+    public IActionResult AddToCart(OrderType selectedType, int menuItemId, int? reservationId)
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -364,12 +377,12 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
 
-        return RedirectToAction("Index", new { selectedType, viewCart = true });
+        return RedirectToAction("Index", new { selectedType, viewCart = true, reservationId });
     }
 
 
     // Remove menu item from the cart
-    public IActionResult RemoveFromCart(Enums.OrderType selectedType, int menuItemId)
+    public IActionResult RemoveFromCart(Enums.OrderType selectedType, int menuItemId, int? reservationId)
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -392,12 +405,12 @@ public class OrderController(ApplicationDbContext context) : Controller
             HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
         }
 
-        return RedirectToAction("Index", new { selectedType, viewCart = true });
+        return RedirectToAction("Index", new { selectedType, viewCart = true, reservationId });
     }
 
     // Update quantity of an item in the cart
     [HttpPost]
-    public IActionResult UpdateQuantity(int menuItemId, string action, OrderType type)
+    public IActionResult UpdateQuantity(int menuItemId, string action, OrderType type, int? reservationId)
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -417,7 +430,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
         }
 
-        return RedirectToAction("Index", "Order", new { selectedType = type, viewCart = true });
+        return RedirectToAction("Index", "Order", new { selectedType = type, viewCart = true, reservationId });
     }
 
     // Calculate Subtotal
@@ -513,6 +526,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             .Include(o => o.OrderMenuItems)!
                 .ThenInclude(omi => omi.MenuItem)
             .Include(o => o.UserAddress)
+            .Include(o => o.Reservation)
             .FirstOrDefault(o => o.Id == orderId && o.UserId == userId);
 
         if (cartOrder == null)

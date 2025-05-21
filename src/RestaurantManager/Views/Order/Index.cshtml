@@ -30,8 +30,8 @@
             <div class="btn-group toggle-btn-group" role="group">
                 <!-- Take Out -->
                 <input type="radio" class="btn-check" name="selectedType" value="TakeOut" id="takeOutBtn"
-                    autocomplete="off" @(selectedType == OrderType.TakeOut ? "checked" : "")
-                    onchange="submitOrderType(this)">
+                    autocomplete="off" @(selectedType == OrderType.TakeOut ? "checked" : "") @(ViewBag.ReservationId !=
+                                                                                                                 null ? "disabled" : "") onchange="submitOrderType(this)">
                 <label class="btn btn-outline-primary @(selectedType == OrderType.TakeOut ? "active" : "")"
                     for="takeOutBtn">
                     Take Out
@@ -39,8 +39,8 @@
 
                 <!-- Delivery -->
                 <input type="radio" class="btn-check" name="selectedType" value="Delivery" id="deliveryBtn"
-                    autocomplete="off" @(selectedType == OrderType.Delivery ? "checked" : "")
-                    onchange="submitOrderType(this)">
+                    autocomplete="off" @(selectedType == OrderType.Delivery ? "checked" : "") @(ViewBag.ReservationId !=
+                                                                                                                  null ? "disabled" : "") onchange="submitOrderType(this)">
                 <label class="btn btn-outline-primary @(selectedType == OrderType.Delivery ? "active" : "")"
                     for="deliveryBtn">
                     Delivery
@@ -48,8 +48,8 @@
 
                 <!-- Dine In -->
                 <input type="radio" class="btn-check" name="selectedType" value="DineIn" id="dineInBtn"
-                    autocomplete="off" @(selectedType == OrderType.DineIn ? "checked" : "")
-                    onchange="submitOrderType(this)">
+                    autocomplete="off" @(selectedType == OrderType.DineIn ? "checked" : "") @(ViewBag.ReservationId ==
+                                                                                                                null ? "disabled" : "") onchange="submitOrderType(this)">
                 <label class="btn btn-outline-primary @(selectedType == OrderType.DineIn ? "active" : "")"
                     for="dineInBtn">
                     Dine In

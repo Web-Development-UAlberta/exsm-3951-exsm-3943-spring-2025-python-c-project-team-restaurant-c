@@ -18,7 +18,13 @@
             <p><strong>Order Type:</strong>
                 @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
             </p>
-            <p><strong>Harvest Club Rewards Earned:</strong> @ViewBag.PointsEarned</p>
+            @if (Model.Type == OrderType.DineIn)
+            {
+                <div>
+                    <p><strong>Reservation Number:</strong>
+                        @Model.ReservationId</p>
+                </div>
+            }
 
             @if (Model.Type == OrderType.Delivery)
             {
@@ -28,6 +34,7 @@
                         @Model.UserAddress.PostalCode</p>
                 </div>
             }
+            <p><strong>Harvest Club Rewards Earned:</strong> @ViewBag.PointsEarned</p>
 
         </div>
 
@@ -73,6 +80,13 @@
                     <td>Tax (5% GST):</td>
                     <td style="text-align:right;">@Model.Tax.ToString("C2")</td>
                 </tr>
+                @if (Model.DeliveryFee != null)
+                {
+                    <tr>
+                        <td>Delivery fee:</td>
+                        <td style="text-align:right;">@Model.DeliveryFee.Value.ToString("C2")</td>
+                    </tr>
+                }
                 <tr>
                     <td>Rewards Redeemed:</td>
                     <td style="text-align:right;">@(ViewBag.RewardsDiscount.ToString("C2"))</td>
