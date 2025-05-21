@@ -75,21 +75,8 @@
 
 <script>
     function submitOrderType(radio) {
-    const selectedType = radio.value;
-
-    //Get all Params that are currently selected
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    //Check which Order type is selected
-    urlParams.set('selectedType', selectedType);
-    
-    //Build the URL with no params
-    const baseUrl = '@Url.Action("Index", "Order")';
-    
-    //Add all the params that were previously selected
-    const newUrl = baseUrl + '?' + urlParams.toString();
-    
-    window.location.href = newUrl;
+        const selectedType = radio.value;
+        window.location.href = `@Url.Action("Index", "Order")?selectedType=${selectedType}`;
     }
 
     // Save scroll position before unload
