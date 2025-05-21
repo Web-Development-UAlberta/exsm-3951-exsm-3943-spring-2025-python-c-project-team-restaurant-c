@@ -2,18 +2,6 @@
 @using RestaurantManager.Enums
 
 @{
-    decimal subtotal = Model.OrderMenuItems?.Sum(item => item.Quantity * item.MenuItem.Price) ?? 0m;
-    decimal tax = subtotal * 0.05m;
-    decimal deliveryFee = Model.Type == OrderType.Delivery ? 5.00m : 0.00m;
-    decimal tip = Model.TipAmount == 0 ? 0m : Model.TipAmount;
-    decimal total = subtotal + tax + tip + deliveryFee;
-
-    decimal tip10 = Math.Round(subtotal * 0.10m, 2);
-    decimal tip15 = Math.Round(subtotal * 0.15m, 2);
-    decimal tip20 = Math.Round(subtotal * 0.20m, 2);
-    bool isCustomTip = Model.TipAmount != 0 && Model.TipAmount != tip10 && Model.TipAmount != tip15 && Model.TipAmount !=
-    tip20;
-
     int itemCount = Model.OrderMenuItems?.Sum(i => i.Quantity) ?? 0;
 }
 
@@ -45,9 +33,9 @@
             <!-- Delivery Addresses -->
             @if (Model.Type == OrderType.Delivery)
             {
-            <div class="mb-2">
-                @await Html.PartialAsync("_DeliveryInfo", Model.User)
-            </div>
+                <div class="mb-2">
+                    @await Html.PartialAsync("_DeliveryInfo", Model.User)
+                </div>
             }
 
             <!-- Payment -->

@@ -86,7 +86,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         const addressSelector = document.getElementById("addressSelector");
         const form = document.getElementById("addressForm");
-        const submitButton = form.querySelector('#submitButton'); // Use ID since it's unique
+        const submitButton = form.querySelector('#submitButton');
 
         function populateFormFromSelection() {
             const selected = addressSelector.value;
@@ -136,10 +136,48 @@
                 submitButton.textContent = "Update";
         }
 
-        // Run initially to populate the form on page load
+        function handleSelectionChange() {
+            populateFormFromSelection();
+
+            const selected = addressSelector.value;
+            const currentUrl = new URL(window.location.href);
+            const isCheckoutPage = currentUrl.pathname === "/Order/Checkout";
+            const isDelivery = currentUrl.searchParams.get("selectedType") === "Delivery";
+
+            if (isCheckoutPage && isDelivery && selected !== "new") {
+                const selectedOption = addressSelector.options[addressSelector.selectedIndex];
+                const dataAttr = selectedOption.getAttribute("data-address");
+                if (!dataAttr) return;
+
+                let address;
+                try {
+                    address = JSON.parse(dataAttr);
+                } catch (err) {
+                    console.error("Invalid JSON in data-address", err);
+                    return;
+                }
+
+                const currentAddressId = currentUrl.searchParams.get("addressId");
+                if (address.Id.toString() !== currentAddressId) {
+                    currentUrl.searchParams.set("addressId", address.Id);
+                    window.location.href = currentUrl.toString();
+                }
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const addressIdFromUrl = urlParams.get("addressId");
+        if (addressIdFromUrl) {
+            const match = [...addressSelector.options].find(
+                opt => opt.value === addressIdFromUrl
+            );
+            if (match) {
+                addressSelector.value = addressIdFromUrl;
+            }
+        }
+
         populateFormFromSelection();
 
-        // Re-run on dropdown change
-        addressSelector.addEventListener("change", populateFormFromSelection);
+        addressSelector.addEventListener("change", handleSelectionChange);
     });
 </script>

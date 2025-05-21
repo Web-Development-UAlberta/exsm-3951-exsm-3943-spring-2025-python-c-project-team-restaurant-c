@@ -58,8 +58,8 @@ public class DistanceService
         if (results.GetArrayLength() == 0)
             return null;
 
-        var lat = double.Parse(results[0].GetProperty("lat").GetString());
-        var lon = double.Parse(results[0].GetProperty("lon").GetString());
+        var lat = double.Parse(results[0].GetProperty("lat").GetString()!);
+        var lon = double.Parse(results[0].GetProperty("lon").GetString()!);
 
         return (lat, lon);
     }

@@ -8,7 +8,6 @@ using System.Security.Claims;
 using RestaurantManager.Utilities;
 using RestaurantManager.Enums;
 using RestaurantManager.Services;
-using System.Threading.Tasks;
 
 namespace RestaurantManager.Controllers;
 
@@ -47,7 +46,6 @@ public class OrderController(ApplicationDbContext context) : Controller
         Claim? userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
         return userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId) ? userId : null;
     }
-
 
     private static async Task<double?> CalculateDistance(string deliveryLocation)
     {
@@ -112,7 +110,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     // Checkout process to save order
     [HttpGet]
-    public async Task<IActionResult> Checkout(OrderType selectedType)
+    public async Task<IActionResult> Checkout(OrderType selectedType, int addressId)
     {
         int? userId = GetUserId();
         if (userId == null) return RedirectToAction("Error");
@@ -123,12 +121,34 @@ public class OrderController(ApplicationDbContext context) : Controller
             return RedirectToAction("Index", "Order"); // Show error or redirect if cart is empty
         }
 
-        // get distance, calculate subtotal, calcualte delievry fee 
-        if (cartOrder != null && cartOrder.UserAddress != null)
+        UserAddress? userAddress = cartOrder.User.UserAddresses?.FirstOrDefault(ua => ua.Id == addressId) ?? cartOrder.User.UserAddresses?.FirstOrDefault();
+
+        cartOrder.Subtotal = CalculateSubtotal([.. cartOrder.OrderMenuItems!.Select(i => (i.Quantity, i.MenuItem.Price))]);
+
+        // Get distance, calculate subtotal, calculate delivery fee.
+        if (selectedType == OrderType.Delivery && userAddress != null)
         {
-            double? distance = await CalculateDistance(cartOrder.UserAddress.AddressLine1);
-            HttpContext.Session.SetString("delivery_distance", distance?.ToString() ?? "0");
+            try
+            {
+                double? deliveryDistance = await CalculateDistance(userAddress.AddressLine1);
+
+                if (deliveryDistance.HasValue)
+                {
+                    deliveryDistance = Math.Round(deliveryDistance.Value, 2);
+                    cartOrder.DeliveryFee = CalculateDeliveryFee(cartOrder.Subtotal, deliveryDistance.Value, selectedType) ?? 0;
+                    ViewBag.DeliveryDistance = deliveryDistance;
+                }
+                else
+                    throw new Exception("Could not calculate delivery distance.");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.DeliveryError = ex.Message;
+            }
         }
+
+        cartOrder.Tax = CalculateTax(cartOrder.Subtotal, cartOrder.DeliveryFee ?? 0);
+        ViewBag.CartOrder = cartOrder;
 
         return View(cartOrder); // Redirect to confirmation page
     }
@@ -141,7 +161,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         DateTime? scheduledTime,
         int? selectedAddressId,
         string? deliveryInstructions,
-        double deliveryDistanceKm = 0,
+        double deliveryDistanceKm,
         bool redeemPoints = false)
     {
         // Get User 
@@ -167,7 +187,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         // Order Date
         cartOrder.OrderDate = DateTime.Now;
 
-        if (selectedType != Enums.OrderType.DineIn)
+        if (selectedType != OrderType.DineIn)
             cartOrder.ScheduledTime = scheduledTime ?? DateTime.Now.AddMinutes(30);
 
         // Calculate Subtotal 
@@ -180,8 +200,7 @@ public class OrderController(ApplicationDbContext context) : Controller
         cartOrder.Tax = CalculateTax(cartOrder.Subtotal, cartOrder.DeliveryFee);
 
         // Calculate Tip 
-        decimal tip = CalculateTip(tipAmount, customTipAmount);
-        cartOrder.TipAmount = tip;
+        cartOrder.TipAmount = CalculateTip(tipAmount, customTipAmount);
 
         // Calculate Rewards 
         decimal rewardsDiscount = CalculateRewardDiscount(redeemPoints, user.RewardsPoints, out int pointsUsed);
@@ -200,11 +219,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         cartOrder.AddressId = selectedAddressId;
 
-        var selectedAddress = _context.UserAddresses.FirstOrDefault(a => a.Id == selectedAddressId && a.UserId == userId);
-        if (selectedAddress != null)
-        {
-            // Optionally process or validate the address
-        }
+        UserAddress? selectedAddress = _context.UserAddresses.FirstOrDefault(a => a.Id == selectedAddressId && a.UserId == userId);
 
         // Save the order and update user points
         await SaveOrderAndUserPoints(cartOrder, user.Id, pointsUsed);
@@ -218,7 +233,7 @@ public class OrderController(ApplicationDbContext context) : Controller
     }
 
     // Method to get or create a cart order for the user
-    private Order? GetOrCreateCartOrder(int userId, Enums.OrderType selectedType)
+    private Order? GetOrCreateCartOrder(int userId, OrderType selectedType)
     {
         Order? cartOrder = HttpContext.Session.GetObject<Order>($"cart_order_{userId}");
 
@@ -233,7 +248,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
             cartOrder = new Order
             {
-                Status = Enums.OrderStatus.InProgress,
+                Status = OrderStatus.InProgress,
                 UserId = userId,
                 User = user,
                 Type = selectedType,
@@ -252,7 +267,7 @@ public class OrderController(ApplicationDbContext context) : Controller
     }
 
     // Add menu item to the cart
-    public IActionResult AddToCart(Enums.OrderType selectedType, int menuItemId)
+    public IActionResult AddToCart(OrderType selectedType, int menuItemId)
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -367,8 +382,10 @@ public class OrderController(ApplicationDbContext context) : Controller
         if (subtotal >= 75) return 0;
         if (deliveryDistanceKm <= 5) return 5.99m;
         if (deliveryDistanceKm <= 8) return 7.99m;
+        if (deliveryDistanceKm <= 18) return 11.99m;
+        if (deliveryDistanceKm <= 26) return 15.99m;
 
-        throw new InvalidOperationException("Delivery is not available for distances over 8km.");
+        throw new InvalidOperationException("Delivery is not available for distances over 26km.");
     }
 
     // Calculate Rewards 

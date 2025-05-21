@@ -2,14 +2,12 @@
 @using RestaurantManager.Enums
 
 @{
-    // Subtotal
-    decimal subtotal = Model.OrderMenuItems?.Sum(item => item.Quantity * item.MenuItem.Price) ?? 0m;
-    // Tax
-    decimal tax = subtotal * 0.05m;
-    // Tip
+    decimal subtotal = ViewBag.CartOrder != null ? (ViewBag.CartOrder.Subtotal ?? 0) : 0m;
+    decimal deliveryFee = ViewBag.CartOrder != null ? (ViewBag.CartOrder.DeliveryFee ?? 0) : 0m;
+    decimal tax = ViewBag.CartOrder != null ? (ViewBag.CartOrder.Tax ?? 0m) : 0m;
     decimal tip = Model.TipAmount == 0 ? 0m : Model.TipAmount;
-    // Delivery Fee
-    decimal deliveryFee = Model.Type == OrderType.Delivery ? 5.00m : 0.00m;
+
+    double deliveryDistanceKm = ViewBag.DeliveryDistance ?? 0;
 
     // Rewards
     int userPoints = Model.User?.RewardsPoints ?? 0;
@@ -19,12 +17,22 @@
     decimal tip10 = Math.Round(subtotal * 0.10m, 2);
     decimal tip15 = Math.Round(subtotal * 0.15m, 2);
     decimal tip20 = Math.Round(subtotal * 0.20m, 2);
-    bool isCustomTip = Model.TipAmount != 0 && Model.TipAmount != tip10 && Model.TipAmount != tip15 && Model.TipAmount !=
-    tip20;
+    bool isCustomTip = Model.TipAmount != 0 && Model.TipAmount != tip10 && Model.TipAmount != tip15 && Model.TipAmount != tip20;
 
     // Total
-    decimal total = Math.Round(Math.Max(0, (subtotal + tax + tip + deliveryFee) - rewardsDiscount), 2);
+    List<decimal> totalTally = 
+    [
+        subtotal,
+        tip,
+        tax,
+        deliveryFee,
+        rewardsDiscount
+    ];
+
+    decimal total = totalTally.Sum();
+    total = total > 0 ? total : 0m;
 }
+
 <!-- Right: Summary -->
 <aside class="col-md-2 me-4 mb-4 sticky-sidebar d-flex flex-column"
     style="position: sticky; max-height: 40rem; width: 400px; background-color: white;">
@@ -71,12 +79,11 @@
             <span id="tipError" class="text-danger small" style="display: none;">Please enter a valid tip amount.</span>
         </div>
 
-        @if (Model.Type == OrderType.Delivery && Model.DeliveryFee.HasValue)
+        @if (Model.Type == OrderType.Delivery && Model.DeliveryFee.HasValue && ViewBag.DeliveryDistance != null)
         {
             <div class="d-flex justify-content-between mt-4 mb-2">
-                <p>Delivery Distance: @deliveryDistanceKm km</p>
-                <span>Delivery Fee</span>
-                <span>@deliveryFee.ToString("C2")</span>
+                <p>Distance <span class="fw-bold">@(ViewBag.DeliveryDistance)km</span></p>
+                <p>Delivery Fee <span class="fw-bold">@deliveryFee.ToString("C2")</span></p>
             </div>
         }
 
@@ -116,13 +123,13 @@
                 <input type="hidden" name="TipAmount" id="tipAmountInput" />
                 <input type="hidden" name="CustomTipAmount" id="customTipAmountInput" />
 
-                <input type="hidden" name="DeliveryFee" value="@deliveryFee" />
-                <input type="hidden" name="deliveryInstructions" id="deliveryInstructionsHidden" />
-
                 <input type="hidden" id="hiddenScheduledTime" name="ScheduledTime" />
 
                 <input type="hidden" id="externalSelectedAddressId" name="selectedAddressId" />
-                <input type="hidden" name="deliveryDistanceKm" value="0" />
+                <input type="hidden" name="DeliveryFee" value="@deliveryFee" />
+                <input type="hidden" name="deliveryInstructions" id="deliveryInstructionsHidden" />
+                <input type="hidden" name="deliveryDistanceKm" value="@deliveryDistanceKm" />
+
                 <input type="hidden" name="redeemPoints" id="redeemPointsInput" value="@canRedeem" />
                 <button type="submit" class="btn btn-primary w-100">
                     Place @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type) Order
@@ -166,7 +173,7 @@
         }
 
         const discount = applyRewards ? 20.00 : 0;
-        const taxAmount = subtotal * 0.05;
+        const taxAmount = (subtotal + deliveryFee) * 0.05;
         const totalBeforeDiscount = subtotal + taxAmount + tipAmount + deliveryFee;
         const finalTotal = Math.max(0, totalBeforeDiscount - discount);
 
