@@ -31,16 +31,14 @@
             </div>
 
             <!-- Delivery Addresses -->
-            @if (Model.Type == OrderType.Delivery)
-            {
-                <div class="mb-2">
-                    @await Html.PartialAsync("_DeliveryInfo", Model.User)
-                </div>
-            }
-
-            <!-- Payment -->
-            <div class="mb-4">
-                @await Html.PartialAsync("_CardPaymentForm", Model.User)
+            <div>
+                @if (Model.Type == OrderType.Delivery)
+                {
+                    <div class="mb-2">
+                        @await Html.PartialAsync("_DeliveryInfo", Model.UserAddress)
+                        @await Html.PartialAsync("_DeliveryFields", Model)
+                    </div>
+                }
             </div>
 
             <!-- Order Summary -->

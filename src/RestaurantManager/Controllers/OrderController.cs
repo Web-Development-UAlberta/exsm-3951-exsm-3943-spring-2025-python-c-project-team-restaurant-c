@@ -6,6 +6,9 @@ using RestaurantManager.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using RestaurantManager.Utilities;
+using Stripe.Checkout;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http;
 using RestaurantManager.Enums;
 using RestaurantManager.Services;
 
@@ -221,15 +224,79 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         UserAddress? selectedAddress = _context.UserAddresses.FirstOrDefault(a => a.Id == selectedAddressId && a.UserId == userId);
 
-        // Save the order and update user points
-        await SaveOrderAndUserPoints(cartOrder, user.Id, pointsUsed);
-
-        // Remove cart from session
+        // // Remove cart from session
         HttpContext.Session.Remove($"cart_order_{userId}");
+
+        // // Add cart data to session
+        HttpContext.Session.SetObject($"full_cart_order", cartOrder);
+        HttpContext.Session.SetInt32($"user_id", user.Id);
+        HttpContext.Session.SetInt32($"points_used", pointsUsed);
 
         TempData["RewardsDiscount"] = rewardsDiscount.ToString();
 
-        return RedirectToAction("Receipt", new { orderId = cartOrder.Id });
+        // Process payment with stripe checkout
+        string domain = HttpContext.Request.GetEncodedUrl();
+        string rootdomain = domain.Remove(domain.Length - 21);
+        var options = new SessionCreateOptions
+        {
+            // SuccessUrl = rootdomain + $"/Order/Receipt?orderId={cartOrder.Id}",
+            SuccessUrl = rootdomain + $"/Order/Confirm",
+            CancelUrl = rootdomain + $"/Order",
+            LineItems = new List<SessionLineItemOptions>
+      {
+        new SessionLineItemOptions
+        {
+
+          PriceData = new SessionLineItemPriceDataOptions
+          {
+            UnitAmount = (long)(total * 100), // Convert to cents
+            Currency = "cad",
+            ProductData = new SessionLineItemPriceDataProductDataOptions
+            {
+              Name = "Order Total",
+              Description = "Thank you for your business!"
+            }
+          },
+          Quantity = 1
+        }
+      },
+            Mode = "payment",
+            CustomerEmail = User.Identity?.Name,
+        };
+
+        var service = new SessionService();
+        Session session = service.Create(options);
+        Response.Headers.Append("Location", session.Url);
+        TempData["Session"] = session.Id;
+        return new StatusCodeResult(303);
+    }
+
+    public async Task<IActionResult> Confirm()
+    {
+        var service = new SessionService();
+        Session session = service.Get(TempData["Session"].ToString());
+
+        // Retrieve cart from session
+        var cartOrder = HttpContext.Session.GetObject<Order>($"full_cart_order");
+        int userId = HttpContext.Session.GetInt32($"user_id") ?? 0;
+        int pointsUsed = HttpContext.Session.GetInt32($"points_used") ?? 0;
+
+        // // Remove cart from session
+        HttpContext.Session.Remove($"full_cart_order");
+        HttpContext.Session.Remove($"user_id");
+        HttpContext.Session.Remove($"points_used");
+
+        if (session.PaymentStatus == "paid")
+        {
+            // Save the order and update user points
+            await SaveOrderAndUserPoints(cartOrder, userId, pointsUsed);
+
+            return RedirectToAction("Receipt", new { orderId = cartOrder.Id });
+        }
+        else
+        {
+            return RedirectToAction("Index", "Order");
+        }
     }
 
     // Method to get or create a cart order for the user
@@ -300,6 +367,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         return RedirectToAction("Index", new { selectedType, viewCart = true });
     }
+
 
     // Remove menu item from the cart
     public IActionResult RemoveFromCart(Enums.OrderType selectedType, int menuItemId)
@@ -372,7 +440,7 @@ public class OrderController(ApplicationDbContext context) : Controller
 
     // Calculate Tax 
     private static decimal CalculateTax(decimal subtotal, decimal? deliveryFee)
-        => Math.Round((subtotal + (deliveryFee ?? 0)) * 0.05m, 2);
+        => Math.Round((subtotal + deliveryFee ?? 0) * 0.05m, 2);
 
     // Calculate Delivery fee
     private static decimal? CalculateDeliveryFee(decimal subtotal, double deliveryDistanceKm, OrderType selectedType)
@@ -471,5 +539,4 @@ public class OrderController(ApplicationDbContext context) : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-
 }

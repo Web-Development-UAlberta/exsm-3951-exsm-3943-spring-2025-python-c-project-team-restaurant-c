@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using DotNetEnv;
+using Stripe;
 
 Env.Load();
 
@@ -59,6 +60,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();
+
+StripeConfiguration.ApiKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
 
 app.UseAuthentication();
 app.UseAuthorization();
