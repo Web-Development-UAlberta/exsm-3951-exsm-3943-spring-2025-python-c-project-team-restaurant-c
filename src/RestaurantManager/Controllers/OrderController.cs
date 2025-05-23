@@ -457,7 +457,7 @@ public class OrderController(ApplicationDbContext context) : Controller
     // Calculate Delivery fee
     private static decimal? CalculateDeliveryFee(decimal subtotal, double deliveryDistanceKm, OrderType selectedType)
     {
-        if (selectedType != OrderType.Delivery) return null;
+        if (selectedType != OrderType.Delivery) return 0;
 
         if (subtotal >= 75) return 0;
         if (deliveryDistanceKm <= 5) return 5.99m;
