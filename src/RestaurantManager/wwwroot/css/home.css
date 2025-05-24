@@ -1,0 +1,52 @@
+.hero-section {
+    height: 85vh;
+    background-image: url('/images/hero-img.png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-mask {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 12rem;
+}
+
+h1,
+h4 {
+    color: var(--cream);
+}
+
+h4 {
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+}
+
+h2,
+p {
+    color: var(--forest-green);
+}
+
+.dine-options-section {
+    background-color: var(--forest-green);
+}
+
+.dine-options-section h2,
+.dine-options-section p {
+    color: var(--cream);
+}
+
+.seasonal-img {
+    max-width: 400px;
+    height: auto;
+}
+
+.footer-img-long {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}

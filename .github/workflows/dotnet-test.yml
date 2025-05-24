@@ -1,0 +1,30 @@
+name: .NET Core CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore src/RestaurantManager.sln
+
+    - name: Build solution
+      run: dotnet build src/RestaurantManager.sln --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test src/RestaurantManager.sln --no-build --configuration Release --logger "console;verbosity=detailed"
