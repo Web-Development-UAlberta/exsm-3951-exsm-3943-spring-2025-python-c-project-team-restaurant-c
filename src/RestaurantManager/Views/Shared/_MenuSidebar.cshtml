@@ -11,7 +11,67 @@
     var cartItemCount = (ViewBag.Cart as Order)?.OrderMenuItems?.Sum(item => item.Quantity) ?? 0;
 }
 
-<aside class="col-md-2 me-4 mb-4 sticky-sidebar d-flex flex-column" style="position: sticky; max-height: 40rem;">
+<!-- Horizontal bar for small screens -->
+<aside class="d-md-none sticky-top px-3 py-2 mb-3" style="background-color: var(--cream); z-index: 1030;">
+    <!-- Category Dropdown -->
+    <div class="dropdown mb-2">
+        <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Categories
+        </button>
+        <ul class="dropdown-menu w-100">
+            @foreach (var category in Enum.GetValues(typeof(MenuItemCategory)).Cast<MenuItemCategory>())
+            {
+                <li>
+                    <a class="dropdown-item" href="#@category">
+                        @PropertyDisplayHelper.GetDisplayName(category)
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Filter Dropdown -->
+    <div class="dropdown mb-2">
+        <button class="btn btn-outline-primary dropdown-toggle w-100 d-flex align-items-center justify-content-center"
+            type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-funnel-fill me-2"></i> Filters
+        </button>
+        <ul class="dropdown-menu w-100">
+            @foreach (var tag in Model)
+            {
+                <li>
+                    <a class="dropdown-item"
+                        href="@Url.Action("Index", showCart ? "Order" : "Menu", new { tag = tag.Name })">
+                        @tag.Name
+                    </a>
+                </li>
+            }
+            <li>
+                <a class="dropdown-item text-secondary"
+                    href="@Url.Action("Index", showCart ? "Order" : "Menu", new { tag = "all" })">
+                    Show All
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Cart Button -->
+    @if (showCart)
+    {
+        <div>
+            <a href="@Url.Action("Index", "Order", new { viewCart = true, selectedType = ViewBag.SelectedType })"
+                class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+                <i class="bi bi-cart-fill me-2"></i> View Cart (@cartItemCount)
+            </a>
+        </div>
+    }
+</aside>
+
+
+<!-- Regular Sidebar for Desktop -->
+<aside class="d-none d-md-flex col-md-2 me-4 mb-4 sticky-sidebar d-flex flex-column"
+    style="position: sticky; max-height: 40rem;">
     <div>
         <div class="mb-4">
             @foreach (var category in Enum.GetValues(typeof(MenuItemCategory)).Cast<MenuItemCategory>())
@@ -22,7 +82,7 @@
                 </div>
             }
         </div>
-        <h4 class="mb-3 sidebar text-dark">Filter</h4>
+        <h4 class="mb-3 sidebar text-dark"><i class="bi bi-funnel-fill me-2"></i>Filter</h4>
         <div id="dietary-filters">
             @foreach (var tag in Model)
             {
@@ -45,7 +105,7 @@
             <div class="mt-auto pt-3">
                 <a href="@Url.Action("Index", "Order", new { viewCart = true, selectedType = ViewBag.SelectedType })"
                     class="btn btn-primary w-100">
-                    <i class="fas fa-shopping-cart"></i> View Cart (@cartItemCount)
+                    <i class="bi bi-cart-fill me-2"></i> View Cart (@cartItemCount)
                 </a>
             </div>
         }

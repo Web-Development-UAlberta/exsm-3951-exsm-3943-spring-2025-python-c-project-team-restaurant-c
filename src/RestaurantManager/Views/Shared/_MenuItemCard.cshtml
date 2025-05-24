@@ -6,12 +6,12 @@
     var showCart = currentController == "Order";
 }
 
-<div class="card menu-card custom-card h-100 p-3 d-flex flex-row" style="border: 1px solid #ddd; border-radius: 8px;">
+<div class="card menu-card custom-card h-100 p-3 d-flex flex-row">
 
     <!-- Dietary Tags -->
     @if (Model.MenuItemDietaryTags != null && Model.MenuItemDietaryTags.Any())
     {
-        <div class="mb-2 w-20 d-flex flex-column">
+        <div class="mb-2 d-flex flex-column">
             @foreach (var tagLink in Model.MenuItemDietaryTags)
             {
                 if (tagLink.DietaryTag != null)
@@ -32,27 +32,26 @@
             <p class="card-text text-muted mb-3">@Model.Description</p>
         }
 
-        <div class="d-flex justify-content-between align-items-end gap-3 w-100 mt-auto">
+        <div class="d-flex justify-content-between align-items-end gap-3 mt-auto">
             <!-- Price -->
             <p class="fw-bold fs-5 text-orange mb-0">@Model.Price.ToString("C2")</p>
 
             <!-- Quantity Buttons -->
-            @if (showCart)
-            {
-                <form method="post"
-                    action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId })">
-                    <button type="submit" class="btn btn-outline-primary">-</button>
-                </form>
 
-                <span class="fw-bold m-auto">
-                    @((ViewBag.Cart as Order)?.OrderMenuItems?.FirstOrDefault(i => i.MenuItemId == Model.Id)?.Quantity ?? 0)
-                </span>
+            <form method="post"
+                action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId })">
+                <button type="submit" class="btn btn-outline-primary">-</button>
+            </form>
 
-                <form method="post"
-                    action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId })">
-                    <button type="submit" class="btn btn-outline-primary">+</button>
-                </form>
-            }
+            <span class="fw-bold m-auto">
+                @((ViewBag.Cart as Order)?.OrderMenuItems?.FirstOrDefault(i => i.MenuItemId == Model.Id)?.Quantity ?? 0)
+            </span>
+
+            <form method="post"
+                action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId })">
+                <button type="submit" class="btn btn-outline-primary">+</button>
+            </form>
+
         </div>
     </div>
 </div>

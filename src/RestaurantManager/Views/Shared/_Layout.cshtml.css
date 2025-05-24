@@ -18,10 +18,12 @@ a {
   color: var(--forest-green);
 }
 
-.nav-pills .nav-link.active,
-.nav-pills .show>.nav-link {
-  color: var(--cream);
-  background-color: var(--terracotta);
+.navbar {
+  border: none;
+}
+
+.navbar-toggler {
+  background-color: var(--cream);
 }
 
 .border-bottom {
@@ -49,4 +51,14 @@ footer a:hover,
 footer td,
 footer a {
   color: var(--bs-white);
+}
+
+@media (max-width: 767px) {
+  .navbar-nav .nav-item {
+    margin-bottom: 0.75rem;
+  }
+
+  .navbar-nav .nav-link {
+    margin-right: 0.5rem;
+  }
 }

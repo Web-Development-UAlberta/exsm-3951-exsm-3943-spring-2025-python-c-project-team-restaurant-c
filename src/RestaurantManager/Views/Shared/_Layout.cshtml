@@ -12,11 +12,12 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/kitchenDashboard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/menu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/receipt.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true" />
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap"
         rel="stylesheet">
-
 </head>
 
 <body>
@@ -29,7 +30,7 @@
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
                     aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <i class="bi bi-list" style="font-size: 1.5rem; color: var(--forest-green);"></i>
                 </button>
 
                 <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
@@ -64,6 +65,7 @@
                                         class="nav-link menu-link d-block">Orders
                                     </a>
                                 </li>
+                                <div class="vr mx-3"></div>
                                 <li class="nav-item me-4">
                                     <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                         @Html.AntiForgeryToken()
@@ -74,26 +76,28 @@
                             }
                             else
                             {
-                                <li class="nav-item me-4">
-                                    <a asp-controller="CustomerDashboard" asp-action="Index"
-                                        class="nav-link menu-link d-block">Account
-                                    </a>
-                                </li>
-                                <li class="nav-item me-4">
-                                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit"
-                                            class="nav-link menu-link d-block border-0 bg-transparent">Logout</button>
-                                    </form>
-                                </li>
-
                                 <li class="nav-item">
                                     <a class="btn btn-outline-primary btn-sm me-2" asp-controller="Order"
                                         asp-action="Index">Order</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="btn btn-primary btn-sm" asp-controller="Reservation" asp-action="Index"> Book
+                                    <a class="btn btn-primary btn-sm me-4" asp-controller="Reservation" asp-action="Index"> Book
                                         Table </a>
+                                </li>
+
+                                <div class="vr mx-3"></div>
+
+                                <li class="nav-item me-2">
+                                    <a asp-controller="CustomerDashboard" asp-action="Index"
+                                        class="nav-link menu-link d-block"><i class="bi bi-person-circle"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit"
+                                            class="nav-link menu-link d-block border-0 bg-transparent">Logout</button>
+                                    </form>
                                 </li>
                             }
                         }

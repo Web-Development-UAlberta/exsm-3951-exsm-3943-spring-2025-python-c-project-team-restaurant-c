@@ -42,7 +42,7 @@
 
         <!-- Manual Address Fields -->
         <div class="mb-3">
-            <label class="form-label text-muted fw-medium">Address Line 1</label>
+            <label class="form-label text-muted fw-medium">Address Line 1 <span class="text-danger">*</span></label>
             <input name="AddressLine1" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
         </div>
 
@@ -52,30 +52,30 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label text-muted fw-medium">City</label>
+            <label class="form-label text-muted fw-medium">City <span class="text-danger">*</span></label>
             <input name="City" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label text-muted fw-medium">Province</label>
+                <label class="form-label text-muted fw-medium">Province <span class="text-danger">*</span></label>
                 <input name="Province" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
             </div>
 
             <div class="col-md-6 mb-3">
-                <label class="form-label text-muted fw-medium">Postal Code</label>
+                <label class="form-label text-muted fw-medium">Postal Code <span class="text-danger">*</span></label>
                 <input name="PostalCode" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
             </div>
         </div>
 
         <div class="mb-4">
-            <label class="form-label text-muted fw-medium">Country</label>
+            <label class="form-label text-muted fw-medium">Country <span class="text-danger">*</span></label>
             <input name="Country" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
         </div>
 
         @if (isCustomerDashboard)
         {
-            <div class="mb-3">
+            <div class="mb-3 text-end">
                 <button type="submit" class="btn btn-primary" id="submitButton">Update</button>
             </div>
         }

@@ -1,10 +1,10 @@
 .login-container {
     display: flex;
     height: 90vh;
+    flex-direction: column;
 }
 
 .login-image {
-    width: 50%;
     display: none;
 }
 
@@ -16,12 +16,13 @@
 
 .login-form-wrapper {
     width: 100%;
-    max-width: 50%;
     background-color: var(--forest-green);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    max-width: 100%;
+    flex: 1;
 }
 
 .login-card {
@@ -33,9 +34,19 @@
     border-radius: 0.5rem;
 }
 
-/* Responsive: show image only on medium and up */
+/* Responsive: for medium and up */
 @media (min-width: 768px) {
+    .login-container {
+        flex-direction: row;
+        /* Side-by-side layout */
+    }
+
     .login-image {
         display: block;
+        width: 50%;
+    }
+
+    .login-form-wrapper {
+        max-width: 50%;
     }
 }
