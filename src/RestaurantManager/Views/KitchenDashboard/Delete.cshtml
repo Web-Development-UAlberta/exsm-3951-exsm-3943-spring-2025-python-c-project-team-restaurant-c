@@ -4,39 +4,41 @@
     ViewData["Title"] = "Delete Menu Item";
 }
 
-<div class="container mt-5 d-flex justify-content-center">
-    <div class="card shadow-sm border-danger" style="max-width: 600px; width: 100%;">
-        <div class="card-header bg-danger text-white fw-bold">
-            <h4 class="mb-0">Delete Menu Item</h4>
-        </div>
-        <div class="card-body">
-            <p class="mb-4">Are you sure you want to delete the following item?</p>
+<div class="container">
+    <div class="mt-5 d-flex justify-content-center">
+        <div class="card shadow-sm border-danger" style="max-width: 600px; width: 100%;">
+            <div class="card-header bg-danger text-white fw-bold">
+                <h4 class="mb-0">Delete Menu Item</h4>
+            </div>
+            <div class="card-body">
+                <p class="mb-4">Are you sure you want to delete the following item?</p>
 
-            <dl class="row">
-                <dt class="col-sm-4">Name</dt>
-                <dd class="col-sm-8">@Model.Name</dd>
+                <dl class="row">
+                    <dt class="col-sm-4">Name</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
 
-                <dt class="col-sm-4">Description</dt>
-                <dd class="col-sm-8">@Model.Description</dd>
+                    <dt class="col-sm-4">Description</dt>
+                    <dd class="col-sm-8">@Model.Description</dd>
 
-                <dt class="col-sm-4">Category</dt>
-                <dd class="col-sm-8">@Model.Category</dd>
+                    <dt class="col-sm-4">Category</dt>
+                    <dd class="col-sm-8">@Model.Category</dd>
 
-                <dt class="col-sm-4">Price</dt>
-                <dd class="col-sm-8">$@Model.Price.ToString("F2")</dd>
-            </dl>
+                    <dt class="col-sm-4">Price</dt>
+                    <dd class="col-sm-8">$@Model.Price.ToString("F2")</dd>
+                </dl>
 
-            <form asp-action="DeleteConfirmed" method="post">
-                <input type="hidden" asp-for="Id" />
-                <div class="d-flex gap-2 justify-content-end">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash me-1"></i> Delete
-                    </button>
-                    <a asp-action="MenuItems" class="btn btn-secondary">
-                        <i class="bi bi-x-circle me-1"></i> Cancel
-                    </a>
-                </div>
-            </form>
+                <form asp-action="DeleteConfirmed" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i> Delete
+                        </button>
+                        <a asp-action="MenuItems" class="btn btn-secondary">
+                            <i class="bi bi-x-circle me-1"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -74,14 +74,14 @@
                         <td style="text-align:right;">@Model.Subtotal.ToString("C2")</td>
                     </tr>
                     <tr>
-                        <td>Tip:</td>
-                        <td style="text-align:right;">@Model.TipAmount.ToString("C2")</td>
-                    </tr>
-                    <tr>
                         <td>Tax (5% GST):</td>
                         <td style="text-align:right;">@Model.Tax.ToString("C2")</td>
                     </tr>
-                    @if (Model.DeliveryFee != null)
+                    <tr>
+                        <td>Tip:</td>
+                        <td style="text-align:right;">@Model.TipAmount.ToString("C2")</td>
+                    </tr>
+                    @if (Model.DeliveryFee != 0)
                     {
                         <tr>
                             <td>Delivery fee:</td>

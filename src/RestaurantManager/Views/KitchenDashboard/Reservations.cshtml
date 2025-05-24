@@ -11,118 +11,132 @@
 }
 
 <div class="banner-image position-relative text-white text-center">
-    <img src="~/images/kitchen.png" class="img-fluid w-100" style="height: 300px; object-fit: cover;" alt="Kitchen Image" />
+    <img src="~/images/kitchen.png" class="img-fluid w-100" style="height: 300px; object-fit: cover;"
+        alt="Kitchen Image" />
     <div class="banner-text position-absolute top-50 start-50 translate-middle">
         <h2 class="fw-bold text-light display-4 text-shadow">Dine In Reservations</h2>
     </div>
 </div>
 
 <div class="container pb-5">
-     @Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
     <!-- Current Reservations -->
     <div class="card shadow-sm border-0 mb-5">
         <div class="card-header bg-warning text-dark fw-bold fs-4">
             Current Reservations
         </div>
         <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Customer</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Guests</th>
-                        <th>Table</th>
-                        <th>Status</th>
-                        <th>Notes</th>
-                        <th>Manage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (reservations != null && reservations.Any())
-                    {
-                        foreach (var r in reservations)
+            <div class="table-responsive">
+
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Guests</th>
+                            <th>Table</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                            <th>Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (reservations != null && reservations.Any())
+                        {
+                            foreach (var r in reservations)
+                            {
+                                <tr>
+                                    <td>@r.User?.FirstName @r.User?.LastName</td>
+                                    <td>@r.ReservationDateTime.ToShortDateString()</td>
+                                    <td>@r.ReservationDateTime.ToShortTimeString()</td>
+                                    <td>@r.GuestCount</td>
+                                    <td>@r.TableNumber</td>
+                                    <td>@r.ReservationStatus</td>
+                                    <td>@r.Notes</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-primary btn-sm"
+                                            onclick="manageReservation(@r.Id, '@r.User?.FirstName @r.User?.LastName', '@r.ReservationDateTime.ToString("MMM dd, yyyy h:mm tt")', '@r.ReservationStatus')">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>@r.User?.FirstName @r.User?.LastName</td>
-                                <td>@r.ReservationDateTime.ToShortDateString()</td>
-                                <td>@r.ReservationDateTime.ToShortTimeString()</td>
-                                <td>@r.GuestCount</td>
-                                <td>@r.TableNumber</td>
-                                <td>@r.ReservationStatus</td>
-                                <td>@r.Notes</td>
-                                <td>
-                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="manageReservation(@r.Id, '@r.User?.FirstName @r.User?.LastName',
-                                     '@r.ReservationDateTime.ToString("MMM dd, yyyy h:mm tt")', '@r.ReservationStatus')">
-                                        <i class="fas fa-cog"></i>Edit
-                                    </button>
-                                </td>
+                                <td colspan="8" class="text-center">No current reservations found.</td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr><td colspan="8" class="text-center">No current reservations found.</td></tr>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Past Reservations -->
+
     <div class="card shadow-sm border-0 mb-5">
         <div class="card-header bg-danger text-white fw-bold fs-4">
             Past Reservations
         </div>
         <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Customer</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Guests</th>
-                        <th>Table</th>
-                        <th>Status</th>
-                        <th>Notes</th>
-                        <th>Manage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (pastReservations != null && pastReservations.Any())
-                    {
-                        foreach (var r in pastReservations)
+            <div class="table-responsive">
+
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Guests</th>
+                            <th>Table</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                            <th>Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (pastReservations != null && pastReservations.Any())
+                        {
+                            foreach (var r in pastReservations)
+                            {
+                                <tr>
+                                    <td>@r.User?.FirstName @r.User?.LastName</td>
+                                    <td>@r.ReservationDateTime.ToShortDateString()</td>
+                                    <td>@r.ReservationDateTime.ToShortTimeString()</td>
+                                    <td>@r.GuestCount</td>
+                                    <td>@r.TableNumber</td>
+                                    <td>@r.ReservationStatus</td>
+                                    <td>@r.Notes</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-primary btn-sm"
+                                            onclick="manageReservation(@r.Id, '@r.User?.FirstName @r.User?.LastName',
+                                                                                                                                                                                     '@r.ReservationDateTime.ToString("MMM dd, yyyy h:mm tt")', '@r.ReservationStatus')">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>@r.User?.FirstName @r.User?.LastName</td>
-                                <td>@r.ReservationDateTime.ToShortDateString()</td>
-                                <td>@r.ReservationDateTime.ToShortTimeString()</td>
-                                <td>@r.GuestCount</td>
-                                <td>@r.TableNumber</td>
-                                <td>@r.ReservationStatus</td>
-                                <td>@r.Notes</td>
-                                <td>
-                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="manageReservation(@r.Id, '@r.User?.FirstName @r.User?.LastName',
-                                     '@r.ReservationDateTime.ToString("MMM dd, yyyy h:mm tt")', '@r.ReservationStatus')">
-                                        <i class="fas fa-cog"></i>Edit
-                                    </button>
-                                </td>
+                                <td colspan="8" class="text-center">No past reservations found.</td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr><td colspan="8" class="text-center">No past reservations found.</td></tr>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
 </div>
 
 <!-- Edit/Delete Popup  -->
-<div class="modal fade" id="manageReservationModal" tabindex="-1" aria-labelledby="manageReservationModalLabel" aria-hidden="true">
+<div class="modal fade" id="manageReservationModal" tabindex="-1" aria-labelledby="manageReservationModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -135,11 +149,11 @@
                     <strong>Date & Time:</strong> <span id="modalDateTime"></span><br>
                     <strong>Current Status:</strong> <span id="modalCurrentStatus"></span>
                 </div>
-                
+
                 <hr>
-                
+
                 <h6>What would you like to do?</h6>
-                
+
                 <div class="mb-3">
                     <label for="statusSelect" class="form-label">Change Status:</label>
                     <select class="form-select" id="statusSelect">
@@ -163,108 +177,93 @@
     </div>
 </div>
 
-<style>
-    .text-shadow {
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-    }
-
-    .card-header {
-        font-family: 'Segoe UI', sans-serif;
-        letter-spacing: 0.5px;
-    }
-
-    .table {
-        table-layout: fixed;
-    }
-</style>
-
 <script>
-let currentReservationId = null;
+    let currentReservationId = null;
 
-function manageReservation(reservationId, customerName, dateTime, currentStatus) {
-    
-    //Store the reservation that we're managing
-    currentReservationId = reservationId;
-    
-    //Fill up the popup with data taken from the reservation
-    document.getElementById('modalCustomerName').textContent = customerName;
-    document.getElementById('modalDateTime').textContent = dateTime;
-    document.getElementById('modalCurrentStatus').textContent = currentStatus;
-    
-    //Make sure dropdown shows current ReservationStatus
-    document.getElementById('statusSelect').value = currentStatus;
-    
-    //Open manage popup
-    var modal = new bootstrap.Modal(document.getElementById('manageReservationModal'));
-    modal.show();
-}
+    function manageReservation(reservationId, customerName, dateTime, currentStatus) {
 
-function updateReservationStatus() {
+        //Store the reservation that we're managing
+        currentReservationId = reservationId;
 
-    const newStatus = document.getElementById('statusSelect').value;
-    
-    if (currentReservationId && newStatus) {
-        //Create form to send data to server
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/KitchenDashboard/UpdateReservationStatus';
-        
-        //Create the security token and add it
-        //Note to team - I don't know if this actually works
-        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-        const tokenInput = document.createElement('input');
-        tokenInput.type = 'hidden';
-        tokenInput.name = '__RequestVerificationToken';
-        tokenInput.value = token;
-        form.appendChild(tokenInput);
-        
-        //Add reservation ID
-        const idInput = document.createElement('input');
-        idInput.type = 'hidden';
-        idInput.name = 'reservationId';
-        idInput.value = currentReservationId;
-        form.appendChild(idInput);
-        
-        //Add new status
-        const statusInput = document.createElement('input');
-        statusInput.type = 'hidden';
-        statusInput.name = 'newStatus';
-        statusInput.value = newStatus;
-        form.appendChild(statusInput);
-        
-        //Send form to update the reservation
-        document.body.appendChild(form);
-        form.submit();
+        //Fill up the popup with data taken from the reservation
+        document.getElementById('modalCustomerName').textContent = customerName;
+        document.getElementById('modalDateTime').textContent = dateTime;
+        document.getElementById('modalCurrentStatus').textContent = currentStatus;
+
+        //Make sure dropdown shows current ReservationStatus
+        document.getElementById('statusSelect').value = currentStatus;
+
+        //Open manage popup
+        var modal = new bootstrap.Modal(document.getElementById('manageReservationModal'));
+        modal.show();
     }
-}
 
-function deleteReservation() {
+    function updateReservationStatus() {
 
-    if (confirm('Are you sure you want to delete this reservation? This action cannot be undone.')) {
+        const newStatus = document.getElementById('statusSelect').value;
 
-        //Create form to send data to server
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/KitchenDashboard/DeleteReservation';
-        
-        //Create the security token and add it 
-        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-        const tokenInput = document.createElement('input');
-        tokenInput.type = 'hidden';
-        tokenInput.name = '__RequestVerificationToken';
-        tokenInput.value = token;
-        form.appendChild(tokenInput);
-        
-        //Add reservation ID to delete
-        const idInput = document.createElement('input');
-        idInput.type = 'hidden';
-        idInput.name = 'reservationId';
-        idInput.value = currentReservationId;
-        form.appendChild(idInput);
-        
-        //Send form to delete the reservation
-        document.body.appendChild(form);
-        form.submit();
+        if (currentReservationId && newStatus) {
+            //Create form to send data to server
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/KitchenDashboard/UpdateReservationStatus';
+
+            //Create the security token and add it
+            //Note to team - I don't know if this actually works
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const tokenInput = document.createElement('input');
+            tokenInput.type = 'hidden';
+            tokenInput.name = '__RequestVerificationToken';
+            tokenInput.value = token;
+            form.appendChild(tokenInput);
+
+            //Add reservation ID
+            const idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'reservationId';
+            idInput.value = currentReservationId;
+            form.appendChild(idInput);
+
+            //Add new status
+            const statusInput = document.createElement('input');
+            statusInput.type = 'hidden';
+            statusInput.name = 'newStatus';
+            statusInput.value = newStatus;
+            form.appendChild(statusInput);
+
+            //Send form to update the reservation
+            document.body.appendChild(form);
+            form.submit();
+        }
     }
-}
+
+    function deleteReservation() {
+
+        if (confirm('Are you sure you want to delete this reservation? This action cannot be undone.')) {
+
+            //Create form to send data to server
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/KitchenDashboard/DeleteReservation';
+
+            //Create the security token and add it 
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const tokenInput = document.createElement('input');
+            tokenInput.type = 'hidden';
+            tokenInput.name = '__RequestVerificationToken';
+            tokenInput.value = token;
+            form.appendChild(tokenInput);
+
+            //Add reservation ID to delete
+            const idInput = document.createElement('input');
+            idInput.type = 'hidden';
+            idInput.name = 'reservationId';
+            idInput.value = currentReservationId;
+            form.appendChild(idInput);
+
+            //Send form to delete the reservation
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
 </script>
