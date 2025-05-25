@@ -5,6 +5,7 @@
 
 @{
     ViewBag.Title = "Customer Dashboard";
+    var passwordModel = ViewBag.ChangePasswordModel as ChangePasswordViewModel ?? new ChangePasswordViewModel();
 }
 
 <div class="container py-5">
@@ -28,7 +29,7 @@
         </div>
 
         <div class="col-md-6">
-            @await Html.PartialAsync("_PasswordChange", (new ChangePasswordViewModel()))
+            @await Html.PartialAsync("_PasswordChange", (passwordModel))
         </div>
 
         <!-- Delivery Addresses -->
@@ -52,7 +53,7 @@
                                     @if (order.ReservationId != null)
                                     {
                                         <strong>Reservation #</strong> @order.ReservationId
-                            
+
                                         <br />
                                     }
                                     <strong> @order.Type</strong><br />

@@ -23,7 +23,7 @@ public partial class User
   [StringLength(100, ErrorMessage = "Email cannot be greater than 100 characters.")]
   public required string Email { get; set; }
 
-  [Column("phone", TypeName = "VARCHAR(50)"), Required(ErrorMessage = "Phone number required."), Phone(ErrorMessage = "Invalid phone number format.")]
+  [Column("phone", TypeName = "VARCHAR(50)"), Required(ErrorMessage = "Phone number required."), RegularExpression(@"^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$", ErrorMessage = "Phone number must be in format (XXX) XXX-XXXX.")]
   [StringLength(20, ErrorMessage = "Phone number must be under 20 characters.")]
   public required string Phone { get; set; }
 

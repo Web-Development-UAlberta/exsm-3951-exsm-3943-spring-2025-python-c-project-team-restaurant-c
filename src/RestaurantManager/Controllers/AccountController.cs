@@ -209,7 +209,6 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
         return View("Register", user);
     }
 
-
     // Password hashing with salt (SHA256)
     private static string HashPassword(string password, string salt)
     {
@@ -232,44 +231,6 @@ public class AccountController(ILogger<AccountController> logger, ApplicationDbC
     {
         var enteredHash = HashPassword(enteredPassword, storedSalt);
         return storedHash == enteredHash;
-    }
-
-    [HttpPost]
-    public IActionResult ChangePassword(ChangePasswordViewModel model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
-
-        // Get the logged-in user's ID (you may be using claims or session for this)
-        int? userId = GetUserId();
-
-        if (userId == null)
-            return NotFound();
-
-        User user = _context.Users.FirstOrDefault(u => u.Id == userId)!;
-
-        if (user == null)
-            return NotFound();
-
-        // Verify current password
-        if (!VerifyPassword(model.CurrentPassword, user.PasswordHash, user.PasswordSalt!))
-        {
-            ModelState.AddModelError("CurrentPassword", "The current password is incorrect.");
-            return View(model);
-        }
-
-        // Generate new salt and hash
-        string newSalt = GenerateSalt();
-        string newHash = HashPassword(model.NewPassword, newSalt);
-
-        user.PasswordSalt = newSalt;
-        user.PasswordHash = newHash;
-        _context.SaveChanges();
-
-        TempData["SuccessMessage"] = "Password updated successfully.";
-        return RedirectToAction("Index", "CustomerDashboard");
     }
 
     private int? GetUserId()
