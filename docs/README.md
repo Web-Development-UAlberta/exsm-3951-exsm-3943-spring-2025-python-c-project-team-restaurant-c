@@ -4,7 +4,7 @@ A full-stack web application for the **Harvest & Hearth** restaurant, allowing c
 
 Developed as part of the **EXSM 3943** C# project at the University of Alberta.
 
----
+Live Site: [https://harvestandhearth.webthesite.com/](https://harvestandhearth.webthesite.com/)
 
 ## Features
 
@@ -22,8 +22,6 @@ Developed as part of the **EXSM 3943** C# project at the University of Alberta.
 - See order details, status, and timestamps
 - Update order progress (e.g., "In Progress", "Ready", "Delivered")
 
----
-
 ## Usage
 
 - Users can select the "Menu" Navigation Tab to browse the menu. Menu items can be viewed by category and filtered by dietary preference.
@@ -40,21 +38,20 @@ Developed as part of the **EXSM 3943** C# project at the University of Alberta.
 - **SQLite Server** (for database development)
 - **Razor Pages** for UI rendering
 - **Bootstrap/CSS** (additional styling)
-
----
+- **Nginx web server** (site deployment)
 
 ## Project Setup
 
 ### Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
-- Entity Framework CLI  
-  Install with:
+- Install the .NET 8 SDK at [https://dotnet.microsoft.com/en-us/download](https://dotnet.microsoft.com/en-us/download)
+- Install the Entity Framework CLI:
 
-  ```bash
-  dotnet tool install --global dotnet-ef
+```bash
+dotnet tool install --global dotnet-ef
+```
 
-  ```
+### Steps
 
 - Clone repository:
 
@@ -62,8 +59,13 @@ Developed as part of the **EXSM 3943** C# project at the University of Alberta.
 git clone git@github.com:Web-Development-UAlberta/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c.git
 ```
 
-- Initialize database:
-  Apply the latest Entity Framework Core migrations:
+- Navigate to repository:
+
+```bash
+cd exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c
+```
+
+- Apply the latest Entity Framework Core migrations:
 
 ```bash
 dotnet ef database update --project src/RestaurantManager/RestaurantManager.csproj
@@ -74,6 +76,8 @@ dotnet ef database update --project src/RestaurantManager/RestaurantManager.cspr
 ```bash
 dotnet run --project src/RestaurantManager/RestaurantManager.csproj
 ```
+
+---
 
 ## Contributors:
 
