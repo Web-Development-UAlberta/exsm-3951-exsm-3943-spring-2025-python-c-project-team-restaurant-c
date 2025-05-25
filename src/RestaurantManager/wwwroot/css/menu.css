@@ -1,0 +1,210 @@
+/* Sidebar Styling */
+.sticky-sidebar {
+    position: sticky;
+    top: 4rem;
+    height: 100vh;
+    background-color: var(--light-cream);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.category-link {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    color: var(--forest-green);
+}
+
+.category-link:hover {
+    color: var(--forest-green-hover);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.category-link:active {
+    color: var(--forest-green-active);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.filter-link {
+    display: flex;
+    align-items: center;
+    color: var(--forest-green);
+}
+
+.filter-link:hover {
+    color: var(--terracotta-hover);
+    cursor: pointer;
+}
+
+.filter-link:active {
+    color: var(--terracotta-active);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Menu Card */
+.menu-card {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    background-color: var(--light-cream);
+    border-radius: 6px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    border: 1px solid var(--terracotta);
+    min-width: 310px;
+}
+
+.menu-card:hover {
+    transform: scale(1.05);
+}
+
+.card-title {
+    color: var(--charcoal);
+    font-size: 1.25rem;
+}
+
+.text-orange {
+    color: var(--terracotta);
+}
+
+.badge {
+    margin-top: 5px;
+    border: .125rem solid var(--terracotta);
+    color: var(--terracotta);
+    width: 2rem;
+    height: 2rem;
+    vertical-align: auto;
+    border-radius: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Cart */
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 500px;
+    z-index: 1050;
+    background: white;
+    border-left: 1px solid #ccc;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.banner-image {
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+}
+
+.banner-image img {
+    object-fit: cover;
+    height: 100%;
+}
+
+.banner-text {
+    color: var(--light-cream);
+    z-index: 2;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.checkout-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.checkout-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.checkout-card {
+    background-color: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-card h4 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
+}
+
+.checkout-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.checkout-table th,
+.checkout-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.full-width-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: var(--forest-green-active);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.display-points {
+    font-size: 4rem !important;
+    font-weight: 900 !important;
+    color: white !important;
+}
+
+/* Sticky scrollable bar at top on small screens */
+.small-screen-filter-bar {
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+    top: 0;
+}
+
+.small-screen-filter-bar a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}

@@ -82,9 +82,10 @@
 
         @if (Model.Type == OrderType.Delivery && Model.DeliveryFee.HasValue && ViewBag.DeliveryDistance != null)
         {
-            <div class="d-flex justify-content-between mt-4 mb-2">
-                <p>Distance <span class="fw-bold">@(ViewBag.DeliveryDistance)km</span></p>
-                <p>Delivery Fee <span class="fw-bold">@deliveryFee.ToString("C2")</span></p>
+            <hr class="my-3" />
+            <div class="d-flex justify-content-between mt-2 mb-2">
+                <label>Distance <span class="fw-bold">@(ViewBag.DeliveryDistance)km</span></label>
+                <label>Delivery Fee <span class="fw-bold">@deliveryFee.ToString("C2")</span></label>
             </div>
         }
 

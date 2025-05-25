@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantManager.Models;
 using RestaurantManager.Data;
+using RestaurantManager.Enums;
 using Microsoft.AspNetCore.Authorization;
 
 namespace RestaurantManager.Controllers;
@@ -13,15 +14,15 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
 {
     private readonly ApplicationDbContext _context = context;
 
-    public IActionResult Index(Enums.OrderType? selectedType)
+    public IActionResult Index(OrderType? selectedType)
     {
         var reservations = _context.Reservations
-            .Where(r => r.ReservationStatus != Enums.ReservationStatus.Cancelled
+            .Where(r => r.ReservationStatus != ReservationStatus.Cancelled
                 && r.ReservationDateTime >= DateTime.Now)
             .ToList();
 
         var orders = _context.Orders
-            .Where(o => o.Status == Enums.OrderStatus.Pending || o.Status == Enums.OrderStatus.InProgress)
+            .Where(o => o.Status == OrderStatus.Pending || o.Status == OrderStatus.InProgress)
             .ToList();
 
         var menuItems = _context.MenuItems
@@ -41,7 +42,7 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         //Sort by the soonest first
         ViewBag.Reservations = _context.Reservations
             .Include(r => r.User)
-            .Where(r => r.ReservationStatus != Enums.ReservationStatus.Cancelled
+            .Where(r => r.ReservationStatus != ReservationStatus.Cancelled
                     && r.ReservationDateTime >= DateTime.Now)  // Add this line!
             .OrderBy(r => r.ReservationDateTime)
             .ToList();
@@ -50,7 +51,7 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         //Only show reservations that have passed or been cancelled.
         ViewBag.PastReservations = _context.Reservations
             .Include(r => r.User)
-            .Where(r => r.ReservationStatus == Enums.ReservationStatus.Cancelled
+            .Where(r => r.ReservationStatus == ReservationStatus.Cancelled
                     || r.ReservationDateTime < DateTime.Now.AddHours(-1))
             .OrderByDescending(r => r.ReservationDateTime)
             .ToList();
@@ -84,6 +85,27 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
     [HttpPost]
     public IActionResult Create(MenuItem item)
     {
+        if (string.IsNullOrWhiteSpace(item.Name))
+        {
+            ModelState.AddModelError("Name", "Name is required.");
+        }
+
+        if (item.Price <= 0)
+        {
+            ModelState.AddModelError("Price", "Price must be greater than zero.");
+        }
+
+        if (!Enum.IsDefined(typeof(MenuItemCategory), item.Category))
+        {
+            ModelState.AddModelError("Category", "Please select a valid category.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            TempData["ErrorMessage"] = "Please correct the errors below and try again.";
+            return View(item);
+        }
+
         if (ModelState.IsValid)
         {
             _context.MenuItems.Add(item);
@@ -94,6 +116,7 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         return View(item);
     }
 
+    [HttpGet]
     public IActionResult Edit(int id)
     {
         var item = _context.MenuItems.Find(id);
@@ -101,7 +124,6 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         {
             return NotFound();
         }
-
         return View(item);
     }
 
@@ -109,14 +131,50 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
     [ValidateAntiForgeryToken]
     public IActionResult Edit(MenuItem item)
     {
-        if (ModelState.IsValid)
+        if (string.IsNullOrWhiteSpace(item.Name))
         {
-            _context.MenuItems.Update(item);
-            _context.SaveChanges();
-            return RedirectToAction("MenuItems");
+            ModelState.AddModelError("Name", "Name is required.");
         }
 
-        return View(item);
+        if (item.Price <= 0)
+        {
+            ModelState.AddModelError("Price", "Price must be greater than zero.");
+        }
+
+        if (!Enum.IsDefined(typeof(MenuItemCategory), item.Category))
+        {
+            ModelState.AddModelError("Category", "Please select a valid category.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            TempData["ErrorMessage"] = "Please correct the errors below and try again.";
+            return View(item);
+        }
+        var existingItem = _context.MenuItems.FirstOrDefault(m => m.Id == item.Id);
+        if (existingItem == null)
+        {
+            return NotFound();
+        }
+
+        try
+        {
+            existingItem.Name = item.Name;
+            existingItem.Description = item.Description;
+            existingItem.Category = item.Category;
+            existingItem.Price = item.Price;
+            existingItem.IsAvailable = item.IsAvailable;
+
+            _context.SaveChanges();
+            TempData["SuccessMessage"] = "Menu item updated successfully!";
+            return RedirectToAction("MenuItems");
+        }
+        catch (Exception)
+        {
+            ModelState.AddModelError(string.Empty, "An error occurred while saving. Please try again.");
+            TempData["ErrorMessage"] = "An unexpected error occurred.";
+            return View(item);
+        }
     }
 
     public IActionResult Delete(int id)
@@ -146,7 +204,7 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
 
 
     [HttpPost]
-    public IActionResult UpdateOrderStatus(int orderId, Enums.OrderStatus status)
+    public IActionResult UpdateOrderStatus(int orderId, OrderStatus status)
     {
         Order? order = _context.Orders.Find(orderId);
 
@@ -168,7 +226,7 @@ public class KitchenDashboardController(ApplicationDbContext context) : Controll
         var reservation = _context.Reservations.Find(reservationId);
 
         //Check if the reservation exists and it has a valid status
-        if (reservation != null && Enum.TryParse<Enums.ReservationStatus>(newStatus, out var status))
+        if (reservation != null && Enum.TryParse<ReservationStatus>(newStatus, out var status))
         {
             //Change status to the new one
             //Mark when it happened then save to the db

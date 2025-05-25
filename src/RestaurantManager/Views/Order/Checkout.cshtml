@@ -11,9 +11,9 @@
     </a>
 
     <h2 class="mb-4">Checkout @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)</h2>
-    <div class="row">
+    <div class="row custom-checkout-layout">
         <!-- Left: Form Fields -->
-        <div class="col-8 py-3">
+        <div class="col-12 col-md-8 py-3">
 
             <!-- Rewards -->
             <div class="mb-2">
@@ -65,46 +65,9 @@
                 }
             </div>
         </div>
-
-        <partial name="_CheckoutSidebar" model="Model" />
+        <!-- Checkout Sidebar -->
+        <div class="col-12 col-md-4 mb-4">
+            <partial name="_CheckoutSidebar" model="Model" />
+        </div>
     </div>
 </div>
-
-<style>
-    .btn-link {
-        color: var(--forest-green);
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .btn-link:hover,
-    .btn-link:focus {
-        color: darken(var(--forest-green-hover), 10%);
-    }
-
-    .quantity-circle {
-        display: inline-block;
-        width: 28px;
-        height: 28px;
-        line-height: 28px;
-        border-radius: 50%;
-        background-color: #f0f0f0;
-        text-align: center;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .list-group-item {
-        padding: 1.25rem 1.5rem;
-        border: none;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .list-group-item:last-child {
-        border-bottom: none;
-    }
-
-    .text-end {
-        text-align: right;
-    }
-</style>
