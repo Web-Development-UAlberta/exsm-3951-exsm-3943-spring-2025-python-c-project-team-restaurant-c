@@ -44,6 +44,11 @@ Live Site: [https://harvestandhearth.webthesite.com/](https://harvestandhearth.w
 
 ### Prerequisites
 
+- Get your Stripe Secret Key:
+  - Create an account with [Stripe](https://dashboard.stripe.com/login)
+  - Click Sandboxes within the Dashboard account picker to create and access your sandbox. This is a test environment to simulate payments using Stripe.
+  - Copy your Secret key under the API Keys Tab inside the Developers Page.
+
 - Install the .NET 8 SDK at [https://dotnet.microsoft.com/en-us/download](https://dotnet.microsoft.com/en-us/download)
 - Install the Entity Framework CLI:
 
@@ -59,22 +64,30 @@ dotnet tool install --global dotnet-ef
 git clone git@github.com:Web-Development-UAlberta/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c.git
 ```
 
-- Navigate to repository:
+- Navigate to the project directory:
 
 ```bash
-cd exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c
+cd exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c/src/RestaurantManager
 ```
+
+- Create a .env file in the project directory with your copied Stripe Secret Key:
+
+```bash
+echo STRIPE_SECRET_KEY=copy_your_secret_key_here > .env
+```
+
+Replace copy_your_secret_key_here with the secret API key from your Stripe account.
 
 - Apply the latest Entity Framework Core migrations:
 
 ```bash
-dotnet ef database update --project src/RestaurantManager/RestaurantManager.csproj
+dotnet ef database update
 ```
 
 - Run application:
 
 ```bash
-dotnet run --project src/RestaurantManager/RestaurantManager.csproj
+dotnet run
 ```
 
 ---
