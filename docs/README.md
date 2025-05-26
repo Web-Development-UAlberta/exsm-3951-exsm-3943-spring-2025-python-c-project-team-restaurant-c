@@ -65,7 +65,7 @@ dotnet tool install --global dotnet-ef
 - Clone repository:
 
 ```bash
-git clone git@github.com:Web-Development-UAlberta/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c.git
+git clone https://github.com/Web-Development-UAlberta/exsm-3951-exsm-3943-spring-2025-python-c-project-team-restaurant-c.git
 ```
 
 - Navigate to repository:
@@ -85,6 +85,8 @@ dotnet ef database update --project src/RestaurantManager/RestaurantManager.cspr
 ```bash
 dotnet run --project src/RestaurantManager/RestaurantManager.csproj
 ```
+
+- The default browser should open the project at https://localhost:xxxx or click the link in the terminal
 
 ---
 
