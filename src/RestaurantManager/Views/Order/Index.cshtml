@@ -74,10 +74,21 @@
 </div>
 
 <script>
-    function submitOrderType(radio) {
-        const selectedType = radio.value;
-        window.location.href = `@Url.Action("Index", "Order")?selectedType=${selectedType}`;
-    }
+function submitOrderType(radio) {
+    const selectedType = radio.value;
+    
+    //Get current URL parameters to preserve them
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    //Update the selectedType parameter
+    urlParams.set('selectedType', selectedType);
+    
+    //Build new URL with all preserved parameters
+    const baseUrl = '@Url.Action("Index", "Order")';
+    const newUrl = baseUrl + '?' + urlParams.toString();
+    
+    window.location.href = newUrl;
+}
 
     // Save scroll position before unload
     window.addEventListener("beforeunload", function () {

@@ -3,12 +3,19 @@
 
 @{
     decimal total = 0;
+
+    var currentTag = Context.Request.Query["tag"].ToString();
+    var hasTag = !string.IsNullOrEmpty(currentTag) && currentTag != "all";
+    var reservationId = ViewBag.reservationId;
 }
 
 <div class="cart-sidebar d-flex flex-column" id="cartContainer" style="width: 500px; z-index: 1050;">
 
     <!-- Close button -->
-    <a href="@Url.Action("Index", "Order", new { selectedType = Model.Type })"
+    <a href="@Url.Action("Index", "Order",
+        reservationId != null ?
+        new { selectedType = Model.Type, tag = currentTag, reservationId = reservationId } :
+        new { selectedType = Model.Type, tag = currentTag })"
         class="btn btn-link position-absolute top-0 start-0 m-3 text-dark"
         style="font-size: 2.5rem; font-weight: semi-bold; line-height: 1;" aria-label="Close">
         &times;
@@ -54,6 +61,7 @@
                                 <input type="hidden" name="menuItemId" value="@item.MenuItem.Id" />
                                 <input type="hidden" name="type" value="@Model.Type" />
                                 <input type="hidden" name="reservationId" value="@ViewBag.reservationId" />
+                                <input type="hidden" name="tag" value="@currentTag" />
 
                                 <button name="action" value="decrease" type="submit"
                                     class="btn btn-sm btn-outline-primary">-</button>
@@ -79,6 +87,7 @@
             <form asp-controller="Order" asp-action="Checkout" method="get">
                 <input type="hidden" name="selectedType" value="@Model.Type" />
                 <input type="hidden" name="reservationId" value="@ViewBag.reservationId" />
+                <input type="hidden" name="tag" value="@currentTag" />
                 <button type="submit" class="btn btn-primary w-100">
                     Checkout @total.ToString("C2")
                 </button>

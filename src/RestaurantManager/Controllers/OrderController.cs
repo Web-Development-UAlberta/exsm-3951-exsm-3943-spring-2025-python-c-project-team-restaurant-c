@@ -346,7 +346,7 @@ public class OrderController(ApplicationDbContext context) : Controller
     }
 
     // Add menu item to the cart
-    public IActionResult AddToCart(OrderType selectedType, int menuItemId, int? reservationId)
+    public IActionResult AddToCart(OrderType selectedType, int menuItemId, int? reservationId, string tag = "all")
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -377,12 +377,12 @@ public class OrderController(ApplicationDbContext context) : Controller
 
         HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
 
-        return RedirectToAction("Index", new { selectedType, viewCart = true, reservationId });
+        return RedirectToAction("Index", new { selectedType, viewCart = true, reservationId, tag });
     }
 
 
     // Remove menu item from the cart
-    public IActionResult RemoveFromCart(Enums.OrderType selectedType, int menuItemId, int? reservationId)
+    public IActionResult RemoveFromCart(Enums.OrderType selectedType, int menuItemId, int? reservationId, string tag = "all")
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -405,12 +405,12 @@ public class OrderController(ApplicationDbContext context) : Controller
             HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
         }
 
-        return RedirectToAction("Index", new { selectedType, viewCart = true, reservationId });
+        return RedirectToAction("Index", new { selectedType, viewCart = true, reservationId, tag });
     }
 
     // Update quantity of an item in the cart
     [HttpPost]
-    public IActionResult UpdateQuantity(int menuItemId, string action, OrderType type, int? reservationId)
+    public IActionResult UpdateQuantity(int menuItemId, string action, OrderType type, int? reservationId, string tag = "all")
     {
         int? userId = GetUserId();
         if (!userId.HasValue) return RedirectToAction("Error");
@@ -430,7 +430,7 @@ public class OrderController(ApplicationDbContext context) : Controller
             HttpContext.Session.SetObject($"cart_order_{userId}", cartOrder);
         }
 
-        return RedirectToAction("Index", "Order", new { selectedType = type, viewCart = true, reservationId });
+        return RedirectToAction("Index", "Order", new { selectedType = type, viewCart = true, reservationId, tag });
     }
 
     // Calculate Subtotal
