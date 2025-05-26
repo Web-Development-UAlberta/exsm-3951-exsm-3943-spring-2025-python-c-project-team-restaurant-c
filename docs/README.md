@@ -22,13 +22,22 @@ Live Site: [https://harvestandhearth.webthesite.com/](https://harvestandhearth.w
 - See order details, status, and timestamps
 - Update order progress (e.g., "In Progress", "Ready", "Delivered")
 
-## Usage
+## Usage - Customers
 
 - Users can select the "Menu" Navigation Tab to browse the menu. Menu items can be viewed by category and filtered by dietary preference.
 - Selecting the "Order" or "Book Table" Navigation Tabs before logging in will redirect the user to the login page. Here they can either log in to an existing account or create a new account using an email and a phone number.
 - Once logged in, the user will have access to the account page where the they can view and edit their profile.
-- Users can select the "Order" Navigation Tab to add items to their cart and place an order. Users can select the "Checkout" option once they have completed thier order. This will take them to the Checkout page where they can confirm their order and view their receipt.
-- Users can select the "Book Table" Navigation Tab to enter the information required to reserve a table. Selecting the "Book Now" button will redirect the user to the Reservation confirmation page.
+- Users can select the "Order" Navigation Tab to add items to their cart and place an order. 
+- Users can select from "Take out" or "Delivery". The user will need to add an address in their "Account" page before they checkout.
+- Users can select the "Checkout" option once they have completed their order. This will take them to the Checkout page where they can confirm their order, add their payment through stripe and finally view their receipt.
+- Users can select the "Book Table" Navigation Tab to enter the information required to reserve a table. Selecting the "Book Now" button will redirect the user to the Reservation confirmation page. If the user wishes, they can pre order their menu by clicking the "Pre-Order Menu" button. 
+
+## Usage - Staff 
+- Staff can login to th Kitchen portal in the footer. 
+- Staff can view the upcoming reservations, active orders and available menu itmes. 
+- Users are able to view all menu items, edit the menu items, add to the menu or delete a menu item. 
+- Users can track current reservaions and manage the booking. They can also see all past reservations. 
+- Orders can be viewed under the "Orders" tab in the navigation. Here staff can view the incoming orders, the type of order (Take out, dine in or delivery), set the status of the order and review additional info such as the order date, the scheduled time and additional infromation about the delivery or reservation. All statuses and order types are colour coded to help staff manage orders. 
 
 ## Tech Stack
 
