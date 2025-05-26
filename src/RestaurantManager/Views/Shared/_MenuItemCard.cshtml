@@ -38,21 +38,25 @@
             <!-- Price -->
             <p class="fw-bold fs-5 text-orange mb-0">@Model.Price.ToString("C2")</p>
 
-            <!-- Quantity Buttons -->
 
-            <form method="post"
-                action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId, tag = currentTag, viewCart = viewCart })">
-                <button type="submit" class="btn btn-outline-primary">-</button>
-            </form>
+            @if (User.Identity.IsAuthenticated && showCart)
+            {
+                <!-- Quantity Buttons -->
 
-            <span class="fw-bold m-auto">
-                @((ViewBag.Cart as Order)?.OrderMenuItems?.FirstOrDefault(i => i.MenuItemId == Model.Id)?.Quantity ?? 0)
-            </span>
+                <form method="post"
+                    action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId, tag = currentTag, viewCart = viewCart })">
+                    <button type="submit" class="btn btn-outline-primary">-</button>
+                </form>
 
-            <form method="post"
-                action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId, tag = currentTag, viewCart = viewCart })">
-                <button type="submit" class="btn btn-outline-primary">+</button>
-            </form>
+                <span class="fw-bold m-auto">
+                    @((ViewBag.Cart as Order)?.OrderMenuItems?.FirstOrDefault(i => i.MenuItemId == Model.Id)?.Quantity ?? 0)
+                </span>
+
+                <form method="post"
+                    action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId, tag = currentTag, viewCart = viewCart })">
+                    <button type="submit" class="btn btn-outline-primary">+</button>
+                </form>
+            }
 
         </div>
     </div>
