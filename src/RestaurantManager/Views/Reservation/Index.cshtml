@@ -4,6 +4,9 @@
     ViewBag.Title = "Book a Table";
 }
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <div class="reservation-background">
     <div class="reservation-overlay">
         <div class="reservation-form-card container py-5">
@@ -14,7 +17,7 @@
 
                 <div class="form-group mb-3">
                     <label for="ReservationDateTime">Reservation Date & Time</label>
-                    <input type="datetime-local" id="ReservationDateTime" name="ReservationDateTime" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" value="@DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm")" required />
+                    <input id="ReservationDateTime" name="ReservationDateTime" class="form-control" value="@DateTime.Now.AddHours(1).ToString("yyyy-MM-ddTHH:mm")" required />
                     <div id="datetimeError" class="text-danger mt-1" style="display: none; font-size: 0.875rem;"></div>                    
                 </div>
 
@@ -78,94 +81,87 @@
 </div>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function() {
-    
-    const datetimeInput = document.getElementById('ReservationDateTime');
     const form = document.getElementById('reservationForm');
     const errorDiv = document.getElementById('datetimeError');
     
+    //Restaurant hours for each day of the week
+    //Sunday 10am-9pm
+    //Monday closed
+    //Tuesday 11am-10pm
+    //Wednesday 11am-10pm
+    //Thursday 11am-10pm
+    //Friday 11am-11pm
+    //Saturday 11am-11pm  
+    const hours = [
+        [10, 21], 
+        null,     
+        [11, 22], 
+        [11, 22], 
+        [11, 22],   
+        [11, 23], 
+        [11, 23]  
+    ];
     
-    //Show error message when invalid time/date selected
-    function showError(message) {
-        errorDiv.textContent = message;
-        errorDiv.style.display = 'block';
-        datetimeInput.style.borderColor = '#dc3545'; 
-    }
-    
-    //Hide error message on load and when correct date is selected
+    //Hide error message and reset border color
     function hideError() {
         errorDiv.style.display = 'none';
-        datetimeInput.style.borderColor = ''; 
+        document.getElementById('ReservationDateTime').style.borderColor = '';
     }
     
-    function validateDateTime() {
-        const dt = new Date(datetimeInput.value);
-        const day = dt.getDay();
-        const hour = dt.getHours();
+    //Start Flatpickr
+    //Year - month - day - 12hour clock - all intervals - disable past dates - start hour from now.
+    const fp = flatpickr("#ReservationDateTime", {
+
+        enableTime: true,                   
+        dateFormat: "Y-m-d h:i K",          
+        time_24hr: false,                    
+        minuteIncrement: 1,                 
+        minDate: "today",                   
+        defaultDate: new Date(Date.now() + 60*60*1000), 
         
-        console.log('Validating:', dt, 'Day:', day, 'Hour:', hour);
-        
-        //24 hour clock
-        //Start with Sunday 10am to 9pm
-        //Monday Closed
-        //Tuesday/Wednesday/Thursday 11am to 10pm
-        //Friday/Saturday 11am to 11pm
-        const hours = [
-            [10, 21],
-            null,      
-            [11, 22], 
-            [11, 22],  
-            [11, 22],  
-            [11, 23],  
-            [11, 23]   
-        ];
-        
-        //Check if we're open that day and if the hour is during open
-        const isValid = hours[day] && hour >= hours[day][0] && hour < hours[day][1];
-        console.log('Is valid:', isValid);
-        
-        if (!isValid) {
-            //Show error is time is outside open and not monday
-            if (hours[day]) {
-                showError('Please select a time during restaurant hours');
-            } 
-            //Show error if Monday is selected
-            else {
-                showError('We are closed on Mondays. Please choose a different day.');
+        //Take out Mondays
+        disable: [
+            function(date) {
+                return date.getDay() === 1; //Disable Mondays (day 1)
             }
-            //Reset input
-            datetimeInput.value = ''; 
-            return false;
-        }
-        //Hide error text
-         else {
-            hideError(); 
-            return true;
-        }
-    }
-    
-    //Eventlistener to check when DateTime is changed
-    datetimeInput.addEventListener('change', function() {
-        console.log('DateTime changed');
-        validateDateTime();
+        ],
+        
+        //This runs when user picks a date
+        onChange: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length > 0) {
+                const day = selectedDates[0].getDay(); 
+                const dayHours = hours[day];         
+                
+                if (dayHours) {
+                    
+                    const startHour = dayHours[0]; 
+                    const endHour = dayHours[1];   
+                    
+                    //Convert to 12 hour format
+                    const startTime12 = startHour <= 12 ? `${startHour}:00 AM` : `${startHour - 12}:00 PM`;
+                    const endTime12 = endHour <= 12 ? `${endHour - 1}:30 AM` : `${endHour - 12 - 1}:30 PM`;
+                    
+                    instance.set('minTime', startTime12);
+                    instance.set('maxTime', endTime12);
+                    hideError(); 
+                } else {
+                    
+                    instance.clear();
+                }
+            }
+        },
+        
+        minTime: "10:00 AM",  
+        maxTime: "8:30 PM"    
     });
     
-    //Check when they try to submit the form
+    //Check form when user tries to submit if no date/time is selected. 
     form.addEventListener('submit', function(e) {
-        console.log('Form submit attempted');
-        if (!validateDateTime()) {
-            console.log('Validation failed, preventing submit');
-            e.preventDefault();
+        const input = document.getElementById('ReservationDateTime');
+        if (!input.value) {         
+            e.preventDefault();      
             return false;
-        }
-        console.log('Validation passed, allowing submit');
-    });
-    
-    //Hide error when changes are being made
-    datetimeInput.addEventListener('input', function() {
-        if (errorDiv.style.display === 'block') {
-            hideError();
         }
     });
 });

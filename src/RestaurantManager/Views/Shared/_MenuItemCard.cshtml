@@ -4,6 +4,8 @@
 @{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var showCart = currentController == "Order";
+    var currentTag = Context.Request.Query["tag"].ToString();
+    var viewCart = Context.Request.Query["viewCart"].ToString().ToLower() == "true"; 
 }
 
 <div class="card menu-card custom-card h-100 p-3 d-flex flex-row">
@@ -39,7 +41,7 @@
             <!-- Quantity Buttons -->
 
             <form method="post"
-                action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId })">
+                action="@Url.Action("RemoveFromCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId, tag = currentTag, viewCart = viewCart })">
                 <button type="submit" class="btn btn-outline-primary">-</button>
             </form>
 
@@ -48,7 +50,7 @@
             </span>
 
             <form method="post"
-                action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId })">
+                action="@Url.Action("AddToCart", "Order", new { menuItemId = Model.Id, selectedType = ViewBag.SelectedType, reservationId = ViewBag.ReservationId, tag = currentTag, viewCart = viewCart })">
                 <button type="submit" class="btn btn-outline-primary">+</button>
             </form>
 
