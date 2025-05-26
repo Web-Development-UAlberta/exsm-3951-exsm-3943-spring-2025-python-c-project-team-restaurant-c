@@ -99,7 +99,7 @@ dotnet ef database update
 dotnet run
 ```
 
-- The default browser should open the project at https://localhost:xxxx or click the link in the terminal
+- Open the project at [ http://localhost:5212]( http://localhost:5212) or click the link in the terminal
 
 ---
 
