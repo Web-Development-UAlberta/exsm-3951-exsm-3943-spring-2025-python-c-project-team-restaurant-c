@@ -1,0 +1,65 @@
+@model IEnumerable<RestaurantManager.Models.Order>
+
+@using RestaurantManager.Enums
+
+@{
+    ViewData["Title"] = "Order History";
+}
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4">Order History</h2>
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-dark text-white fw-bold fs-4">
+            Orders
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Reservation</th>
+                        <th>Items</th>
+                        <th>Notes</th>
+                        <th>Order Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.Id</td>
+                                <td>@order.Type.ToString().Replace("DineIn", "Dine-In").Replace("TakeOut", "Take-Out")</td>
+                                <td>@order.Status</td>
+                                <td>
+                                  @(order.Reservation != null ? $"#{order.Reservation.Id} for {order.Reservation.ReservationDateTime:g}" : "—")
+                                </td>
+                                <td>
+                                    <ul class="list-unstyled mb-0">
+                                        @if (order != null)
+                                        {
+                                            @foreach (var item in order.OrderMenuItems)
+                                            {
+                                                <li>@item.MenuItem.Name (x @item.Quantity)</li>
+                                            }
+                                        }
+                                    </ul>
+                                    <div class="text-muted small">Total: @order.OrderMenuItems.Sum(i => i.Quantity)</div>
+                                </td>
+                                <td>@(order.Notes ?? "—")</td>                           
+                                <td>@order.OrderDate.ToString("g")</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="8" class="text-center py-4">No orders found.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

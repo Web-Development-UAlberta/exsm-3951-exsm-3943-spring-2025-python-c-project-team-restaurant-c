@@ -1,0 +1,20 @@
+@model RestaurantManager.Models.User
+
+@{
+    ViewData["Title"] = "Login";
+    ViewBag.IsLogin = true;
+}
+
+<div class="login-container">
+    <!-- Left side with image -->
+    <div class="login-image">
+        <img src="~/images/cheese-img.png" alt="Login Visual" />
+    </div>
+
+    <!-- Right side with colored background and login card -->
+    <div class="login-form-wrapper">
+        <div class="login-card">
+            @await Html.PartialAsync("_UserFormPartial")
+        </div>
+    </div>
+</div>

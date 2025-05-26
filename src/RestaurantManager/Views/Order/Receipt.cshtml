@@ -1,0 +1,11 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+@using RestaurantManager.Models
+
+@{
+    ViewData["Title"] = "Receipt";
+}
+
+<div class="container py-5">
+    @await Html.PartialAsync("_OrderReceipt", Model)
+</div>

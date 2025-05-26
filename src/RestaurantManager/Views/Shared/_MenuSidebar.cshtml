@@ -1,0 +1,134 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using RestaurantManager.Enums
+@using RestaurantManager.Utilities
+@model List<DietaryTag>
+
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var showCart = currentController == "Order";
+    var viewCart = Context.Request.Query["viewCart"].ToString().ToLower() == "true";
+    var currentTag = Context.Request.Query["tag"].ToString();
+    var cartItemCount = (ViewBag.Cart as Order)?.OrderMenuItems?.Sum(item => item.Quantity) ?? 0;
+    var reservationId = ViewBag.ReservationId;
+
+}
+
+<!-- Horizontal bar for small screens -->
+<aside class="d-md-none sticky-top px-3 py-2 mb-3" style="background-color: var(--cream); z-index: 1030;">
+    <!-- Category Dropdown -->
+    <div class="dropdown mb-2">
+        <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Categories
+        </button>
+        <ul class="dropdown-menu w-100">
+            @foreach (var category in Enum.GetValues(typeof(MenuItemCategory)).Cast<MenuItemCategory>())
+            {
+                <li>
+                    <a class="dropdown-item" href="#@category">
+                        @PropertyDisplayHelper.GetDisplayName(category)
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Filter Dropdown -->
+    <div class="dropdown mb-2">
+        <button class="btn btn-outline-primary dropdown-toggle w-100 d-flex align-items-center justify-content-center"
+            type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-funnel-fill me-2"></i> Filters
+        </button>
+        <ul class="dropdown-menu w-100">
+            @foreach (var tag in Model)
+            {
+                <li>
+                    <a class="dropdown-item"
+                        href="@Url.Action("Index", showCart ? "Order" : "Menu",
+                        reservationId != null ?
+                        new { tag = tag.Name, selectedType = ViewBag.SelectedType, viewCart = viewCart, reservationId = reservationId } :
+                        new { tag = tag.Name, selectedType = ViewBag.SelectedType, viewCart = viewCart })">
+                        @tag.Name
+                    </a>
+                </li>
+            }
+            <li>
+                <a class="dropdown-item text-secondary"
+                    href="@Url.Action("Index", showCart ? "Order" : "Menu",
+                    reservationId != null ?
+                    new { tag = "all", selectedType = ViewBag.SelectedType, viewCart = viewCart, reservationId = reservationId } :
+                    new { tag = "all", selectedType = ViewBag.SelectedType, viewCart = viewCart })">
+                    Show All
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Cart Button -->
+    @if (showCart)
+    {
+        <div>
+            <a href="@Url.Action("Index", "Order",
+            reservationId != null ?
+            new { viewCart = true, selectedType = ViewBag.SelectedType, tag = currentTag, reservationId = reservationId } :
+            new { viewCart = true, selectedType = ViewBag.SelectedType, tag = currentTag })"
+                class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+                <i class="bi bi-cart-fill me-2"></i> View Cart (@cartItemCount)
+            </a>
+        </div>
+    }
+</aside>
+
+
+<!-- Regular Sidebar for Desktop -->
+<aside class="d-none d-md-flex col-md-2 me-4 mb-4 sticky-sidebar d-flex flex-column"
+    style="position: sticky; max-height: 40rem;">
+    <div>
+        <div class="mb-4">
+            @foreach (var category in Enum.GetValues(typeof(MenuItemCategory)).Cast<MenuItemCategory>())
+            {
+                <div class="list-group-item bg-transparent text-dark border-0">
+                    <a href="#@category"
+                        class="category-link text-decoration-none">@PropertyDisplayHelper.GetDisplayName(category)</a>
+                </div>
+            }
+        </div>
+        <h4 class="mb-3 sidebar text-dark"><i class="bi bi-funnel-fill me-2"></i>Filter</h4>
+        <div id="dietary-filters">
+            @foreach (var tag in Model)
+            {
+                <a href="@Url.Action("Index", showCart ? "Order" : "Menu",
+                reservationId != null ?
+                new { tag = tag.Name, selectedType = ViewBag.SelectedType, viewCart = viewCart, reservationId = reservationId } :
+                new { tag = tag.Name, selectedType = ViewBag.SelectedType, viewCart = viewCart })"
+                    class="filter-link text-decoration-none d-flex flex-row gap-2 mb-3">
+                    <span class="badge m-0">@tag.Name?[0]</span>
+                    @tag.Name
+                </a>
+            }
+
+            <div class="list-group-item bg-transparent text-dark border-0">
+                <a href="@Url.Action("Index", showCart ? "Order" : "Menu",
+                reservationId != null ?
+                new { tag = "all", selectedType = ViewBag.SelectedType, viewCart = viewCart, reservationId = reservationId } :
+                new { tag = "all", selectedType = ViewBag.SelectedType, viewCart = viewCart })"
+                    class="filter-link text-decoration-none">
+                    Show All
+                </a>
+            </div>
+        </div>
+        @if (showCart)
+        {
+            <div class="mt-auto pt-3">
+                <a href="@Url.Action("Index", "Order",
+                reservationId != null ?
+                new { viewCart = true, selectedType = ViewBag.SelectedType, tag = currentTag, reservationId = reservationId } :
+                new { viewCart = true, selectedType = ViewBag.SelectedType, tag = currentTag })"
+                    class="btn btn-primary w-100">
+                    <i class="bi bi-cart-fill me-2"></i> View Cart (@cartItemCount)
+                </a>
+            </div>
+        }
+    </div>
+</aside>

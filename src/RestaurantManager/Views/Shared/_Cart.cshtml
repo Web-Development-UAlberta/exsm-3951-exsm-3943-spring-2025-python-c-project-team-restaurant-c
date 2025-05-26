@@ -1,0 +1,97 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+
+@{
+    decimal total = 0;
+
+    var currentTag = Context.Request.Query["tag"].ToString();
+    var hasTag = !string.IsNullOrEmpty(currentTag) && currentTag != "all";
+    var reservationId = ViewBag.reservationId;
+}
+
+<div class="cart-sidebar d-flex flex-column" id="cartContainer" style="width: 500px; z-index: 1050;">
+
+    <!-- Close button -->
+    <a href="@Url.Action("Index", "Order",
+        reservationId != null ?
+        new { selectedType = Model.Type, tag = currentTag, reservationId = reservationId } :
+        new { selectedType = Model.Type, tag = currentTag })"
+        class="btn btn-link position-absolute top-0 start-0 m-3 text-dark"
+        style="font-size: 2.5rem; font-weight: semi-bold; line-height: 1;" aria-label="Close">
+        &times;
+    </a>
+
+    <!-- Scrollable cart content -->
+    <div class="flex-grow-1 overflow-auto px-4" style="min-height: 0;">
+        <!-- Header -->
+        <div class="pt-5 mt-3 px-4 border-bottom" style="z-index: 1;">
+            <h5 class="mb-1 mt-5">Your Cart</h5>
+            <div>
+                @if (Model != null)
+                {
+                    <div class="text-muted small mb-2">
+                        <strong>Order Type:</strong>
+                        <span id="selectedOrderType">
+                            @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
+                        </span>
+                    </div>
+                }
+            </div>
+
+        </div>
+
+
+        @if (Model != null && Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+        {
+            <ul class="list-group mb-4 pt-4">
+                @foreach (var item in Model.OrderMenuItems)
+                {
+                    var itemSubtotal = item.Quantity * item.MenuItem.Price;
+                    total += itemSubtotal;
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>@item.MenuItem.Name</strong><br />
+                            <small class="text-muted">@item.MenuItem.Price.ToString("C2") each</small>
+                        </div>
+
+                        <div class="text-end">
+                            <form asp-action="UpdateQuantity" method="post" class="d-flex align-items-center gap-2">
+                                <input type="hidden" name="orderId" value="@Model.Id" />
+                                <input type="hidden" name="menuItemId" value="@item.MenuItem.Id" />
+                                <input type="hidden" name="type" value="@Model.Type" />
+                                <input type="hidden" name="reservationId" value="@ViewBag.reservationId" />
+                                <input type="hidden" name="tag" value="@currentTag" />
+
+                                <button name="action" value="decrease" type="submit"
+                                    class="btn btn-sm btn-outline-primary">-</button>
+                                <span class="mx-2">@item.Quantity</span>
+                                <button name="action" value="increase" type="submit"
+                                    class="btn btn-sm btn-outline-primary">+</button>
+                            </form>
+                            <small class="fw-bold d-block mt-2">@itemSubtotal.ToString("C2")</small>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="text-muted text-center pt-5">Your cart is empty.</p>
+        }
+    </div>
+
+    @if (Model != null && Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+    {
+        <div class="border-top p-4">
+            <form asp-controller="Order" asp-action="Checkout" method="get">
+                <input type="hidden" name="selectedType" value="@Model.Type" />
+                <input type="hidden" name="reservationId" value="@ViewBag.reservationId" />
+                <input type="hidden" name="tag" value="@currentTag" />
+                <button type="submit" class="btn btn-primary w-100">
+                    Checkout @total.ToString("C2")
+                </button>
+            </form>
+        </div>
+    }
+</div>

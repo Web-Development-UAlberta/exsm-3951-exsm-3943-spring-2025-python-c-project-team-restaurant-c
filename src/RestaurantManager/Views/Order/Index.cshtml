@@ -1,0 +1,105 @@
+@model IEnumerable<RestaurantManager.Models.MenuItem>
+@using RestaurantManager.Enums
+
+@{
+    ViewBag.Title = "Order";
+    var dietaryTags = (List<DietaryTag>)ViewBag.DietaryTags;
+    var viewCart = Context.Request.Query["viewCart"].ToString().ToLower() == "true";
+    var currentOrder = ViewBag.Cart as RestaurantManager.Models.Order;
+
+    var orderTypes = Enum.GetValues(typeof(RestaurantManager.Enums.OrderType))
+    .Cast<RestaurantManager.Enums.OrderType>()
+    .ToList();
+
+    var selectedType = (OrderType)(ViewBag.SelectedType ?? OrderType.TakeOut);
+
+    ViewBag.OrderTypes = orderTypes;
+}
+
+<div class="banner-image position-relative text-white text-center">
+    <img src="~/images/drinks-img.png" class="img-fluid w-100" alt="Restaurant Image" />
+    <div class="banner-text position-absolute top-50 start-50 translate-middle">
+        <h2 class="fw-bold text-light display-4">Order for Take Out or Delivery</h2>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="p-4 mb-5 d-flex justify-content-center my-4">
+
+        <form id="orderTypeForm">
+            <div class="btn-group toggle-btn-group" role="group">
+                <!-- Take Out -->
+                <input type="radio" class="btn-check" name="selectedType" value="TakeOut" id="takeOutBtn"
+                    autocomplete="off" @(selectedType == OrderType.TakeOut ? "checked" : "") @(ViewBag.ReservationId !=
+                                                                                                                 null ? "disabled" : "") onchange="submitOrderType(this)">
+                <label class="btn btn-outline-primary @(selectedType == OrderType.TakeOut ? "active" : "")"
+                    for="takeOutBtn">
+                    Take Out
+                </label>
+
+                <!-- Delivery -->
+                <input type="radio" class="btn-check" name="selectedType" value="Delivery" id="deliveryBtn"
+                    autocomplete="off" @(selectedType == OrderType.Delivery ? "checked" : "") @(ViewBag.ReservationId !=
+                                                                                                                  null ? "disabled" : "") onchange="submitOrderType(this)">
+                <label class="btn btn-outline-primary @(selectedType == OrderType.Delivery ? "active" : "")"
+                    for="deliveryBtn">
+                    Delivery
+                </label>
+
+                <!-- Dine In -->
+                <input type="radio" class="btn-check" name="selectedType" value="DineIn" id="dineInBtn"
+                    autocomplete="off" @(selectedType == OrderType.DineIn ? "checked" : "") @(ViewBag.ReservationId ==
+                                                                                                                null ? "disabled" : "") onchange="submitOrderType(this)">
+                <label class="btn btn-outline-primary @(selectedType == OrderType.DineIn ? "active" : "")"
+                    for="dineInBtn">
+                    Dine In
+                </label>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="row">
+        <partial name="_MenuSidebar" model="dietaryTags" />
+        <div class="col-md-9">
+            <partial name="_MenuGroupedItems" model="Model" />
+        </div>
+    </div>
+
+    @if (viewCart && currentOrder != null)
+    {
+        @await Html.PartialAsync("_Cart", currentOrder)
+    }
+
+</div>
+
+<script>
+function submitOrderType(radio) {
+    const selectedType = radio.value;
+    
+    //Get current URL parameters to preserve them
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    //Update the selectedType parameter
+    urlParams.set('selectedType', selectedType);
+    
+    //Build new URL with all preserved parameters
+    const baseUrl = '@Url.Action("Index", "Order")';
+    const newUrl = baseUrl + '?' + urlParams.toString();
+    
+    window.location.href = newUrl;
+}
+
+    // Save scroll position before unload
+    window.addEventListener("beforeunload", function () {
+        localStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    // Restore scroll position on load
+    window.addEventListener("load", function () {
+        const scrollPosition = localStorage.getItem("scrollPosition");
+        if (scrollPosition !== null) {
+            window.scrollTo({ top: parseInt(scrollPosition), left: 0, behavior: "instant" });
+        }
+    });
+</script>

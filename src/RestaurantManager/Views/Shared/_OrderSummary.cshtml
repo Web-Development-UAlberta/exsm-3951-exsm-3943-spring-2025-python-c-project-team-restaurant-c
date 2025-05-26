@@ -1,0 +1,27 @@
+@model RestaurantManager.Models.Order
+
+<h3>Order Summary</h3>
+<table class="table mb-4">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model.OrderMenuItems)
+            {
+                <tr>
+                    <td>@item.MenuItem.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.MenuItem.Price.ToString("C2")</td>
+                    <td>@((item.Quantity * item.MenuItem.Price).ToString("C"))</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

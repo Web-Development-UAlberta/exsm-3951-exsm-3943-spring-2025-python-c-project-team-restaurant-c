@@ -1,0 +1,73 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+
+@{
+    int itemCount = Model.OrderMenuItems?.Sum(i => i.Quantity) ?? 0;
+}
+
+<div class="container py-5">
+    <a asp-controller="Order" asp-action="Index" class="btn btn-link text-decoration-none mb-4">
+        &larr; Back to Order
+    </a>
+
+    <h2 class="mb-4">Checkout @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)</h2>
+    <div class="row custom-checkout-layout">
+        <!-- Left: Form Fields -->
+        <div class="col-12 col-md-8 py-3">
+
+            <!-- Rewards -->
+            <div class="mb-2">
+                @await Html.PartialAsync("_RewardPoints", Model.User)
+            </div>
+
+            <!-- Take Out Information -->
+            @if (Model.Type == OrderType.TakeOut || Model.Type == OrderType.Delivery)
+            {
+                <div class="mb-2">
+                    @await Html.PartialAsync("_OrderInfo", Model)
+                </div>
+            }
+
+            <!-- Contact -->
+            <div class="mb-2">
+                @await Html.PartialAsync("_UserInfo", Model.User)
+            </div>
+
+            <!-- Delivery Addresses -->
+            @if (Model.Type == OrderType.Delivery)
+            {
+                <div class="mb-2">
+                    @await Html.PartialAsync("_DeliveryInfo", Model.User)
+                </div>
+            }
+
+            <!-- Order Summary -->
+            <div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+                <h4 class="mb-4 text-dark fw-bold">Order Summary (@itemCount item@(itemCount == 1 ? "" : "s"))</h4>
+                @if (Model.OrderMenuItems != null && Model.OrderMenuItems.Any())
+                {
+                    <ul class="list-group mb-4">
+                        @foreach (var item in Model.OrderMenuItems)
+                        {
+                            var itemSubtotal = item.Quantity * item.MenuItem.Price;
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@item.MenuItem.Name</strong><br />
+                                    <small class="text-muted">@item.MenuItem.Price.ToString("C2") each</small><br />
+                                </div>
+                                <div class="text-end">
+                                    <span class="quantity-circle">@item.Quantity</span>
+                                    <small class="fw-bold d-block mt-2">@itemSubtotal.ToString("C2")</small>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+        <!-- Checkout Sidebar -->
+        <div class="col-12 col-md-4 mb-4">
+            <partial name="_CheckoutSidebar" model="Model" />
+        </div>
+    </div>
+</div>

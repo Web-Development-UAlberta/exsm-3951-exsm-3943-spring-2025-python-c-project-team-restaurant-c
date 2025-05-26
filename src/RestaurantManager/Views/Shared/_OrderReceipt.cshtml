@@ -1,0 +1,107 @@
+@model RestaurantManager.Models.Order
+@using RestaurantManager.Enums
+@using RestaurantManager.Models
+
+@{
+    ViewData["Title"] = "Receipt";
+}
+
+<div class="container py-5">
+    <div class="receipt-container">
+        <div class="receipt-header">
+            <img src="~/images/harvest_hearth_logo_hip_final.svg" alt="harvest & hearth" height="100" />
+            <h2 class="pt-3 pb-3">Order Receipt - Order #@Model.Id</h2>
+            <p>Thank you for your order, @Model.User.FirstName!</p>
+        </div>
+
+        <div class="receipt-section">
+            <p><strong>Order Type:</strong>
+                @RestaurantManager.Utilities.PropertyDisplayHelper.GetDisplayName(Model.Type)
+            </p>
+            @if (Model.Type == OrderType.DineIn)
+            {
+                <div>
+                    <p><strong>Reservation Number:</strong>
+                        @Model.ReservationId</p>
+                    <p><strong>Reservation Date:</strong> @Model.Reservation.ReservationDateTime.ToString("f")</p>
+                </div>
+            }
+
+            @if (Model.Type == OrderType.Delivery)
+            {
+                <div>
+                    <p><strong>Delivery Address:</strong>
+                        @Model.UserAddress.AddressLine1 @Model.UserAddress.City, @Model.UserAddress.Province
+                        @Model.UserAddress.PostalCode</p>
+                </div>
+            }
+            <p><strong>Harvest Club Rewards Earned:</strong> @ViewBag.PointsEarned</p>
+
+        </div>
+
+
+        <div class="receipt-section">
+            <table class="receipt-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th style="text-align:right;">Qty</th>
+                        <th style="text-align:right;">Price</th>
+                        <th style="text-align:right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @foreach (var item in Model.OrderMenuItems)
+                        {
+                            <tr>
+                                <td>@item.MenuItem.Name</td>
+                                <td style="text-align:right;">@item.Quantity</td>
+                                <td style="text-align:right;">@item.MenuItem.Price.ToString("C2")</td>
+                                <td style="text-align:right;">@((item.Quantity * item.MenuItem.Price).ToString("C2"))</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+            <div class="receipt-section">
+                <table class="receipt-summary">
+                    <tr>
+                        <td>Subtotal:</td>
+                        <td style="text-align:right;">@Model.Subtotal.ToString("C2")</td>
+                    </tr>
+                    <tr>
+                        <td>Tax (5% GST):</td>
+                        <td style="text-align:right;">@Model.Tax.ToString("C2")</td>
+                    </tr>
+                    <tr>
+                        <td>Tip:</td>
+                        <td style="text-align:right;">@Model.TipAmount.ToString("C2")</td>
+                    </tr>
+                    @if (Model.DeliveryFee != 0)
+                    {
+                        <tr>
+                            <td>Delivery fee:</td>
+                            <td style="text-align:right;">@Model.DeliveryFee.Value.ToString("C2")</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>Rewards Redeemed:</td>
+                        <td style="text-align:right;">@(ViewBag.RewardsDiscount.ToString("C2"))</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total:</strong></td>
+                        <td style="text-align:right;"><strong>@Model.Total.ToString("C2")</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="receipt-footer pt-4">
+            <p>@ViewBag.SustainabilityMessage</p>
+        </div>
+    </div>
+</div>

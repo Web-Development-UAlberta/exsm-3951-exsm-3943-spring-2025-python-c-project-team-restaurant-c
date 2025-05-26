@@ -1,0 +1,254 @@
+@using Newtonsoft.Json
+@model RestaurantManager.Models.User
+
+@{
+    bool isCustomerDashboard = ViewData["CurrentRoute"]?.ToString().Contains("CustomerDashboard") ?? false;
+}
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+    <h4 class="mb-4 text-dark fw-bold">Delivery Address</h4>
+
+    <form asp-action="UpdateAddress" asp-controller="CustomerDashboard" method="post" id="addressForm">
+        <!-- Dropdown -->
+        <div class="mb-4">
+            <label class="form-label text-muted fw-medium">Select Address</label>
+            <select id="addressSelector" class="form-select rounded-3">
+                @foreach (UserAddress a in Model.UserAddresses)
+                {
+                    var uAddress = new
+                    {
+                        a.Id,
+                        a.AddressLine1,
+                        a.AddressLine2,
+                        a.City,
+                        a.Province,
+                        a.PostalCode,
+                        a.Country
+                    };
+
+                    <option value="@a.Id" data-address='@Html.Raw(JsonConvert.SerializeObject(uAddress))'>
+                        @a.AddressLine1, @a.City
+                    </option>
+                }
+                @if (isCustomerDashboard)
+                {
+                    <option value="new">New Address</option>
+                }
+            </select>
+        </div>
+
+        <!-- Hidden ID -->
+        <input type="hidden" name="Id" value="0" />
+
+        <!-- Manual Address Fields -->
+
+        <div class="mb-3">
+            <label class="form-label text-muted fw-medium">Address Line 1 <span class="text-danger">*</span></label>
+            <input name="AddressLine1" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
+            <span class="text-danger small"></span> <!-- Error message will appear here -->
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-muted fw-medium">Address Line 2</label>
+            <input name="AddressLine2" class="form-control rounded-3" readonly="@(!isCustomerDashboard)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-muted fw-medium">City <span class="text-danger">*</span></label>
+            <input name="City" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
+            <span class="text-danger small"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-muted fw-medium">Province <span class="text-danger">*</span></label>
+                <select name="Province" class="form-select rounded-3" required disabled="@(!isCustomerDashboard)">
+                    <option selected value="Alberta">Alberta</option>
+                </select>
+                <span class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-muted fw-medium">Postal Code <span class="text-danger">*</span></label>
+                <input name="PostalCode" class="form-control rounded-3" required readonly="@(!isCustomerDashboard)" />
+                <span class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label text-muted fw-medium">Country <span class="text-danger">*</span></label>
+            <select name="Country" class="form-select rounded-3" required disabled="@(!isCustomerDashboard)">
+                <option selected value="Canada">Canada</option>
+            </select>
+            <span class="text-danger small"></span>
+        </div>
+
+        @if (isCustomerDashboard)
+        {
+            <div class="mb-3 text-end">
+                <button type="submit" class="btn btn-primary" id="submitButton">Update</button>
+            </div>
+        }
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addressSelector = document.getElementById("addressSelector");
+        const form = document.getElementById("addressForm");
+        const submitButton = form.querySelector('#submitButton');
+
+        function validateAddressFields() {
+            const addressLine1 = form.querySelector('input[name="AddressLine1"]');
+            const city = form.querySelector('input[name="City"]');
+            const province = form.querySelector('input[name="Province"]');
+            const postalCode = form.querySelector('input[name="PostalCode"]');
+            const country = form.querySelector('input[name="Country"]');
+            let isValid = true;
+
+            form.querySelectorAll('.text-danger').forEach(error => error.textContent = '');
+
+            if (!addressLine1.value.trim()) {
+                isValid = false;
+                addressLine1.nextElementSibling.textContent = "Address Line 1 is required.";
+            }
+
+            if (!city.value.trim()) {
+                isValid = false;
+                city.nextElementSibling.textContent = "City is required.";
+            }
+
+            if (!province.value.trim()) {
+                isValid = false;
+                province.nextElementSibling.textContent = "Province is required.";
+            }
+
+            const postalCodeValue = postalCode.value.trim();
+            if (!postalCodeValue) {
+                isValid = false;
+                postalCode.nextElementSibling.textContent = "Postal Code is required.";
+            } else {
+                const canadianPostalCodePattern = /^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$/;
+                if (!canadianPostalCodePattern.test(postalCodeValue)) {
+                    isValid = false;
+                    postalCode.nextElementSibling.textContent = "Invalid postal code format. Use the format A1A 1A1.";
+                }
+            }
+
+            if (!country.value.trim()) {
+                isValid = false;
+                country.nextElementSibling.textContent = "Country is required.";
+            }
+
+            return isValid;
+        }
+
+        function populateFormFromSelection() {
+            const selected = addressSelector.value;
+
+            const externalHiddenInput = document.getElementById("externalSelectedAddressId");
+            if (externalHiddenInput) {
+                externalHiddenInput.value = selected === "new" ? null : selected;
+            }
+
+            if (selected === "new") {
+                form.querySelector('input[name="Id"]').value = 0;
+                form.querySelector('input[name="AddressLine1"]').value = '';
+                form.querySelector('input[name="AddressLine2"]').value = '';
+                form.querySelector('input[name="City"]').value = '';
+                form.querySelector('input[name="Province"]').value = '';
+                form.querySelector('input[name="PostalCode"]').value = '';
+                form.querySelector('input[name="Country"]').value = '';
+
+                if (submitButton)
+                    submitButton.textContent = "Add";
+
+                return;
+            }
+
+            const selectedOption = addressSelector.options[addressSelector.selectedIndex];
+            const dataAttr = selectedOption.getAttribute("data-address");
+
+            if (!dataAttr) return;
+
+            let address;
+            try {
+                address = JSON.parse(dataAttr);
+            } catch (err) {
+                console.error("Invalid JSON in data-address", err);
+                return;
+            }
+
+            form.querySelector('input[name="Id"]').value = address.Id || 0;
+            form.querySelector('input[name="AddressLine1"]').value = address.AddressLine1 || '';
+            form.querySelector('input[name="AddressLine2"]').value = address.AddressLine2 || '';
+            form.querySelector('input[name="City"]').value = address.City || '';
+            form.querySelector('input[name="Province"]').value = address.Province || '';
+            form.querySelector('input[name="PostalCode"]').value = address.PostalCode || '';
+            form.querySelector('input[name="Country"]').value = address.Country || '';
+
+            if (submitButton)
+                submitButton.textContent = "Update";
+        }
+
+        function handleSelectionChange() {
+            populateFormFromSelection();
+
+            const selected = addressSelector.value;
+            const currentUrl = new URL(window.location.href);
+            const isCheckoutPage = currentUrl.pathname === "/Order/Checkout";
+            const isDelivery = currentUrl.searchParams.get("selectedType") === "Delivery";
+
+            if (isCheckoutPage && isDelivery && selected !== "new") {
+                const selectedOption = addressSelector.options[addressSelector.selectedIndex];
+                const dataAttr = selectedOption.getAttribute("data-address");
+                if (!dataAttr) return;
+
+                let address;
+                try {
+                    address = JSON.parse(dataAttr);
+                } catch (err) {
+                    console.error("Invalid JSON in data-address", err);
+                    return;
+                }
+
+                const currentAddressId = currentUrl.searchParams.get("addressId");
+                if (address.Id.toString() !== currentAddressId) {
+                    currentUrl.searchParams.set("addressId", address.Id);
+                    window.location.href = currentUrl.toString();
+                }
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const addressIdFromUrl = urlParams.get("addressId");
+        if (addressIdFromUrl) {
+            const match = [...addressSelector.options].find(
+                opt => opt.value === addressIdFromUrl
+            );
+            if (match) {
+                addressSelector.value = addressIdFromUrl;
+            }
+        }
+
+        populateFormFromSelection();
+
+        addressSelector.addEventListener("change", handleSelectionChange);
+
+        form.addEventListener("submit", function (event) {
+            // Before submitting, validate the form
+            if (!validateAddressFields()) {
+                // Prevent form submission if validation fails
+                event.preventDefault();
+                return false;
+            }
+
+            // If validation passes, allow form submission
+            return true;
+        });
+
+    });
+</script>

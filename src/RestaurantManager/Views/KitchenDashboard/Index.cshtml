@@ -1,0 +1,165 @@
+@using RestaurantManager.Models
+@using RestaurantManager.Enums
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Kitchen Dashboard";
+    var reservations = ViewBag.Reservations as List<Reservation>;
+    var orders = ViewBag.Orders as List<Order>;
+    var menuItems = ViewBag.MenuItems as List<MenuItem>;
+
+    var now = DateTime.Now;
+    var currentDay = now.DayOfWeek;
+
+    string FormatTimeSpan(TimeSpan ts) =>
+    ts.TotalMinutes <= 0
+    ? "Closed"
+    : $"{(int)ts.TotalHours}h {ts.Minutes}m left";
+
+    // DineIn and TakeOut have same schedule
+    DateTime? GetClosingTimeForDineInTakeOut(DayOfWeek day)
+    {
+        return day switch
+        {
+            DayOfWeek.Tuesday => now.Date.AddHours(22),
+            DayOfWeek.Wednesday => now.Date.AddHours(22),
+            DayOfWeek.Thursday => now.Date.AddHours(22),
+            DayOfWeek.Friday => now.Date.AddHours(23),
+            DayOfWeek.Saturday => now.Date.AddHours(23),
+            DayOfWeek.Sunday => now.Date.AddHours(21),
+            _ => null // Monday closed
+        };
+    }
+
+    DateTime? GetClosingTimeForDelivery(DayOfWeek day)
+    {
+        return day switch
+        {
+            DayOfWeek.Tuesday => now.Date.AddHours(21.5),
+            DayOfWeek.Wednesday => now.Date.AddHours(21.5),
+            DayOfWeek.Thursday => now.Date.AddHours(21.5),
+            DayOfWeek.Friday => now.Date.AddHours(21.5),
+            DayOfWeek.Saturday => now.Date.AddHours(21.5),
+            DayOfWeek.Sunday => now.Date.AddHours(21.5),
+            _ => null // Monday closed
+        };
+    }
+
+    var dineInClosing = GetClosingTimeForDineInTakeOut(currentDay);
+    var deliveryClosing = GetClosingTimeForDelivery(currentDay);
+
+    var timeLeftDineIn = dineInClosing.HasValue ? dineInClosing.Value - now : TimeSpan.Zero;
+    var timeLeftDelivery = deliveryClosing.HasValue ? deliveryClosing.Value - now : TimeSpan.Zero;
+}
+
+<!-- Banner -->
+<div class="banner-image position-relative text-white text-center mb-2">
+    <img src="~/images/kitchen.png" class="img-fluid w-100" style="height: 340px; object-fit: cover;"
+        alt="Kitchen Image" />
+    <div class="banner-text position-absolute top-50 start-50 translate-middle">
+        <h2 class="fw-bold text-light display-4 text-shadow">Kitchen Dashboard</h2>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <!-- Left Sidebar: Hours & Time Info -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body">
+                    <!-- Opening Hours -->
+                    <div class="mb-5">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-clock-history me-2"></i>Opening Hours
+                        </h5>
+                        <div class="small text-muted mb-2">Dine-In & Pickup</div>
+                        <ul class="list-unstyled mb-3">
+                            <li><strong>Tue-Thu:</strong> 11:00 AM - 10:00 PM</li>
+                            <li><strong>Fri-Sat:</strong> 11:00 AM - 11:00 PM</li>
+                            <li><strong>Sun:</strong> 10:00 AM - 9:00 PM</li>
+                        </ul>
+                        <div class="small text-muted mb-1">Delivery</div>
+                        <p class="mb-0">
+                            <strong>Daily:</strong> 11:30 AM - 9:30 PM<br />
+                            <small class="text-muted">(Last order accepted 30 min before close)</small>
+                        </p>
+                    </div>
+
+                    <!-- Current Time -->
+                    <div class="mb-5">
+                        <h5 class="fw-bold mb-2">
+                            <i class="bi bi-calendar-event me-2"></i>Current Time
+                        </h5>
+                        <p class="text-muted">
+                            @now.ToString("dddd, MMMM dd yyyy — hh:mm tt", CultureInfo.InvariantCulture)
+                        </p>
+                    </div>
+
+                    <!-- Time Remaining -->
+                    <div>
+                        <h5 class="fw-bold mb-2">
+                            <i class="bi bi-hourglass-split me-2"></i>Time Remaining Today
+                        </h5>
+                        <ul class="list-group list-group-sm">
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-2 py-2">
+                                <span><strong>Dine-In / Pickup</strong></span>
+                                <span class="text-muted">@FormatTimeSpan(timeLeftDineIn)</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-2 py-2">
+                                <span><strong>Delivery</strong></span>
+                                <span class="text-muted">@FormatTimeSpan(timeLeftDelivery)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Dashboard Cards -->
+        <div class="col-lg-8">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100" style="min-height: 220px;">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title">Upcoming Reservations</h5>
+                                <h2 class="display-6 fw-bold text-primary mb-3">@ViewBag.UpcomingReservations</h2>
+                            </div>
+                            <a href="@Url.Action("Reservations", "KitchenDashboard")" class="btn btn-outline-primary">
+                                View Reservations
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100" style="min-height: 220px;">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title">Active Orders</h5>
+                                <h2 class="display-6 fw-bold text-success mb-3">@ViewBag.ActiveOrders</h2>
+                            </div>
+                            <a href="@Url.Action("Orders", "KitchenDashboard")" class="btn btn-outline-primary">
+                                View Orders
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card border-0 shadow-sm rounded-4 h-100" style="min-height: 220px;">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title">Available Menu Items</h5>
+                                <h2 class="display-6 fw-bold text-warning mb-3">@ViewBag.AvailableMenuItems</h2>
+                            </div>
+                            <a href="@Url.Action("MenuItems", "KitchenDashboard")" class="btn btn-outline-primary">
+                                View Menu Items
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

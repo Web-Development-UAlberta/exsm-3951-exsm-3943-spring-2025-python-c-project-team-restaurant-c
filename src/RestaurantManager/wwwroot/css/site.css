@@ -1,0 +1,281 @@
+html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+}
+
+main {
+  flex: 1;
+}
+
+:root {
+  --forest-green: #2C5530;
+  --forest-green-hover: #244628;
+  --forest-green-active: #1a361f;
+
+  --terracotta: #C96D3A;
+  --terracotta-hover: #a8562f;
+  --terracotta-active: #8a4320;
+
+  --light-cream: #FCFAF7;
+  --cream: #F5F1E8;
+  --charcoal: #3A3E3B;
+  --bs-white: #fff;
+}
+
+.btn {
+  padding: 0.5rem 2rem;
+}
+
+.counter-btn {
+  width: 3rem;
+  height: 3rem;
+  border: .125rem solid var(--forest-green);
+}
+
+/* Outline Primary */
+.btn-outline-primary {
+  color: var(--forest-green);
+  border: .125rem solid var(--forest-green);
+  font-weight: 600;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: var(--forest-green);
+  color: var(--cream);
+  border-color: var(--forest-green);
+}
+
+/* Outline Primary */
+footer .btn-outline-primary {
+  color: var(--cream);
+  border-color: var(--cream);
+  background-color: transparent;
+}
+
+footer .btn-outline-primary:hover,
+footer .btn-outline-primary:focus {
+  background-color: var(--cream);
+  color: var(--terracotta);
+  border-color: var(--cream);
+}
+
+/* Filled Primary */
+.btn-primary {
+  background-color: var(--forest-green);
+  border-color: var(--forest-green);
+  color: var(--cream) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--forest-green-hover);
+  border-color: var(--forest-green-hover);
+  color: var(--cream);
+}
+
+.btn-primary:active {
+  background-color: var(--forest-green-active);
+  border-color: var(--forest-green-active);
+  color: var(--cream);
+}
+
+/* Style when the radio is checked */
+.btn-check:checked+.btn-outline-primary {
+  background-color: var(--forest-green) !important;
+  border-color: var(--forest-green) !important;
+  color: var(--cream) !important;
+  box-shadow: none !important;
+}
+
+/* Keep it green on hover while checked */
+.btn-check:checked+.btn-outline-primary:hover {
+  background-color: var(--forest-green-hover) !important;
+  border-color: var(--forest-green-hover) !important;
+  color: var(--cream) !important;
+}
+
+/* Keep it green when active (clicked/held down) while checked */
+.btn-check:checked+.btn-outline-primary:active {
+  background-color: var(--forest-green) !important;
+  border-color: var(--forest-green) !important;
+  color: var(--cream) !important;
+  box-shadow: none !important;
+}
+
+/* Prevent blue box shadow and color flash from Bootstrap's active/focus */
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  box-shadow: none !important;
+  background-color: transparent !important;
+  color: var(--forest-green) !important;
+}
+
+/* Remove blue from non-selected hover/active */
+.btn-check:not(:checked)+.btn-outline-primary:hover,
+.btn-check:not(:checked)+.btn-outline-primary:active {
+  background-color: var(--cream) !important;
+  border-color: var(--forest-green) !important;
+  color: var(--forest-green) !important;
+}
+
+
+/* Footer Filled Primary */
+footer .btn-primary {
+  background-color: var(--cream);
+  border-color: var(--cream);
+  color: var(--terracotta) !important;
+}
+
+footer .btn-primary:hover,
+footer .btn-primary:focus {
+  background-color: var(--bs-white);
+  border-color: var(--bs-white);
+  color: var(--terracotta-hover);
+}
+
+footer .btn-primary:active {
+  background-color: var(--cream);
+  border-color: var(--cream);
+  color: var(--terracotta-active);
+}
+
+
+body {
+  margin-bottom: 60px;
+  background-color: var(--light-cream);
+  font-family: 'Montserrat', sans-serif;
+  /* You can replace with 'Nunito' if preferred */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Libre Baskerville', serif;
+  /* Or 'Playfair Display' */
+  color: (var(--terracotta));
+}
+
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem var(--cream), 0 0 0 0.25rem var(--terracotta);
+}
+
+.menu-link {
+  color: var(--forest-green);
+  font-weight: 600;
+}
+
+.menu-link:hover {
+  color: var(--forest-green-hover);
+}
+
+
+footer .menu-link,
+footer .menu-link:hover {
+  color: var(--cream);
+}
+
+footer a,
+footer a:hover {
+  text-decoration: none;
+  color: var(--cream);
+}
+
+footer table td {
+  font-size: x-small;
+}
+
+.custom-tight-rows td,
+.custom-tight-rows th {
+  padding-top: 0.05rem;
+  padding-bottom: 0.05rem;
+}
+
+footer .d-felx {
+  gap: 0.05rem;
+}
+
+footer .btn {
+  font-size: small;
+  padding: 0.5rem 2rem;
+}
+
+
+
+
+
+/* Footer content styling for small screens (mobile) */
+@media (max-width: 767px) {
+
+  html {
+    font-size: 16px;
+  }
+
+  footer {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    text-align: center;
+  }
+
+  footer .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  footer .logo {
+    max-width: 120px;
+    margin-bottom: 1rem;
+  }
+
+  footer .d-flex {
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  footer .mb-2 {
+    margin-bottom: 0.5rem;
+  }
+
+  footer .mb-3 {
+    margin-bottom: 1rem;
+  }
+
+  footer .nav-link {
+    font-size: 0.875rem;
+  }
+
+  footer .btn {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+  }
+
+  footer .text-muted {
+    font-size: 0.75rem;
+  }
+
+  footer table {
+    width: 100%;
+    font-size: 0.875rem;
+  }
+
+  footer table td,
+  footer table th {
+    padding: 0.25rem;
+  }
+}

@@ -1,0 +1,300 @@
+@model IEnumerable<RestaurantManager.Models.Reservation>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>    
+
+<div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+    <h4 class="mb-4 text-dark fw-bold">Upcoming Reservations</h4>
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var res in Model.OrderByDescending(r => r.ReservationDateTime).Take(3))
+        {
+            <div class="mb-3 pb-3 border-bottom">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="card-text mb-1"><strong>Date & Time:</strong> @res.ReservationDateTime.ToString("MMM dd, yyyy h:mm tt")</p>
+                        <p class="card-text mb-1"><strong>Guests:</strong> @res.GuestCount</p>
+                        <p class="card-text mb-1"><strong>Table #:</strong> @res.TableNumber</p>
+                        <p class="card-text mb-1"><strong>Reservation #:</strong> @res.Id</p>
+                        <p class="card-text mb-1">
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        @if (res.ReservationStatus != RestaurantManager.Enums.ReservationStatus.Cancelled)
+                        {
+                            <div class="btn-group-vertical w-100" role="group">
+                                <button type="button" class="btn btn-outline-primary btn-sm mb-2" 
+                                        data-reservation-id="@res.Id"
+                                        data-reservation-datetime="@res.ReservationDateTime.ToString("yyyy-MM-ddTHH:mm")"
+                                        data-guest-count="@res.GuestCount"
+                                        data-notes="@(res.Notes ?? "")"
+                                        data-user-name="@(res.User?.FirstName) @(res.User?.LastName)"
+                                        data-user-email="@(res.User?.Email ?? "")"
+                                        data-user-phone="@(res.User?.Phone ?? "")"
+                                        onclick="editReservation(this)">
+                                    <i class="fas fa-edit"></i> Edit Booking
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-sm" 
+                                        onclick="confirmDelete(@res.Id, '@res.ReservationDateTime.ToString("MMM dd, yyyy h:mm tt")')">
+                                    <i class="fas fa-trash"></i> Cancel Booking
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <small class="text-muted">Cancelled</small>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">No current reservations.</p>
+        <div class="text-center mt-3">
+            <a href="@Url.Action("Index", "Reservation")" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Make a Reservation
+            </a>
+        </div>
+    }
+</div>
+
+<!-- Confirm Popup -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmModalLabel">Cancel Reservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel your reservation for <strong id="reservationDetails"></strong>?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Note:</strong> This action cannot be undone. You'll need to make a new reservation if you change your mind.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep Reservation</button>
+                <form id="deleteForm" method="post" action="@Url.Action("DeleteReservation", "Reservation")" style="display: inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="reservationIdInput" name="id" value="" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Cancel Reservation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Popup -->
+<div class="modal fade" id="editReservationModal" tabindex="-1" aria-labelledby="editReservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editReservationModalLabel">Edit Reservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editForm" method="post" action="@Url.Action("EditReservation", "Reservation")">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="editReservationId" name="Id" value="" />
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="editDateTime">Date & Time</label>
+                                <input id="editDateTime" name="ReservationDateTime" class="form-control" required />
+                                <div id="editDatetimeError" class="text-danger mt-2" style="display: none;">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span id="errorMessage"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="editGuestCount">Number of Guests</label>
+                                <input type="number" id="editGuestCount" name="GuestCount" class="form-control" min="1" max="50" required />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="editNotes">Special Requests</label>
+                        <textarea id="editNotes" name="Notes" class="form-control" rows="3" placeholder="Special occasions, accessibility needs, dietary restrictions, etc."></textarea>
+                    </div>
+                    
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">Contact Information</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Name:</strong> <span id="editUserName"></span></p>
+                                    <p class="mb-1"><strong>Email:</strong> <span id="editUserEmail"></span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>Phone:</strong> <span id="editUserPhone"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Reservation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(reservationId, reservationDetails) {
+    //Set the reservation details in the modal
+    document.getElementById('reservationDetails').textContent = reservationDetails;
+    
+    //Set the hidden input value instead of changing the URL
+    document.getElementById('reservationIdInput').value = reservationId;
+    
+    //Show the modal
+    var modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+    modal.show();
+}
+
+function editReservation(button) {
+    //Get data from the buttons attributes
+    const reservationId = button.getAttribute('data-reservation-id');
+    const dateTime = button.getAttribute('data-reservation-datetime');
+    const guestCount = button.getAttribute('data-guest-count');
+    const notes = button.getAttribute('data-notes');
+    const userName = button.getAttribute('data-user-name');
+    const userEmail = button.getAttribute('data-user-email');
+    const userPhone = button.getAttribute('data-user-phone');
+    
+    //Set the form values
+    document.getElementById('editReservationId').value = reservationId;
+    document.getElementById('editGuestCount').value = guestCount;
+    document.getElementById('editNotes').value = notes;
+    
+    //Set user display info
+    document.getElementById('editUserName').textContent = userName;
+    document.getElementById('editUserEmail').textContent = userEmail;
+    document.getElementById('editUserPhone').textContent = userPhone;
+    
+    //Show the modal
+    var modal = new bootstrap.Modal(document.getElementById('editReservationModal'));
+    modal.show();
+
+    //Initialize Flatpickr after modal opens
+    setTimeout(function() {
+        initializeEditFlatpickr(dateTime);
+    }, 200);
+}
+
+function initializeEditFlatpickr(currentDateTime) {
+    const editErrorDiv = document.getElementById('editDatetimeError');
+    const errorMessage = document.getElementById('errorMessage');
+    const editForm = document.getElementById('editForm');
+    
+    //Restaurant hours for each day of the week
+    //Sunday 10am-9pm
+    //Monday closed
+    //Tuesday 11am-10pm
+    //Wednesday 11am-10pm
+    //Thursday 11am-10pm
+    //Friday 11am-11pm
+    //Saturday 11am-11pm
+    const hours = [
+        [10, 21], 
+        null,     
+        [11, 22], 
+        [11, 22], 
+        [11, 22], 
+        [11, 23], 
+        [11, 23]  
+    ];
+    
+    //Hide error message and reset border color
+    function hideEditError() {
+        editErrorDiv.style.display = 'none';
+        document.getElementById('editDateTime').style.borderColor = '';
+    }
+    
+    //Show error message
+    function showEditError(message) {
+        errorMessage.textContent = message;
+        editErrorDiv.style.display = 'block';
+        document.getElementById('editDateTime').style.borderColor = '#dc3545';
+    }
+    
+    //Destroy any existing Flatpickr instance
+    const existingInput = document.getElementById('editDateTime');
+    if (existingInput._flatpickr) {
+        existingInput._flatpickr.destroy();
+    }
+    
+    //Initialize Flatpickr on the edit input
+    const fp = flatpickr("#editDateTime", {
+        enableTime: true,                   
+        dateFormat: "Y-m-d h:i K",         
+        time_24hr: false,                   
+        minuteIncrement: 30,                
+        minDate: "today",                   
+        defaultDate: currentDateTime,       
+        
+        //Take out Mondays
+        disable: [
+            function(date) {
+                return date.getDay() === 1;
+            }
+        ],
+        
+        //This runs when user picks a date
+        onChange: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length > 0) {
+                const day = selectedDates[0].getDay();
+                const dayHours = hours[day];          
+                
+                if (dayHours) {
+                    const startHour = dayHours[0];
+                    const endHour = dayHours[1];  
+                    
+                    //Convert to 12 hour format
+                    const startTime12 = startHour <= 12 ? `${startHour}:00 AM` : `${startHour - 12}:00 PM`;
+                    const endTime12 = endHour <= 12 ? `${endHour - 1}:30 AM` : `${endHour - 12 - 1}:30 PM`;
+                    
+                    instance.set('minTime', startTime12);
+                    instance.set('maxTime', endTime12);
+                    hideEditError();
+                } else {
+                    instance.clear();
+                }
+            }
+        },
+        
+        minTime: "10:00 AM", 
+        maxTime: "8:30 PM"   
+    });
+    
+    //Remove old form event listener if it exists
+    editForm.removeEventListener('submit', editForm.flatpickrSubmitHandler);
+    
+    //Check form when user tries to submit if no date/time is selected
+    editForm.flatpickrSubmitHandler = function(e) {
+        const input = document.getElementById('editDateTime');
+        if (!input.value) {
+            showEditError('Please select a reservation date and time');
+            e.preventDefault();
+            return false;
+        }
+    };
+    
+    editForm.addEventListener('submit', editForm.flatpickrSubmitHandler);
+}
+</script>

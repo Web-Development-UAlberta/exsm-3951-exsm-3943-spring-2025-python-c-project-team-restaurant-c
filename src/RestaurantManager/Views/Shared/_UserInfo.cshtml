@@ -1,0 +1,64 @@
+@model RestaurantManager.Models.User
+
+@{
+    bool isCustomerDashboard = ViewData["CurrentRoute"]?.ToString().Contains("CustomerDashboard") ?? false;
+}
+
+<div class="card shadow-sm rounded-4 p-4 mb-5 border-0" style="max-width: 600px; margin: auto;">
+    <h4 class="mb-4 text-dark fw-bold">Contact Information</h4>
+
+    <form asp-action="UpdateUserInfo" asp-controller="CustomerDashboard" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row">
+            <!-- First Name -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="FirstName" class="form-label text-muted fw-medium">First Name <span
+                        class="text-danger">*</span></label>
+                <input asp-for="FirstName" class="form-control rounded-3" placeholder="First Name" required
+                    readonly="@(!isCustomerDashboard)" />
+                <span asp-validation-for="FirstName" class="text-danger small"></span>
+            </div>
+
+            <!-- Last Name -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="LastName" class="form-label text-muted fw-medium">Last Name <span
+                        class="text-danger">*</span></label>
+                <input asp-for="LastName" class="form-control rounded-3" placeholder="Last Name" required
+                    readonly="@(!isCustomerDashboard)" />
+                <span asp-validation-for="LastName" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Email -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Email" class="form-label text-muted fw-medium">Email <span
+                        class="text-danger">*</span></label>
+                <input asp-for="Email" class="form-control rounded-3" placeholder="example@email.com" required
+                    readonly="@(!isCustomerDashboard)" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <!-- Phone -->
+            <div class="col-md-6 mb-4">
+                <label asp-for="Phone" class="form-label text-muted fw-medium">Phone <span
+                        class="text-danger">*</span></label>
+                <input asp-for="Phone" class="form-control rounded-3" placeholder="(XXX) XXX-XXXX" required
+                    readonly="@(!isCustomerDashboard)" />
+                <span asp-validation-for="Phone" class="text-danger small"></span>
+            </div>
+        </div>
+
+        @if (isCustomerDashboard)
+        {
+            <div class="mb-3 text-end">
+                <button type="submit" class="btn btn-primary rounded-3">Update</button>
+            </div>
+        }
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

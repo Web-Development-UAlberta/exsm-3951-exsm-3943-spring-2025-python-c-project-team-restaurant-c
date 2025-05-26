@@ -1,0 +1,83 @@
+@using RestaurantManager.Enums;
+@using RestaurantManager.Models;
+
+@model RestaurantManager.Models.User
+
+@{
+    ViewBag.Title = "Customer Dashboard";
+    var passwordModel = ViewBag.ChangePasswordModel as ChangePasswordViewModel ?? new ChangePasswordViewModel();
+}
+
+<div class="container py-5">
+    <h2 class="mb-4 fw-semibold">Welcome, @Model.FirstName @Model.LastName!</h2>
+
+    <div class="row g-4">
+
+        <!-- Loyalty Rewards -->
+        <div class="col-md-6 mb-4">
+            @await Html.PartialAsync("_RewardPoints", Model)
+        </div>
+
+        <!-- Reservation History -->
+        <div class="col-md-6">
+            @await Html.PartialAsync("_UserReservationHistory", Model.Reservations)
+        </div>
+
+        <!-- Personal Info with Edit Toggle -->
+        <div class="col-md-6">
+            @await Html.PartialAsync("_UserInfo", Model)
+        </div>
+
+        <div class="col-md-6">
+            @await Html.PartialAsync("_PasswordChange", (passwordModel))
+        </div>
+
+        <!-- Delivery Addresses -->
+        <div class="col-md-6">
+            @await Html.PartialAsync("_DeliveryInfo", Model)
+        </div>
+
+        <!-- Order History -->
+        <div class="col-md-6">
+            <div class="card shadow-sm rounded-4 p-4 border-0">
+                <h4 class="mb-4 text-dark fw-bold">Recent Orders</h4>
+
+                @if (Model.Orders != null && Model.Orders.Any())
+                {
+                    @foreach (var order in Model.Orders.OrderByDescending(o => o.OrderDate).Take(2))
+                    {
+                        <div class="mb-4 border-bottom pb-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>Order #</strong> @order.Id<br />
+                                    @if (order.ReservationId != null)
+                                    {
+                                        <strong>Reservation #</strong> @order.ReservationId
+
+                                        <br />
+                                    }
+                                    <strong> @order.Type</strong><br />
+                                    <strong>Date:</strong> @order.OrderDate.ToString("MMM dd, yyyy")
+                                </div>
+                                <div class="text-end">
+                                    <strong>Status:</strong> @order.Status<br />
+                                    <strong>Total:</strong> @order.Total.ToString("C2")
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="text-end">
+                        <a asp-controller="CustomerDashboard" asp-action="OrderHistory" class="btn btn-primary">
+                            View Full Order History
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No recent orders available.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
